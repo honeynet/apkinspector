@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Project SYSTEM "Project-4.6.dtd">
+<!-- eric4 project file for project AndroidGui -->
+<!-- Saved: 2011-08-22, 01:17:28 -->
+<!-- Copyright (C) 2011 ,  -->
+<Project version="4.6">
+  <Language></Language>
+  <ProgLanguage mixed="0">Python</ProgLanguage>
+  <ProjectType>Qt4</ProjectType>
+  <Description></Description>
+  <Version>0.1</Version>
+  <Author></Author>
+  <Email></Email>
+  <Sources>
+    <Source>startQT.py</Source>
+    <Source>APKInfo.py</Source>
+    <Source>GetMethods.py</Source>
+    <Source>Graph.py</Source>
+    <Source>xdotParser.py</Source>
+    <Source>InputDialog.py</Source>
+    <Source>newMessageBox.py</Source>
+    <Source>CodeEditor.py</Source>
+    <Source>SyntaxHighter.py</Source>
+    <Source>SearchFilter.py</Source>
+    <Source>RenamingDialog.py</Source>
+    <Source>FindDialog.py</Source>
+    <Source>Global.py</Source>
+    <Source>CallInOut.py</Source>
+    <Source>CallInOutDialog.py</Source>
+    <Source>JAD.py</Source>
+    <Source>APKtool.py</Source>
+    <Source>ConfigurationDialog.py</Source>
+    <Source>MyThread.py</Source>
+    <Source>ProgressDialog.py</Source>
+    <Source>UI/Ui_RenamingDialog.py</Source>
+    <Source>UI/Ui_InputDialog.py</Source>
+    <Source>UI/Ui_FindDialog.py</Source>
+    <Source>UI/Ui_CallInOutDialog.py</Source>
+    <Source>UI/Ui_ConfigurationDialog.py</Source>
+    <Source>UI/Ui_MainWindow.py</Source>
+  </Sources>
+  <Forms>
+    <Form>UI/RenamingDialog.ui</Form>
+    <Form>UI/InputDialog.ui</Form>
+    <Form>UI/FindDialog.ui</Form>
+    <Form>UI/CallInOutDialog.ui</Form>
+    <Form>UI/ConfigurationDialog.ui</Form>
+    <Form>UI/MainWindow.ui</Form>
+  </Forms>
+  <Translations>
+  </Translations>
+  <Resources>
+  </Resources>
+  <Interfaces>
+  </Interfaces>
+  <Others>
+  </Others>
+  <Vcs>
+    <VcsType>None</VcsType>
+  </Vcs>
+  <FiletypeAssociations>
+    <FiletypeAssociation pattern="*.ui" type="FORMS" />
+    <FiletypeAssociation pattern="*.idl" type="INTERFACES" />
+    <FiletypeAssociation pattern="*.qm" type="TRANSLATIONS" />
+    <FiletypeAssociation pattern="*.ptl" type="SOURCES" />
+    <FiletypeAssociation pattern="*.pyw" type="SOURCES" />
+    <FiletypeAssociation pattern="*.ui.h" type="FORMS" />
+    <FiletypeAssociation pattern="*.ts" type="TRANSLATIONS" />
+    <FiletypeAssociation pattern="*.py" type="SOURCES" />
+    <FiletypeAssociation pattern="*.qrc" type="RESOURCES" />
+  </FiletypeAssociations>
+</Project>

@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainWindow</class>
+ <widget class="QMainWindow" name="mainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1052</width>
+    <height>629</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>100</width>
+    <height>100</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>APKinspector</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../src/images/mainwindow.qrc">
+    <normaloff>:/src/images/logo2.png</normaloff>
+    <normalon>:/src/images/logo2.png</normalon>
+    <activeoff>:/src/images/logo2.png</activeoff>
+    <activeon>:/src/images/logo2.png</activeon>
+    <selectedoff>:/src/images/logo2.png</selectedoff>
+    <selectedon>:/src/images/logo2.png</selectedon>:/src/images/logo2.png</iconset>
+  </property>
+  <property name="locale">
+   <locale language="Chinese" country="China"/>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>24</width>
+    <height>24</height>
+   </size>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QMdiArea" name="mdiArea">
+      <widget class="QWidget" name="win1">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>720</width>
+         <height>524</height>
+        </size>
+       </property>
+       <property name="windowTitle">
+        <string>MainView</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_1">
+        <item row="0" column="0">
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <property name="documentMode">
+           <bool>false</bool>
+          </property>
+          <widget class="QWidget" name="tab_cfg">
+           <attribute name="title">
+            <string>CFG</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_11"/>
+          </widget>
+          <widget class="QWidget" name="tab_dalvik">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <attribute name="title">
+            <string>Dalvik</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_12"/>
+          </widget>
+          <widget class="QWidget" name="tab_bytecode">
+           <attribute name="title">
+            <string>ByteCode</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_13"/>
+          </widget>
+          <widget class="QWidget" name="tab_smali">
+           <attribute name="title">
+            <string>Smali</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_14"/>
+          </widget>
+          <widget class="QWidget" name="tab_java">
+           <attribute name="title">
+            <string>Java</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_15">
+            <item row="0" column="0">
+             <widget class="QPlainTextEdit" name="plainTextEdit_java"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_callinout">
+           <attribute name="title">
+            <string>Call in/out</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_16">
+            <item row="0" column="0">
+             <widget class="QTextEdit" name="textEdit_call"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_permission">
+           <attribute name="title">
+            <string>Permission</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_17">
+            <item row="0" column="0">
+             <widget class="QTextEdit" name="textEdit_permission"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_manifest">
+           <attribute name="title">
+            <string>AndroidManifest.xml</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_18">
+            <item row="0" column="0">
+             <widget class="QTextBrowser" name="textBrowser"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="win2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>298</width>
+         <height>524</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="windowTitle">
+        <string>SideView</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_21">
+          <item row="1" column="0">
+           <layout class="QGridLayout" name="gridLayout_211">
+            <item row="0" column="0" colspan="2">
+             <widget class="QLineEdit" name="lineEdit">
+              <property name="text">
+               <string>Please input the strings</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QRadioButton" name="radioButton_filter">
+              <property name="text">
+               <string>Filter</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QRadioButton" name="radioButton_search">
+              <property name="text">
+               <string>Search</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QPushButton" name="pushButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>OK</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="0">
+           <widget class="QTabWidget" name="tabWidget_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="currentIndex">
+             <number>3</number>
+            </property>
+            <widget class="QWidget" name="tab_file">
+             <attribute name="title">
+              <string>Files</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_2121">
+              <item row="0" column="1">
+               <widget class="QTreeWidget" name="treeWidget_files">
+                <attribute name="headerVisible">
+                 <bool>false</bool>
+                </attribute>
+                <column>
+                 <property name="text">
+                  <string notr="true">1</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_strings">
+             <attribute name="title">
+              <string>Strings</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_2122">
+              <item row="0" column="0">
+               <widget class="QListWidget" name="listWidget_strings">
+                <property name="editTriggers">
+                 <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+                </property>
+                <property name="movement">
+                 <enum>QListView::Static</enum>
+                </property>
+                <property name="isWrapping" stdset="0">
+                 <bool>false</bool>
+                </property>
+                <property name="resizeMode">
+                 <enum>QListView::Fixed</enum>
+                </property>
+                <property name="layoutMode">
+                 <enum>QListView::SinglePass</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_classes">
+             <attribute name="title">
+              <string>Classes</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_2123">
+              <item row="0" column="0">
+               <widget class="QListWidget" name="listWidget_classes"/>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_methods">
+             <attribute name="title">
+              <string>Methods</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_2124">
+              <item row="0" column="0">
+               <widget class="QTreeWidget" name="treeWidget_methods">
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="verticalScrollBarPolicy">
+                 <enum>Qt::ScrollBarAsNeeded</enum>
+                </property>
+                <property name="horizontalScrollBarPolicy">
+                 <enum>Qt::ScrollBarAsNeeded</enum>
+                </property>
+                <property name="autoScrollMargin">
+                 <number>16</number>
+                </property>
+                <property name="editTriggers">
+                 <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+                </property>
+                <property name="verticalScrollMode">
+                 <enum>QAbstractItemView::ScrollPerPixel</enum>
+                </property>
+                <property name="horizontalScrollMode">
+                 <enum>QAbstractItemView::ScrollPerPixel</enum>
+                </property>
+                <property name="rootIsDecorated">
+                 <bool>true</bool>
+                </property>
+                <property name="uniformRowHeights">
+                 <bool>false</bool>
+                </property>
+                <property name="animated">
+                 <bool>false</bool>
+                </property>
+                <property name="headerHidden">
+                 <bool>true</bool>
+                </property>
+                <attribute name="headerCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="headerHighlightSections">
+                 <bool>false</bool>
+                </attribute>
+                <column>
+                 <property name="text">
+                  <string notr="true">1</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_apkinfo">
+             <attribute name="title">
+              <string>APKInfo</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_3">
+              <item row="0" column="0">
+               <widget class="QTableWidget" name="tableWidget_apkinfo">
+                <attribute name="horizontalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="horizontalHeaderStretchLastSection">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="verticalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="verticalHeaderStretchLastSection">
+                 <bool>false</bool>
+                </attribute>
+                <row>
+                 <property name="text">
+                  <string>filename</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>version code</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>version name</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>packages</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>receivers</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>services</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>permissions</string>
+                 </property>
+                </row>
+                <column>
+                 <property name="text">
+                  <string>info</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1052</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File(&amp;F)</string>
+    </property>
+    <addaction name="actNew"/>
+    <addaction name="actOpen"/>
+    <addaction name="actClose"/>
+    <addaction name="separator"/>
+    <addaction name="actSave"/>
+    <addaction name="actASave"/>
+    <addaction name="separator"/>
+    <addaction name="actQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit_E">
+    <property name="title">
+     <string>Edit(&amp;E)</string>
+    </property>
+    <addaction name="actUndo"/>
+    <addaction name="actCut"/>
+    <addaction name="actCopy"/>
+    <addaction name="actPast"/>
+    <addaction name="actAll"/>
+   </widget>
+   <widget class="QMenu" name="menuTool_T">
+    <property name="title">
+     <string>Tools(&amp;T)</string>
+    </property>
+    <addaction name="actFind"/>
+    <addaction name="actCall_in_out"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp_H">
+    <property name="title">
+     <string>Help(&amp;H)</string>
+    </property>
+    <addaction name="About"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings_S">
+    <property name="title">
+     <string>Setting(&amp;S)</string>
+    </property>
+    <addaction name="actConfiguration"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit_E"/>
+   <addaction name="menuTool_T"/>
+   <addaction name="menuSettings_S"/>
+   <addaction name="menuHelp_H"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actNew"/>
+   <addaction name="actOpen"/>
+   <addaction name="actSave"/>
+  </widget>
+  <action name="actNew">
+   <property name="icon">
+    <iconset resource="../src/images/mainwindow.qrc">
+     <normaloff>:/src/images/new.png</normaloff>:/src/images/new.png</iconset>
+   </property>
+   <property name="text">
+    <string>New(&amp;N)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actOpen">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../src/images/mainwindow.qrc">
+     <normaloff>:/src/images/open.png</normaloff>:/src/images/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open(&amp;O)</string>
+   </property>
+  </action>
+  <action name="actClose">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Close(&amp;C)</string>
+   </property>
+  </action>
+  <action name="actSave">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../src/images/mainwindow.qrc">
+     <normaloff>:/src/images/save.png</normaloff>:/src/images/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save(&amp;S)</string>
+   </property>
+  </action>
+  <action name="actASave">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Save as(&amp;A)</string>
+   </property>
+  </action>
+  <action name="actQuit">
+   <property name="text">
+    <string>Quit(&amp;X)</string>
+   </property>
+  </action>
+  <action name="actUndo">
+   <property name="text">
+    <string>Undo(&amp;U)</string>
+   </property>
+  </action>
+  <action name="actCut">
+   <property name="text">
+    <string>Cut(&amp;T)</string>
+   </property>
+  </action>
+  <action name="actCopy">
+   <property name="text">
+    <string>Copy(&amp;C)</string>
+   </property>
+  </action>
+  <action name="actPast">
+   <property name="text">
+    <string>Past(&amp;P)</string>
+   </property>
+  </action>
+  <action name="actAll">
+   <property name="text">
+    <string>All(&amp;A)</string>
+   </property>
+  </action>
+  <action name="actFind">
+   <property name="text">
+    <string>Find(&amp;F)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="About">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actCall_in_out">
+   <property name="text">
+    <string>Call in/out</string>
+   </property>
+  </action>
+  <action name="actConfiguration">
+   <property name="text">
+    <string>Configuration</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../src/images/mainwindow.qrc"/>
+ </resources>
+ <connections/>
+</ui>

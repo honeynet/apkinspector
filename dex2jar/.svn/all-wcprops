@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar
+END
+setclasspath.bat
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar/setclasspath.bat
+END
+dex2jar.bat
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar/dex2jar.bat
+END
+dex2jar-dump.bat
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar/dex2jar-dump.bat
+END
+dex2jar.sh
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar/dex2jar.sh
+END
+dex2jar-dump.sh
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar/dex2jar-dump.sh
+END

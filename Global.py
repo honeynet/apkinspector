@@ -1,0 +1,10 @@
+global TABWIDGET
+global DALVIKEDIT
+global GRAPH
+global MAINWINDOW
+global CONFIG
+global APK
+global VM
+global VMX
+global FLAG_JAD
+global FLAG_APKTOOL
