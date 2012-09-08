@@ -1,0 +1,13 @@
+import java.io.IOException;
+
+tracked(F) class InputStream {
+    public InputStream() [] -> [F] { }
+
+    public int read(byte[] b, int off) [F] -> [F] throws RuntimeException[F]
+    {
+        if (b == null)
+            throw new NullPointerException();
+
+        return off;
+    }
+}

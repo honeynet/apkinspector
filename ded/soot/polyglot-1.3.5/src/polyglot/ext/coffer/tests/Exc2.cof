@@ -1,0 +1,13 @@
+import java.io.IOException;
+
+tracked(F) class InputStream {
+    public InputStream() [] -> [F] { }
+
+    public int read(byte[] b, int off, int len) [F] -> [F]
+    {
+        if (off < 0 || len < 0)
+            return 0;
+
+        return 1;
+    }
+}

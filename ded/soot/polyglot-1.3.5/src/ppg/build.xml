@@ -1,0 +1,96 @@
+<project name="PPG" default="compile" basedir=".">
+	<description>
+		Build the PPG extensible parser generator.
+	</description>
+
+	<property name="src.dir" location="."/>
+	<property name="lexer.dir" location="${src.dir}/lex"/>
+	<property name="parser.dir" location="${src.dir}/parse"/>
+	<property name="dst.dir" location="classes"/>
+	<property name="top.dir" location="../../.."/>
+	<property name="jflex.jar" location="${top.dir}/jlex.jar"/>
+	<property name="java_cup.jar" location="${top.dir}/java_cup.jar"/>
+	<property name="Lexer.java" location="${lexer.dir}/Lexer.java"/>
+	<property name="Parser.java" location="${parser.dir}/Parser.java"/>
+
+	<fileset id="lexer.src" dir="${lexer.dir}">
+		<include name="ppg.flex"/>
+	</fileset>
+
+	<fileset id="lexer.ir" dir="${lexer.dir}">
+		<include name="Lexer.java"/>
+	</fileset>
+
+	<fileset id="parser.src" dir="${parser.dir}">
+		<include name="ppg.cup"/>
+	</fileset>
+
+	<fileset id="parser.ir" dir="${parser.dir}">
+		<include name="Parser.java"/>
+		<include name="Constant.java"/>
+	</fileset>
+		
+	<target name="init">
+	    <tstamp/>
+	    <mkdir dir="${dst.dir}"/>
+	</target>
+
+	<target name="lexer-deps">
+		<dependset>
+			<srcfileset refid="lexer.src"/>
+			<targetfileset refid="lexer.ir"/>
+		</dependset>
+		<available property="lexer.up-to-date" file="${Lexer.java}"/>
+	</target>
+
+	<target name="lexer" depends="lexer-deps"
+                             unless="lexer.up-to-date">
+		<java	classname="JFlex.Main"
+			classpath="${jflex.jar}"
+			fork="true"
+			dir="${lexer.dir}">
+			<arg line="ppg.flex"/>
+		</java>
+	</target>
+
+	<target name="parser-deps">
+		<dependset>
+			<srcfileset refid="parser.src"/>
+			<targetfileset refid="parser.ir"/>
+		</dependset>
+		<available property="parser.up-to-date" file="${Parser.java}"/>
+	</target>
+
+	<target name="parser" depends="lexer,parser-deps" 
+	                      unless="parser.up-to-date">
+		<java	classname="java_cup.Main"
+			classpath="${java_cup.jar}"
+			fork="true"
+			dir="${parser.dir}">
+			<arg line="-parser Parser -symbols Constant ppg.cup"/>
+		</java>
+	</target>
+
+	<target name="compile" depends="init,parser">
+		<javac 	srcdir="${src.dir}" 
+			destdir="${dst.dir}"
+			classpath="${java_cup.jar}"
+			excludes="test/**"/>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar destfile="ppg.jar" basedir="${dst.dir}"/>
+	</target>
+
+	<target name="clean">
+		<delete quiet="true" dir="${dst.dir}"/>
+	</target>
+
+	<target name="clobber" depends="clean">
+		<delete quiet="true">
+			<fileset refid="lexer.ir"/>
+			<fileset refid="parser.ir"/>
+			<fileset dir="." includes="ppg.jar"/>
+		</delete>
+	</target>
+</project>

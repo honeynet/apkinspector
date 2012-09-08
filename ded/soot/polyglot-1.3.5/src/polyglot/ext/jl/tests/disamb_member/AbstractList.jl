@@ -1,0 +1,7 @@
+class AbstractList
+{
+  int modCount;
+}        
+
+
+    

@@ -1,0 +1,388 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Using Side-Effect Attributes</TITLE>
+<META NAME="description" CONTENT="Using Side-Effect Attributes">
+<META NAME="keywords" CONTENT="sideeffect">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sideeffect.css">
+
+</HEAD>
+
+<BODY >
+
+<H1 ALIGN="CENTER">Using Side-Effect Attributes</H1>
+<DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Anatole Le (ale44@sable.mcgill.ca
+        mailto:ale44@sable.mcgill.ca)</STRONG></P>
+<P ALIGN="CENTER"><STRONG>June 3, 2008</STRONG></P>
+</DIV>
+
+<P>
+This note explains how to use Soot annotation options to add
+side-effect attributes in class files and
+how these attributes can be used in JIT or ahead-of-time compilers.
+
+<P>
+
+<H1><A NAME="SECTION00010000000000000000">
+Side-Effects</A>
+</H1>
+
+<P>
+Side-effect analysis provides an approximation of the set of memory 
+locations that each instruction may read or write. This analysis can 
+optimize code by eliminating redundant loads and stores. It has been 
+observed in the past for languages such as Modula-3, C or Java that 
+the use of side-effect information 
+in compilers does have a significant impact on performance.
+
+<P>
+Soot can perform static analyses for computing side-effect information
+with different levels of precision. The simplest, 
+least precise side-effect analysis computed in Soot 
+uses Class Hierarchy Analysis (CHA) for an approximation of the call 
+graph and method summaries of fields read and written. More precise 
+(though more expensive) side-effect analyses 
+make use of call graph and points-to information computed
+by Spark. The results of these analyses can then be encoded in
+class files as attributes, and ahead-of-time or JIT compilers can 
+use it to improve optimizations such as common sub-expression
+elimination, load elimination,
+dead store removal and loop-invariant code motion. 
+
+<P>
+Soot also supports user-defined attributes.
+The process of adding new analyses and attributes is documented in
+``Adding attributes to class files via Soot''.
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Annotation Options for Side-Effects in Soot</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00021000000000000000">
+Options</A>
+</H2>
+
+<P>
+Soot has a command-line option <TT>-annot-side-effect</TT> 
+to annotate class files with side-effect attributes. Since
+a side-effect analysis requires a call-graph, options
+whole-program mode (<TT>-w</TT>) and application mode (<TT>-app</TT>) must
+also be specified. These three options are
+required to perform Soot's simplest side-effect analysis, which we
+call <TT>CHA</TT>.
+
+<P>
+More precise side-effect analyses that make use of points-to
+analysis can be computed using
+various Spark options such as <TT>on-fly-cg</TT> and <TT>field-based</TT>.
+When <TT>on-fly-cg</TT> is true, the call graph is computed 
+on the fly (otf) as the points-to analysis is performed. When it is false, it is
+computed ahead-of-time (aot) using CHA. The <TT>field-based</TT> option
+specifies whether the points-to analysis is field-based (fb) or
+field-sensitive (fs). A description of the different Spark
+options can be found in Ondrej Lhotak's 
+M.Sc. thesis
+http://www.sable.mcgill.ca/publications/thesis/#olhotakMastersThesis
+and in the Soot
+Phase Options document. 
+
+<P>
+The figure below gives an overview of the relative precision of the 
+variations, with precision increasing from bottom to top.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="FIG:LATTICE"></A><A NAME="101"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
+Relative Precision of Analysis Variations</CAPTION>
+<TR><TD><IMG
+ WIDTH="19" HEIGHT="8" BORDER="0"
+ SRC="img1.png"
+ ALT="\begin{figure}\begin{center}
+\begin{tikzpicture}
+\node (otffs) at (0, 0) {otf-...
+...raw[-&gt;] (aotfs) -- (otffs) {};
+\end{tikzpicture} \end{center}\par\end{figure}"></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+<DL>
+<DT><STRONG>-w -app -annot-side-effect</STRONG></DT>
+<DD> 
+<BR>
+With these options enabled, a
+simple side-effect analysis is computed using a CHA call graph and
+method field read/write summaries are built. No points-to analysis is
+performed to differentiate fields from different objects. Side-effect
+information is then annotated in class files attributes. 
+
+<P>
+</DD>
+<DT><STRONG>-p cg.spark enabled -annot-side-effect</STRONG></DT>
+<DD> 
+<BR>
+The analysis uses Spark to compute points-to analysis. By default
+it builds the call graph on-the-fly using points-to information and
+performs a field-sensitive analysis. Side-effect information is then
+computed using the points-to analysis, and encoded in class files.
+
+<P>
+</DD>
+<DT><STRONG>-p cg.spark enabled,on-fly-cg:false,field-based -annot-side-effect</STRONG></DT>
+<DD> 
+<BR>
+The analysis uses Spark to compute points-to analysis. The
+<TT>on-fly-cg:false</TT> and <TT>field-based</TT> options specify Spark 
+to construct the call graph ahead-of-time using CHA, and to perform a
+field-based analysis.  
+Side-effect information is then
+computed using the points-to analysis, and encoded in class files.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00022000000000000000">
+Examples</A>
+</H2>
+
+<P>
+Annotate class files with Soot's simple side-effect analysis. 
+<PRE>
+   java -Xmx400m soot.Main -w -app -annot-side-effect 
+       spec.benchmarks._201_compress.Main
+</PRE>
+
+<P>
+Annotate class files with a side-effect analysis using Spark. The call
+graph is built ahead-of-time (aot) and the points-to analysis is field-based (fb).
+<PRE>
+   java -Xmx400m soot.Main -w -app -p cg.spark enabled,on-fly-cg:false,field-based 
+       -annot-side-effect spec.benchmarks._201_compress.Main
+</PRE>
+
+<P>
+Annotate class files with a side-effect analysis using Spark. The call
+graph is built ahead-of-time (aot) and the points-to analysis is
+field-sensitive (fs).
+<PRE>
+   java -Xmx400m soot.Main -w -app -p cg.spark enabled,on-fly-cg:false 
+      -annot-side-effect spec.benchmarks._201_compress.Main
+</PRE>
+
+<P>
+Annotate class files with a side-effect analysis using Spark. The call
+graph is built on-the-fly (otf) and the analysis is
+field-based (fb).
+<PRE>
+   java -Xmx400m soot.Main -w -app -p cg.spark enabled,field-based 
+      -annot-side-effect spec.benchmarks._201_compress.Main
+</PRE>
+
+<P>
+Annotate class files with a side-effect analysis using Spark. The call
+graph is built on-the-fly (otf) and the analysis is
+field-sensitive (fs).
+<PRE>
+   java -Xmx400m soot.Main -w -app -p cg.spark enabled -annot-side-effect 
+       spec.benchmarks._201_compress.Main
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Side-Effect Attribute Format</A>
+</H1>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="FIG:SEFORMAT"></A><A NAME="102"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
+Side-Effect Attribute Format</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+</DIV><TABLE  WIDTH="590">
+<TR><TD>
+<PRE>
+SideEffectAttribute:
+
+  RecordCount   
+  (2 bytes)     
+  
+  BytecodeOffset   ReadSet   WriteSet   ExtraByte
+  (2 bytes)        (2 bytes) (2 bytes)  (1 byte)
+
+  BytecodeOffset   ReadSet   WriteSet   ExtraByte
+  (2 bytes)        (2 bytes) (2 bytes)  (1 byte)
+
+  ...
+
+
+DependenceGraph:
+
+  Set         Set
+  (2 bytes)   (2 bytes)
+
+  Set         Set
+  (2 bytes)   (2 bytes)
+
+  ...
+</PRE></TD></TR>
+</TABLE></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Figure&nbsp;<A HREF="#FIG:SEFORMAT">2</A> shows the format of side-effect attributes in
+class files. Each method is associated with two attributes. The
+first one, <TT>SideEffectAttribute</TT>, maps each bytecode that has
+side-effects to a read and write set. The extra byte contains a bit
+that indicates whether a bytecode explicitly or implicitly invokes a
+native method, and other bits for future use. The second attribute, 
+<TT>DependenceGraph</TT>, denotes which read and write sets have dependences. 
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Example of Using Side-Effect Attributes</A>
+</H1>
+
+<P>
+In Figure&nbsp;<A HREF="#FIG:SEEXAMPLE">3</A>, we show sample code and the resulting
+encoding of side-effect information. Method <TT>foo</TT> contains
+instructions that, once compiled to bytecode, would include two 
+<I>putfield</I>, two <I>invokevirtual</I>, and one <I>getfield</I> 
+bytecodes at offset 2, 7, 11, 16 and 20. 
+In the side-effect attribute, there is no entry for <TT>a.nothing()</TT>
+(offset 11) since this call has no side-effect. 
+In method <TT>foo</TT>, it is clear from the code that
+there is a write-write dependence between statements <TT>a.g = 4</TT> and
+<TT>a.setG( 5 )</TT>. This dependence is given in the attributes by
+mapping the write set of <TT>a.g = 4</TT> to 1 and <TT>a.setG( 5 )</TT> to 2
+in the SideEffectAttribute at offsets
+7 and 16 respectively, and specifying that sets 1 and 2 have a
+dependence in the DependenceGraph attribute.
+Now, since there is no dependence between statements <TT>a.f = 3</TT> and
+subsequent statements, the load in statement <TT>int i = a.f</TT> can be
+eliminated by a copy of its previous assigned value (i.e. 3).
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="FIG:SEEXAMPLE"></A><A NAME="103"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
+Example of Side-Effect Attribute</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+</DIV><TABLE  WIDTH="590">
+<TR><TD>
+<PRE>
+class A {
+  int f;
+  int g;
+  void setF( int n ) { this.f = n; }
+  void setG( int n ) { this.g = n; }
+  void nothing() {}
+
+  void foo( A a ) {
+      a.f = 3;      // putfield      at offset  2
+      a.g = 4;      // putfield      at offset  7
+      a.nothing();  // invokevirtual at offset 11
+      a.setG( 5 );  // invokevirtual at offset 16 
+      int i = a.f;  // invokevirtual at offset 20
+  }
+
+  public static void main(String[] args) {
+      foo( new A() );
+  }
+}
+
+SideEffectAttribute (method foo): 
+  RecordCount: 4
+  Offset  ReadSet  WriteSet
+       2       -1         0
+       7       -1         1
+      16       -1         2
+      20        0        -1
+
+DependenceGraph (method foo):
+  Set  Set
+    1    2
+</PRE></TD></TR>
+</TABLE></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+Other information</A>
+</H1>
+Our 
+technical
+reporthttp://www.sable.mcgill.ca/publications/techreports/#report2004-5
+contains detailed explanations of the side-effect variations, and how
+side-effect attributes can be used in the presence of method inlining.
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+Change log</A>
+</H1>
+
+<UL>
+<LI>Feb 27, 2005: Initial version.
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00070000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>Using Side-Effect Attributes</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>sideeffect -split 0 -nonavigation -dir ./</TT>
+<P>
+The translation was initiated by Eric BODDEN on 2008-06-03
+<BR><HR>
+<ADDRESS>
+Eric BODDEN
+2008-06-03
+</ADDRESS>
+</BODY>
+</HTML>

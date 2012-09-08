@@ -1,0 +1,267 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=latex 2007.12.29)  3 JUN 2008 17:15
+entering extended mode
+ %&-line parsing enabled.
+**phase
+(./phase.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, croatian, bulgarian, russian, ukrainian, czech, slovak, danish, dut
+ch, finnish, finnish, french, basque, french, german, ngerman, german, ngerman,
+ greek, monogreek, ancientgreek, ibycus, hungarian, hungarian, italian, italian
+, latin, latin, mongolian, mongolian, norsk, norsk, coptic, esperanto, estonian
+, icelandic, indonesian, interlingua, romanian, serbian, slovenian, turkish, up
+persorbian, welsh, polish, polish, portuguese, portuguese, spanish, catalan, ga
+lician, spanish, catalan, galician, swedish, swedish, loaded.
+(/usr/share/texmf-texlive/tex/latex/base/article.cls
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf-texlive/tex/latex/base/size10.clo
+File: size10.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf-texlive/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip43
+)
+(/usr/share/texmf/tex/latex/html/html.sty
+Package: html 1999/07/19 v1.38 hypertext commands for latex2html (nd, hws, rrm)
+
+\c@lpart=\count87
+\c@lchapter=\count88
+\c@chapter=\count89
+\c@lsection=\count90
+\c@lsubsection=\count91
+\c@lsubsubsection=\count92
+\c@lparagraph=\count93
+\c@lsubparagraph=\count94
+\c@lsubsubparagraph=\count95
+\ptrfile=\write3
+)
+(/usr/share/texmf-texlive/tex/latex/tools/longtable.sty
+Package: longtable 2004/02/01 v4.11 Multi-page Table package (DPC)
+\LTleft=\skip44
+\LTright=\skip45
+\LTpre=\skip46
+\LTpost=\skip47
+\LTchunksize=\count96
+\LTcapwidth=\dimen103
+\LT@head=\box26
+\LT@firsthead=\box27
+\LT@foot=\box28
+\LT@lastfoot=\box29
+\LT@cols=\count97
+\LT@rows=\count98
+\c@LT@tables=\count99
+\c@LT@chunks=\count100
+\LT@p@ftn=\toks14
+) (./phase.aux)
+\openout1 = `phase.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 16.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 16.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 16.
+ [1
+
+]
+(./phase.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 4.
+ [2] [3])
+\tf@toc=\write4
+\openout4 = `phase.toc'.
+
+ [4] [5] [6] [7] [8] [9] [10] [11] [12]
+Overfull \hbox (5.74576pt too wide) in paragraph at lines 1265--1267
+[]\OT1/cmr/m/n/10 When this op-tion is set to true, Spark treats ref-er-ences t
+o EMP-TY-SET, EMP-TYMAP, and EMPTYLIST
+ []
+
+
+Overfull \hbox (68.6348pt too wide) in paragraph at lines 1265--1267
+\OT1/cmr/m/n/10 as al-lo-ca-tion sites for Hash-Set, HashMap and LinkedList ob-
+jects re-spec-tively, and ref-er-ences to Hashtable.emptyIterator
+ []
+
+[13]
+Underfull \hbox (badness 10000) in paragraph at lines 1364--1365
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1422--1423
+
+ []
+
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 1495--1496
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1557--1558
+
+ []
+
+[15] [16]
+Overfull \hbox (2.88301pt too wide) in paragraph at lines 1742--1743
+[]\OT1/cmr/m/n/10 (default value:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1823--1824
+
+ []
+
+
+Overfull \hbox (6.47932pt too wide) in paragraph at lines 1853--1854
+[]|\OT1/cmtt/m/n/10 cha-context-aot
+ []
+
+
+Overfull \hbox (11.72928pt too wide) in paragraph at lines 1861--1862
+[]|\OT1/cmtt/m/n/10 ofcg-context-aot
+ []
+
+[17]
+Underfull \hbox (badness 10000) in paragraph at lines 1950--1951
+
+ []
+
+[18]
+Underfull \hbox (badness 10000) in paragraph at lines 2006--2007
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2106--2107
+
+ []
+
+
+Overfull \hbox (1.22937pt too wide) in paragraph at lines 2148--2149
+[]|\OT1/cmtt/m/n/10 threadkobjsens
+ []
+
+[19] [20]
+Underfull \hbox (badness 10000) in paragraph at lines 2335--2336
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2393--2394
+
+ []
+
+[21]
+Underfull \hbox (badness 10000) in paragraph at lines 2460--2461
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2516--2517
+
+ []
+
+[22] [23]
+Underfull \hbox (badness 10000) in paragraph at lines 2738--2739
+
+ []
+
+
+Overfull \hbox (1.22937pt too wide) in paragraph at lines 2741--2742
+[]|\OT1/cmtt/m/n/10 medium-grained
+ []
+
+
+Overfull \hbox (1.22937pt too wide) in paragraph at lines 2749--2750
+[]|\OT1/cmtt/m/n/10 coarse-grained
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2757--2758
+[]|\OT1/cmtt/m/n/10 single-static
+ []
+
+
+Overfull \hbox (1.22937pt too wide) in paragraph at lines 2764--2765
+[]|\OT1/cmtt/m/n/10 leave-original
+ []
+
+[24]
+Overfull \hbox (8.4669pt too wide) in paragraph at lines 2902--2906
+[]\OT1/cmr/m/n/10 Insert a check that, be-fore in-vok-ing the static copy of th
+e tar-get method, throws a \OT1/cmtt/m/n/10 NullPointerException
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2954--2955
+
+ []
+
+
+Overfull \vbox (23.37946pt too high) has occurred while \output is active []
+
+
+[25]
+Underfull \hbox (badness 10000) in paragraph at lines 3070--3071
+
+ []
+
+[26] [27]
+Overfull \hbox (4.75244pt too wide) in paragraph at lines 3306--3307
+[]\OT1/cmr/m/n/10 (default value: \OT1/cmtt/m/n/10 false\OT1/cmr/m/n/10 ) 
+ []
+
+
+Overfull \hbox (20.39122pt too wide) in paragraph at lines 3314--3315
+[]\OT1/cmr/m/n/10 (default value: \OT1/cmtt/m/n/10 false\OT1/cmr/m/n/10 ) 
+ []
+
+[28] [29] [30]
+Underfull \hbox (badness 10000) in paragraph at lines 3737--3738
+
+ []
+
+[31] [32] [33] [34] [35] [36]
+Underfull \hbox (badness 10000) in paragraph at lines 4656--4657
+
+ []
+
+[37] [38] [39] [40] [41] [42] [43] [44] (./phase.aux) ) 
+Here is how much of TeX's memory you used:
+ 634 strings out of 93946
+ 7203 string characters out of 1162065
+ 58672 words of memory out of 1500000
+ 3969 multiletter control sequences out of 10000+50000
+ 8747 words of font info for 32 fonts, out of 1200000 for 2000
+ 743 hyphenation exceptions out of 8191
+ 23i,7n,19p,646b,261s stack positions out of 5000i,500n,6000p,200000b,5000s
+
+Output written on phase.dvi (44 pages, 164984 bytes).

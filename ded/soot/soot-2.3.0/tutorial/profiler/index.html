@@ -1,0 +1,472 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Adding profiling instructions to applications with Soot</TITLE>
+<META NAME="description" CONTENT="Adding profiling instructions to applications with Soot">
+<META NAME="keywords" CONTENT="profiler">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="profiler.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<H1 ALIGN="CENTER">Adding profiling instructions to applications with Soot</H1>
+<DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Feng Qian (<A NAME="tex2html1"
+  HREF="mailto:fqian@sable.mcgill.ca">fqian@sable.mcgill.ca)</A></STRONG></P>
+<P ALIGN="CENTER"><I>Patrick Lam <A NAME="tex2html2"
+  HREF="mailto:plam@sable.mcgill.ca">(plam@sable.mcgill.ca)</A></I></P>
+<P ALIGN="CENTER"><STRONG>March 8, 2000</STRONG></P>
+</DIV>
+
+<P>
+This tutorial is based on the <TT>countgotos</TT> example, written by
+Raja-Vall&#233;e-Rai and distributed with Ashes.  It is located in
+<TT>ashes.examples.countgotos</TT> package. The code can be downloaded at
+
+<P>
+<A NAME="tex2html3"
+  HREF="Main.java">http://www.sable.mcgill.ca/soot/tutorial/profiler/Main.java</A>
+<P>
+At this stage, the developer should have a basic knowledge of Soot,
+including the SootClass, SootMethod and Unit classes.  They are
+described in <A NAME="tex2html4"
+  HREF="../createclass">the document about creating a class
+using Soot</A>.
+
+<P>
+
+<H1><A NAME="SECTION00010000000000000000">
+Goals</A>
+</H1>
+
+<P>
+This tutorial describes how to write a <TT>BodyTransformer</TT> which annotates
+<TT>JimpleBody</TT>'s with a goto-counter.  In particular, the developer will be
+able to write code to:
+
+<UL>
+<LI>Retrieve a desired method from the <TT>Scene</TT> by signature.
+</LI>
+<LI>Add a field to a class file.
+</LI>
+<LI>Differentiate between various types of Jimple statements.
+</LI>
+<LI>Insert Jimple instructions at a certain point.
+</LI>
+</UL>
+
+<P>
+The <TT>GotoInstrumenter</TT> example instruments a class or application to print
+out the number of <TT>goto</TT> bytecodes executed at run time. 
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Creating a GotoInstrumenter</A>
+</H1>
+
+<P>
+We will instrument a class to print out the number of goto
+instructions executed at run time. The general strategy is:
+
+<P>
+
+<OL>
+<LI>Add a static field <TT>gotoCount</TT> to the main class.
+</LI>
+<LI>Insert instructions incrementing <TT>gotoCount</TT> before each
+<TT>goto</TT> instruction in each method.
+</LI>
+<LI>Insert <TT>gotoCount</TT> print-out instructions before each 
+return statement in 'main' method.
+</LI>
+<LI>Insert <TT>gotoCount</TT> print-out statements before each
+<TT>System.exit()</TT> invocation in each method.
+</LI>
+</OL>
+
+<P>
+Once we create a <TT>BodyTransformer</TT> class and add it to the appropriate
+<TT>Pack</TT>, it will be invoked for each <TT>Body</TT> in the program.
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Subclassing <TT>BodyTransformer</TT></A>
+</H1>
+
+<P>
+This example works by creating a <TT>Transformer</TT> which is added to
+the appropriate pack.  We thus declare a subclass of <TT>BodyTransformer</TT> to carry out our instrumentation:
+
+<P>
+<PRE>
+public class GotoInstrumenter extends BodyTransformer
+{
+    private static GotoInstrumenter instance = new GotoInstrumenter();
+    private GotoInstrumenter() {}
+
+    public static GotoInstrumenter v() { return instance; }
+</PRE>
+
+<P>
+The above code creates a private static instance and an accessor to that
+instance.
+
+<P>
+<PRE>
+    protected void internalTransform(Body body, String phaseName, Map options)
+    {
+</PRE>
+
+<P>
+Every <TT>BodyTransformer</TT> must declare some <TT>internalTransform</TT>
+method, carrying out the transformation.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Adding a Field</A>
+</H1>
+
+<P>
+We already know how to add locals to a method body; this is seen in
+the <TT>createclass</TT>
+<A NAME="tex2html5"
+  HREF="../createclass">example</A>.
+We now show how to add a field to a class.
+
+<P>
+Here, we want to add a counter field to the main class.
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+Sanity check - find main() method</A>
+</H2>
+
+<P>
+First of all, we check the 'main' method declaration by its subsignature.
+<PRE>
+    if (!Scene.v().getMainClass().
+              declaresMethod("void main(java.lang.String[])"))
+        throw new RuntimeException("couldn't find main() in mainClass");
+</PRE>
+
+<P>
+A couple of notes about this snippet of code.  First, note that we
+call <TT>Scene.v().getMainClass()</TT>.  This returns the <TT>Scene</TT>'s
+idea of the main class; in application mode, it is the file specified
+on the command-line, and in single-file mode, it is the last file
+specified on the command-line.  Also, note that if we fail, then
+a <TT>RuntimeException</TT> is thrown.  It is not worthwhile to use a checked
+exception in this case.
+
+<P>
+The <TT>main</TT> class for a Java program will always have subsignature
+(the Soot word for a complete method signature) <TT>.void
+main(java.lang.String[])</TT>. The call to <TT>declaresMethod</TT> 
+returns true if a method with this subsignature is declared in this
+class.
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000">
+Fetching or adding the field</A>
+</H2>
+
+<P>
+Now, if we've already added the field, we need only fetch it:
+<PRE>
+    if (addedFieldToMainClassAndLoadedPrintStream)
+        gotoCounter = Scene.v().getMainClass().getFieldByName("gotoCount");
+</PRE>
+
+<P>
+Otherwise, we need to add it.
+<PRE>
+    else
+    {
+        // Add gotoCounter field
+        gotoCounter = new SootField("gotoCount", LongType.v(), 
+                                        Modifier.STATIC);
+        Scene.v().getMainClass().addField(gotoCounter);
+</PRE>
+
+<P>
+Here, we create a new instance of <TT>SootField</TT>, for a static field
+containing a <TT>long</TT>, named <TT>gotoCount</TT>.  This is the field
+which will be incremented each time we do a <TT>goto</TT>.  We add it to
+the main class.
+
+<P>
+<PRE>
+        // Just in case, resolve the PrintStream SootClass.
+        Scene.v().loadClassAndSupport("java.io.PrintStream");
+        javaIoPrintStream = Scene.v().getSootClass("java.io.PrintStream");
+    
+        addedFieldToMainClassAndLoadedPrintStream = true;
+    }
+</PRE>
+We will use the <TT>java.io.PrintStream</TT> method, so we load it just
+in case.
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+Add locals and statements</A>
+</H1>
+
+<P>
+Recall that a <TT>BodyTransformer</TT> operates on an existing method
+body.  In this step, locals are added to the body, and profiling structions
+are inserted while iterating over the statements of the body. 
+
+<P>
+We first use the method's signature to check if it is a <TT>main</TT>
+method or not:
+<PRE>
+    boolean isMainMethod = body.getMethod().getSubSignature()
+                .equals("void main(java.lang.String[])");
+</PRE>
+We could also check to see if <TT>body.getMethod().getDeclaringClass()</TT>
+is the main class, but we don't bother.
+
+<P>
+Next, a local is added; we already know how to do this.
+<PRE>
+    Local tmpLocal = Jimple.v().newLocal("tmp", LongType.v());
+    body.getLocals().add(tmpLocal);
+</PRE>
+
+<P>
+Here, we are inserting statements at certain program
+points.  We look for specific statements by iterating over the
+<TT>Unit</TT>s chain; in Jimple, this chain is filled with <TT>Stmt</TT>s.
+
+<P>
+<PRE>
+    Iterator stmtIt = body.getUnits().snapshotIterator();
+    while (stmtIt.hasNext())
+    {
+        Stmt s = (Stmt) stmtIt.next();
+        if (s instanceof GotoStmt)
+        {
+            /* Insert profiling instructions before s. */
+        }
+        else if (s instanceof InvokeStmt)
+        {
+            /* Check if it is a System.exit() statement.
+             * If it is, insert print-out statement before s.
+             */
+        }
+        else if (isMainMethod &amp;&amp; (s instanceof ReturnStmt 
+                     || s instanceof ReturnVoidStmt))
+         {
+            /* In the main method, before the return statement, insert
+             * print-out statements.
+             */
+         }
+    }
+</PRE>
+
+<P>
+The call to <TT>getUnits()</TT> is akin to that in the <TT>createclass</TT>
+example. It returns a Chain of statements. 
+
+<P>
+The <TT>snapshotIterator()</TT> returns an iterator over the Chain,
+but modification of the underlying chain is permitted.  A usual iterator
+would throw a <TT>ConcurrentModificationException</TT> in that case!
+
+<P>
+We can determine the statement type by checking its class with <TT>instanceof</TT>.  Here, we are looking at four different statement types:
+<TT>GotoStmt</TT>, <TT>InvokeStmt</TT>, <TT>ReturnStmt</TT> and <TT>ReturnVoidStmt</TT>.
+
+<P>
+Before every <TT>GotoStmt</TT>, we insert instructions that increase the
+counter. The instructions in Jimple are:
+
+<P>
+<PRE>
+        tmpLong = &lt;classname: long gotoCount&gt;;
+        tmpLong = tmpLong + 1L;
+        &lt;classname: long gotoCount&gt; = tmpLong;
+</PRE>
+
+<P>
+Creating a reference to a static field is done via a call to
+<TT>Jimple.v().newStaticFieldRef(gotoCounter.makeRef())</TT>. The entire
+assignment statement is created with the <TT>newAssignStmt</TT> method.
+
+<P>
+<PRE>
+    AssignStmt toAdd1 = Jimple.v().newAssignStmt(tmpLong,
+                                Jimple.v().newStaticFieldRef(gotoCounter.makeRef()));
+</PRE>
+
+<P>
+The new statements can then be added to the body by invoking the <TT>insertBefore()</TT> method.  There are also some other methods that can
+add statements to a body.  We have seen one of them in <TT>createclass</TT> example, <TT>add()</TT>.  Note that above, we need to get a
+SootFieldRef from the SootField gotoCounter, in order to construct the
+Jimple StaticFieldRef grammar chunk properly.
+
+<P>
+<PRE>
+    units.insertBefore(toAdd1, s);
+</PRE>
+
+<P>
+We have thus added profiling instructions before every <TT>goto</TT> statement. 
+
+<P>
+It is quite dandy to keep counters; they are useless unless
+outputted. We add printing statements before calls to <TT>System.exit()</TT>.  This is done similarly to what we did for <TT>goto</TT>
+statements, except that we will look more deeply into the Jimple
+statements and expressions.
+
+<P>
+<PRE>
+    InvokeExpr iexpr = (InvokeExpr) ((InvokeStmt)s).getInvokeExpr();
+    if (iexpr instanceof StaticInvokeExpr)
+    {
+        SootMethod target = ((StaticInvokeExpr)iexpr).getMethod();
+        if (target.getSignature().equals
+                    ("&lt;java.lang.System: void exit(int)&gt;"))
+        {
+            /* insert printing statements here */
+        }
+    }
+</PRE>
+
+<P>
+Every <TT>InvokeStmt</TT> has an <TT>InvokeExpr</TT>. The 
+<TT>InvokeExpr</TT> must be able to return the target method. 
+Again, we can use signatures to test for the wanted method. 
+
+<P>
+We already saw how to make printing statements in <TT>createclass</TT>
+example.  Here is the generated Jimple code.
+<PRE>
+    tmpRef = &lt;java.lang.System: java.io.PrintStream out&gt;;
+    tmpLong = &lt;test: long gotoCount&gt;;
+    virtualinvoke tmpRef.&lt;java.io.PrintStream: void println(long)&gt;(tmpLong);
+</PRE>
+
+<P>
+In the <TT>main()</TT> method, we must also insert the same 
+statements before each <TT>return</TT> statement.
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+Outputting annotated code</A>
+</H1>
+
+<P>
+Since we are providing a <TT>BodyTransformer</TT>, the modified <TT>Body</TT>
+is treated as input to the next phase of Soot, and outputted at the end,
+as per the Soot options.
+
+<P>
+
+<H1><A NAME="SECTION00070000000000000000">
+Adding this transformation to Soot</A>
+</H1>
+
+<P>
+The preferred method of adding a transformation to Soot is by providing a
+<TT>Main</TT> class in one's own package.  This class adds transformers
+to <TT>Pack</TT>s, as needed.  It then calls <TT>soot.Main.main</TT> with
+the arguments it has been passed.  This is demonstrated in 
+<TT>ashes.examples.countgotos.Main</TT>.
+
+<P>
+
+<H1><A NAME="SECTION00080000000000000000">
+Conclusions</A>
+</H1>
+
+<P>
+In this tutorial, we have seen how to instrument class files in Soot.
+Usually, anything we want to do can be viewed as a transformer of
+class files. Here, we used more advanced methods than in the <TT>createclass</TT>
+example.
+
+<P>
+
+<H1><A NAME="SECTION00090000000000000000">
+Where to find files</A>
+</H1>
+
+<P>
+The <TT>GotoInstrumenter</TT>, as described in this document (in <TT>BodyTransformer</TT> form) is available in the <TT>ashesBase</TT> package.
+There is one Java file, <TT>Main.java</TT>, which contains the
+<TT>Main</TT> and <TT>GotoInstrumenter</TT> classes.
+Full class names are <TT>ashes.examples.countgotos.Main</TT> and
+<TT>.GotoInstrumenter</TT>.
+
+<P>
+
+<H1><A NAME="SECTION000100000000000000000">
+Change Log</A>
+</H1>
+
+<UL>
+<LI>March 9, 2000: Initial version.
+
+<P>
+</LI>
+<LI>March 23, 2000: Changes reflecting that the gotocounter is
+distributed with ashes now.
+
+<P>
+</LI>
+<LI>Feb 7, 2005: Update calls to Jimple constructors to pass
+  SootFieldRef's and SootMethodRef's where appropriate, using makeRef().
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION000110000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>Adding profiling instructions to applications with Soot</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>profiler -split 0 -nonavigation -dir ./</TT>
+<P>
+The translation was initiated by Eric BODDEN on 2008-06-03
+<BR><HR>
+<ADDRESS>
+Eric BODDEN
+2008-06-03
+</ADDRESS>
+</BODY>
+</HTML>

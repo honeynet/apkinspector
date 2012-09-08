@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Using the Jimple Parser</TITLE>
+<META NAME="description" CONTENT="Using the Jimple Parser">
+<META NAME="keywords" CONTENT="jimpleParser">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="jimpleParser.css">
+
+</HEAD>
+
+<BODY >
+<H1 ALIGN="CENTER">Using the Jimple Parser</H1>
+<DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Patrice Pominville</STRONG></P>
+<P ALIGN="CENTER"><I><A NAME="tex2html1"
+  HREF="mailto:patrice@sable.mcgill.ca">patrice@sable.mcgill.ca</A></I></P>
+<P ALIGN="CENTER"><STRONG>March 24, 2000</STRONG></P>
+</DIV>
+
+<P>
+
+<H1><A NAME="SECTION00010000000000000000">
+Introduction</A>
+</H1>
+At the heart of the Soot bytecode optimization framework is the Jimple
+Internal Representation.  This document describes Soot's ability to
+read in textual Jimple files.
+
+<P>
+We have already seen Soot's ability to load Java <TT>.class</TT> files.
+Soot can output the Jimple representation of classes in a textual
+format (<TT>.jimple</TT> files) and reread this textual format back into
+Soot.  
+
+<P>
+The ability to parsing textual <TT>.jimple</TT> files is quite handy. For
+example, a user could output classfiles as <TT>.jimple</TT> files, tweak
+these by hand, and then use Soot to parse them and output tweaked
+bytecode.  Soot thus provides a high-level facility for editing class
+files.  Another potential application of the <TT>.jimple</TT> files is to
+cache optimized classfiles for future analysis. Soot can, at a
+later time, read these files back in, and will not need to reoptimize
+the original classfile.  This leads to faster compilation times.
+Finally, a user, or a software tool, can write a class in the Jimple
+textual format, use Soot to parse the Jimple, and thus create bytecode. 
+
+<P>
+The Jimple format is self-explanatory. The SableCC grammar for textual
+Jimple can be found in the source code distribution of Soot; it is called
+<TT>jimple.scc</TT>. The following is an fragment of Jimple code:
+
+<P>
+<PRE>
+    {
+        java.lang.String[] r0;
+        long l0, $l1, $l2, $l3, $l4, $l5, $l6, $l7;
+        int i0, $i1, $i2, i3;
+        java.io.PrintStream $r1, $r2, $r3;
+
+        r0 := @parameter0: java.lang.String[];
+        i0 = 0;
+        $i1 = 33 % 33;
+        $i2 = $i1 + 2;
+        if $i2 != 43 goto label0;
+
+        i3 = 9;
+        goto label1;
+
+     label0:
+        i3 = 4;
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Producing <TT>.jimple</TT> Files</A>
+</H1>
+
+<P>
+The default output format for Soot is classfiles. However, Soot can
+also produce output in other formats, i.e. textual Jimple. To output
+<TT>.jimple</TT> files, invoke Soot using the <TT>-f jimple</TT> command line
+option. For example,
+
+<P>
+<PRE>
+  java soot.Main -f jimple --app test
+</PRE>
+
+<P>
+will output test and dependent classes as <TT>.jimple</TT> files.
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Parsing <TT>.jimple</TT> Files</A>
+</H1>
+
+<P>
+Out of the box, Soot will first look for a classfile to find the
+definition of a given class; only if this fails will it look for a
+<TT>.jimple</TT> definition. The command line option <TT>--src-prec
+jimple</TT> (source precedence) instructs Soot to preferentially resolve
+the class from a <TT>.jimple</TT> file, falling back on <TT>.class</TT>
+files.  When resolving, Soot will look for <TT>.jimple</TT> files using
+the <TT>soot-classpath</TT> in the same manner as it does to find <TT>.class</TT> files. For example, to build on the previous example, the
+command
+
+<P>
+<PRE>
+  java soot.Main --src-prec jimple --app test
+</PRE>
+
+<P>
+will read the class <TT>test</TT> from the file <TT>test.jimple</TT>, and its
+related classes from the other <TT>.jimple</TT> files produced in the previous
+step.
+
+<P>
+For more details on the <TT>-f</TT> and <TT>--src-prec</TT> options
+the user can refer to the Soot <A NAME="tex2html2"
+  HREF="../usage">command line documentation</A>.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+History</A>
+</H1>
+
+<UL>
+<LI>March 24, 2000: Initial version.
+</LI>
+<LI>May 31, 2003: Updated for Soot 2.0.
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>Using the Jimple Parser</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>jimpleParser -split 0 -nonavigation -dir ./</TT>
+<P>
+The translation was initiated by Eric BODDEN on 2008-06-03
+<BR><HR>
+<ADDRESS>
+Eric BODDEN
+2008-06-03
+</ADDRESS>
+</BODY>
+</HTML>

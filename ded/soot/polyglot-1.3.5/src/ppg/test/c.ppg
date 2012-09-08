@@ -1,0 +1,5 @@
+include "a.ppg"
+
+start with E;
+
+drop { D, B, a, d, c, z }

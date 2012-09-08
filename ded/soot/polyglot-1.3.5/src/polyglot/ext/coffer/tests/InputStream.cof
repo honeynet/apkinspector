@@ -1,0 +1,70 @@
+import java.io.IOException;
+
+public abstract tracked(F) class InputStream {
+    public InputStream() [] -> [F] { }
+
+    public abstract int read() [F] -> [F] throws IOException [F];
+
+    public int read(byte[] b) [F] -> [F] throws IOException [F], RuntimeException [F] {
+        return read(b, 0, b.length);
+    }
+
+    public int read(byte[] b, int off, int len) [F] -> [F]
+        throws IOException[F], RuntimeException[F]
+    {
+        if (b == null)
+            throw new NullPointerException();
+
+        if (off < 0 || off+len > b.length)
+            throw new IndexOutOfBoundsException();
+
+        int n = 0;
+
+        try {
+            while (n < len) {
+                b[off+n] = (byte) read();
+                n++;
+            }
+        }
+        catch (IOException e) {
+            // F held here since IOException path through read() ensures F
+        }
+
+        return n;
+    }
+
+    public void close() [F] -> [] throws IOException [F] {
+        free this;
+    }
+}
+
+/*
+public class tracked(F) FilterInputStream extends InputStream {
+    public tracked InputStream in;
+
+    public FilterInputStream(tracked(I) InputStream in) [I] -> [F] {
+        // this.in = in; // illegal cannot create alias of tracked variable
+
+        // like: adopt in by this, but with explicit pointer
+        this.in =: in;
+    }
+
+    // e0 : tracked(F) C
+    // C.f : tracked D
+    // e1 : tracked(I) D
+    // ------------------------
+    // [I] |- e0.f = adopt e1 : [F]
+
+    public int read() [F] -> [F] throws IOException [F] {
+        // like: focus in = this.in
+        // adopt if field := local
+        // focus if local := field
+        tracked InputStream in := this.in;
+        return in.read();
+    }
+}
+
+default spec for entry is [F]
+default spec for return is [F]
+default spec for exception is the return spec without the pre-condition
+*/

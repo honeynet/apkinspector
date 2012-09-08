@@ -1,0 +1,151 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=latex 2007.12.29)  3 JUN 2008 17:15
+entering extended mode
+ %&-line parsing enabled.
+**createclass
+(./createclass.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, croatian, bulgarian, russian, ukrainian, czech, slovak, danish, dut
+ch, finnish, finnish, french, basque, french, german, ngerman, german, ngerman,
+ greek, monogreek, ancientgreek, ibycus, hungarian, hungarian, italian, italian
+, latin, latin, mongolian, mongolian, norsk, norsk, coptic, esperanto, estonian
+, icelandic, indonesian, interlingua, romanian, serbian, slovenian, turkish, up
+persorbian, welsh, polish, polish, portuguese, portuguese, spanish, catalan, ga
+lician, spanish, catalan, galician, swedish, swedish, loaded.
+(/usr/share/texmf-texlive/tex/latex/base/article.cls
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf-texlive/tex/latex/base/size10.clo
+File: size10.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf-texlive/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip43
+)
+(/usr/share/texmf/tex/latex/html/html.sty
+Package: html 1999/07/19 v1.38 hypertext commands for latex2html (nd, hws, rrm)
+
+\c@lpart=\count87
+\c@lchapter=\count88
+\c@chapter=\count89
+\c@lsection=\count90
+\c@lsubsection=\count91
+\c@lsubsubsection=\count92
+\c@lparagraph=\count93
+\c@lsubparagraph=\count94
+\c@lsubsubparagraph=\count95
+\ptrfile=\write3
+) (./createclass.aux)
+\openout1 = `createclass.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 16.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 16.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 16.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 24.
+
+(/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 24.
+ [1
+
+] [2]
+Overfull \hbox (13.24077pt too wide) in paragraph at lines 238--238
+[]    \OT1/cmtt/m/n/10 String fileName = SourceLocator.v().getFileNameFor(sClas
+s, Options.output_format_class);[] 
+ []
+
+[3]
+Overfull \hbox (18.49072pt too wide) in paragraph at lines 261--261
+[]    \OT1/cmtt/m/n/10 String fileName = SourceLocator.v().getFileNameFor(sClas
+s, Options.output_format_jimple);[] 
+ []
+
+[4] [5]
+Overfull \hbox (2.74086pt too wide) in paragraph at lines 422--422
+[]                \OT1/cmtt/m/n/10 Arrays.asList(new Type[] {ArrayType.v(RefTyp
+e.v("java.lang.String"), 1)}),[] 
+ []
+
+
+Overfull \hbox (28.99063pt too wide) in paragraph at lines 422--422
+[]                \OT1/cmtt/m/n/10 arg = Jimple.v().newLocal("l0", ArrayType.v(
+RefType.v("java.lang.String"), 1));[] 
+ []
+
+
+Overfull \hbox (55.2404pt too wide) in paragraph at lines 422--422
+[]                     \OT1/cmtt/m/n/10 Jimple.v().newParameterRef(ArrayType.v(
+RefType.v("java.lang.String"), 1), 0)));[] 
+ []
+
+
+Overfull \hbox (49.99045pt too wide) in paragraph at lines 422--422
+[]                    \OT1/cmtt/m/n/10 Scene.v().getField("<java.lang.System: j
+ava.io.PrintStream out>").makeRef())));[] 
+ []
+
+
+Overfull \hbox (123.4898pt too wide) in paragraph at lines 422--422
+[]                \OT1/cmtt/m/n/10 SootMethod toCall = Scene.v().getMethod("<ja
+va.io.PrintStream: void println(java.lang.String)>");[] 
+ []
+
+
+Overfull \hbox (291.48834pt too wide) in paragraph at lines 422--422
+[]                \OT1/cmtt/m/n/10 units.add(Jimple.v().newInvokeStmt(Jimple.v(
+).newVirtualInvokeExpr(tmpRef, toCall.makeRef(), StringConstant.v("Hello world!
+"))));[] 
+ []
+
+[6]
+Overfull \hbox (34.24059pt too wide) in paragraph at lines 422--422
+[]        \OT1/cmtt/m/n/10 String fileName = SourceLocator.v().getFileNameFor(s
+Class, Options.output_format_class);[] 
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 426
+.
+(/usr/share/texmf/tex/latex/R/omscmtt.fd
+File: omscmtt.fd 
+)
+LaTeX Font Info:    Font shape `OMS/cmtt/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 426.
+ [7] (./createclass.aux) ) 
+Here is how much of TeX's memory you used:
+ 553 strings out of 93946
+ 6599 string characters out of 1162065
+ 55636 words of memory out of 1500000
+ 3888 multiletter control sequences out of 10000+50000
+ 8747 words of font info for 32 fonts, out of 1200000 for 2000
+ 743 hyphenation exceptions out of 8191
+ 23i,6n,19p,161b,239s stack positions out of 5000i,500n,6000p,200000b,5000s
+
+Output written on createclass.dvi (7 pages, 17600 bytes).

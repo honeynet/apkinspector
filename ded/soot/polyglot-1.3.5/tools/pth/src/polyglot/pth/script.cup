@@ -1,0 +1,187 @@
+package polyglot.pth;
+
+import java.io.*;
+import java.util.*;
+
+action code {:
+:}
+
+parser code {:
+    Lexer_c lexer;
+    public Grm(String filename) {
+        this(new File(filename));
+    }
+    public Grm(File file) {
+        this();
+        try {
+            lexer = new Lexer_c(new FileInputStream(file));
+        }
+        catch (Exception e) {
+            System.out.println("open script file (" + file.getName() +") error: " + e);
+            lexer = new Lexer_c(System.in);
+        }
+    }
+
+    public Grm(Lexer_c l) {
+        this();
+        lexer = l;
+    }
+    
+    public static int findErrorKind(String s) {
+      s = s.toLowerCase();
+      for (int i = 0; i < 10; i++) {
+          String t = polyglot.util.ErrorInfo.getErrorString(i);
+          if (t.toLowerCase().startsWith(s))
+            return i;
+      }
+      return -1;      
+    }
+:}
+
+scan with {:
+    return lexer.next_token();
+:}
+
+
+terminal String IDENT;
+terminal String STRING_LITERAL;
+terminal LPAREN, RPAREN;
+terminal LBRACK, RBRACK;
+terminal LBRACE, RBRACE;
+terminal SEMICOLON, COMMA;
+
+non terminal List goal;                    // List of SourceFileTest
+non terminal List compilertest_list;           // List of SourceFileTest
+non terminal List compilertest;           // List of SourceFileTest
+non terminal String command_line_args_opt;         
+non terminal List filetest_list;           // List of SourceFileTest
+non terminal SourceFileTest filetest;
+non terminal List filename_list;           // List of String
+non terminal String description_opt;
+non terminal List failure_set_opt;         // List of ExpectedFailure
+non terminal List failure_set;             // List of ExpectedFailure
+non terminal String sentence;        
+non terminal ExpectedFailure failure;
+
+start with goal;
+
+goal ::=
+        compilertest_list:a
+            {: RESULT = a; :}
+    ;
+
+compilertest_list ::=
+        compilertest:a
+            {: 
+               RESULT = a;
+            :}
+    |   compilertest:a compilertest_list:b
+            {: b.addAll(0, a); RESULT = b; :}
+    ;
+
+compilertest ::=
+        IDENT:a command_line_args_opt:b LBRACE filetest_list:c RBRACE
+            {: String extClassName = a;
+               
+		        for (Iterator iter = c.iterator(); iter.hasNext(); ) {
+		            SourceFileTest sft = (SourceFileTest)iter.next();
+		            sft.setExtensionClassname(extClassName);
+		            sft.setExtraCmdLineArgs(b);
+		        }
+               RESULT = c; :}
+	    
+    ;
+
+command_line_args_opt ::=
+        sentence:a
+            {: RESULT = a; :}
+    | {: RESULT = null; :}
+    ;
+    
+filetest_list ::=
+        filetest:a
+            {: List list = new LinkedList();
+               list.add(a);
+               RESULT = list;
+            :}
+    |   filetest:a SEMICOLON
+            {: List list = new LinkedList();
+               list.add(a);
+               RESULT = list;
+            :}
+    |   filetest:a SEMICOLON filetest_list:b
+            {: b.add(0, a); RESULT = b; :}
+    ;
+
+filetest ::=
+        filename_list:a description_opt:b failure_set_opt:d
+            {: SourceFileTest sft = null;
+               if (a.size() == 1) {
+                   sft = new SourceFileTest((String)a.get(0));
+               }
+               else {
+                   sft = new SourceFileTest(a);
+               }
+               sft.setDescription(b);
+               sft.setExpectedFailures(d);
+               RESULT = sft; :}
+	    
+    ;
+
+filename_list ::=
+        IDENT:a
+            {: List list = new LinkedList();
+               list.add(a);
+               RESULT = list;
+            :}
+    |   filename_list:a IDENT:b
+            {: a.add(b); RESULT = a; :}
+    ;
+
+description_opt ::=
+            {: RESULT = null; :}
+    |   sentence:a
+            {: RESULT = a; :}
+    ;
+
+sentence ::=
+        STRING_LITERAL:a
+            {: RESULT = a; :}
+    ;
+
+failure_set_opt ::=
+            {: List l = new ArrayList();
+               RESULT = l;
+            :}
+    | failure_set:a
+            {: RESULT = a; :}
+    ;
+    
+failure_set ::=
+        failure:a
+            {: List l = new ArrayList();
+               l.add(a);
+               RESULT = l;
+            :}
+    |   failure_set:a  COMMA failure:b
+            {: a.add(b); RESULT = a; :}
+    ;
+
+failure ::= 
+         LPAREN IDENT:a RPAREN 
+            {: 
+              RESULT = new ExpectedFailure(Grm.findErrorKind(a));
+             :}
+    |    LPAREN RPAREN 
+            {: 
+              RESULT = new AnyExpectedFailure();
+             :}
+    |    LPAREN IDENT:a COMMA STRING_LITERAL:b RPAREN 
+            {: 
+              RESULT = new ExpectedFailure(Grm.findErrorKind(a), b);
+             :}
+    |    LPAREN STRING_LITERAL:b RPAREN 
+            {: 
+              RESULT = new ExpectedFailure(b);
+             :}
+    ;

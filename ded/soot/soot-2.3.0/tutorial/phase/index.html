@@ -1,0 +1,5615 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Soot phase options</TITLE>
+<META NAME="description" CONTENT="Soot phase options">
+<META NAME="keywords" CONTENT="phase">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="phase.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<H1 ALIGN="CENTER">Soot phase options</H1>
+<DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Patrick Lam (<A NAME="tex2html1"
+  HREF="mailto:plam@sable.mcgill.ca">plam@sable.mcgill.ca</A>)</STRONG></P>
+<P ALIGN="CENTER"><I>Feng Qian (<A NAME="tex2html2"
+  HREF="mailto:fqian@sable.mcgill.ca">fqian@sable.mcgill.ca</A>)</I></P>
+<P ALIGN="LEFT"><SMALL>Ondrej Lhot&#225;k (<A NAME="tex2html3"
+  HREF="mailto:olhotak@sable.mcgill.ca">olhotak@sable.mcgill.ca</A>)</SMALL></P>
+</DIV>
+
+<P>
+Soot supports the powerful--but initially confusing--notion of
+``phase options''.  This document aims to clear up the confusion so
+you can exploit the power of phase options.
+
+<P>
+Soot's execution is divided into a number of phases.  For example,
+<TT>JimpleBody</TT>s are built by a phase called <TT>jb</TT>, which is
+itself comprised of subphases, such as the aggregation of local
+variables (<TT>jb.a</TT>).
+
+<P>
+Phase options provide a way for you to
+change the behaviour of a phase from the Soot command-line.  They take
+the form <TT>-p </TT><EM>phase</EM>.<EM>name</EM> 
+<EM>option</EM>:<EM>value</EM>.  For instance,
+to instruct Soot to use original names in Jimple, we would invoke Soot
+like this:
+<PRE>
+java soot.Main foo -p jb use-original-names:true
+</PRE>
+Multiple option-value pairs may be specified in a single <TT>-p</TT> option
+separated by commas. For example,
+<PRE>
+java soot.Main foo -p cg.spark verbose:true,on-fly-cg:true
+</PRE>
+
+<P>
+There are five types of phase options:
+
+<OL>
+<LI>Boolean options take the values
+``true'' and ``false''; if you specify the name of a boolean option without adding a value for it, ``true'' is assumed.
+</LI>
+<LI>Multi-valued options take a value from a set of allowed values
+specific to that option.
+</LI>
+<LI>Integer options
+take an integer value. 
+</LI>
+<LI>Floating point options take a 
+floating point number as their value. 
+</LI>
+<LI>String options take an arbitrary
+string as their value.
+</LI>
+</OL>
+
+<P>
+Each option has a default value which is used if the option is not
+specified on the command line.
+
+<P>
+All phases and subphases accept the option ``<TT>enabled</TT>'', which
+must be ``<TT>true</TT>'' for the phase or subphase to execute. To save
+you some typing, the pseudo-options ``<TT>on</TT>'' and ``<TT>off</TT>''
+are equivalent to ``<TT>enabled:true</TT>'' and ``<TT>enabled:false</TT>'',
+respectively. In addition, specifying any options for a phase
+automatically enables that phase.
+
+<P>
+
+<H4><A NAME="SECTION00000010000000000000">
+Adding your own subphases</A>
+</H4>
+
+<P>
+
+<P>
+Within Soot, each phase is implemented by a <TT>Pack</TT>. The <TT>Pack</TT>
+is a collection of transformers, each corresponding to a subphase of
+the phase implemented by the <TT>Pack</TT>. When the <TT>Pack</TT> is
+called, it executes each of its transformers in order.
+
+<P>
+Soot transformers are usually instances of classes that extend 
+<TT>BodyTransformer</TT> or <TT>SceneTransformer</TT>.  In either case, the
+transformer class must override the <TT>internalTransform</TT> method,
+providing an implementation which carries out some transformation on
+the code being analyzed.
+
+<P>
+To add a transformer to some <TT>Pack</TT> without modifying Soot itself,
+create your own class which changes the contents of the <TT>Pack</TT>s to
+meet your requirements and then calls <TT>soot.Main</TT>.
+
+<P>
+<BR>
+<BR>
+<BR>
+<BR>
+
+<P>
+The remainder of this document describes the transformations belonging
+to Soot's various <TT>Pack</TT>s and their corresponding phase
+options.
+
+<P>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Contents</A>
+</H2>
+<!--Table of Contents-->
+
+<UL CLASS="TofC">
+<LI><A NAME="tex2html242"
+  HREF="phase.html#SECTION00020000000000000000">Jimple Body Creation (jb)</A>
+<UL>
+<LI><A NAME="tex2html243"
+  HREF="phase.html#SECTION00021000000000000000">Local Splitter (jb.ls)</A>
+<LI><A NAME="tex2html244"
+  HREF="phase.html#SECTION00022000000000000000">Jimple Local Aggregator (jb.a)</A>
+<LI><A NAME="tex2html245"
+  HREF="phase.html#SECTION00023000000000000000">Unused Local Eliminator (jb.ule)</A>
+<LI><A NAME="tex2html246"
+  HREF="phase.html#SECTION00024000000000000000">Type Assigner (jb.tr)</A>
+<LI><A NAME="tex2html247"
+  HREF="phase.html#SECTION00025000000000000000">Unsplit-originals Local Packer (jb.ulp)</A>
+<LI><A NAME="tex2html248"
+  HREF="phase.html#SECTION00026000000000000000">Local Name Standardizer (jb.lns)</A>
+<LI><A NAME="tex2html249"
+  HREF="phase.html#SECTION00027000000000000000">Copy Propagator (jb.cp)</A>
+<LI><A NAME="tex2html250"
+  HREF="phase.html#SECTION00028000000000000000">Dead Assignment Eliminator (jb.dae)</A>
+<LI><A NAME="tex2html251"
+  HREF="phase.html#SECTION00029000000000000000">Post-copy propagation Unused Local Eliminator (jb.cp-ule)</A>
+<LI><A NAME="tex2html252"
+  HREF="phase.html#SECTION000210000000000000000">Local Packer (jb.lp)</A>
+<LI><A NAME="tex2html253"
+  HREF="phase.html#SECTION000211000000000000000">Nop Eliminator (jb.ne)</A>
+<LI><A NAME="tex2html254"
+  HREF="phase.html#SECTION000212000000000000000">Unreachable Code Eliminator (jb.uce)</A>
+<LI><A NAME="tex2html255"
+  HREF="phase.html#SECTION000213000000000000000">Trap Tightener (jb.tt)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html256"
+  HREF="phase.html#SECTION00030000000000000000">Java To Jimple Body Creation (jj)</A>
+<UL>
+<LI><A NAME="tex2html257"
+  HREF="phase.html#SECTION00031000000000000000">Local Splitter (jj.ls)</A>
+<LI><A NAME="tex2html258"
+  HREF="phase.html#SECTION00032000000000000000">Jimple Local Aggregator (jj.a)</A>
+<LI><A NAME="tex2html259"
+  HREF="phase.html#SECTION00033000000000000000">Unused Local Eliminator (jj.ule)</A>
+<LI><A NAME="tex2html260"
+  HREF="phase.html#SECTION00034000000000000000">Type Assigner (jj.tr)</A>
+<LI><A NAME="tex2html261"
+  HREF="phase.html#SECTION00035000000000000000">Unsplit-originals Local Packer (jj.ulp)</A>
+<LI><A NAME="tex2html262"
+  HREF="phase.html#SECTION00036000000000000000">Local Name Standardizer (jj.lns)</A>
+<LI><A NAME="tex2html263"
+  HREF="phase.html#SECTION00037000000000000000">Copy Propagator (jj.cp)</A>
+<LI><A NAME="tex2html264"
+  HREF="phase.html#SECTION00038000000000000000">Dead Assignment Eliminator (jj.dae)</A>
+<LI><A NAME="tex2html265"
+  HREF="phase.html#SECTION00039000000000000000">Post-copy propagation Unused Local Eliminator (jj.cp-ule)</A>
+<LI><A NAME="tex2html266"
+  HREF="phase.html#SECTION000310000000000000000">Local Packer (jj.lp)</A>
+<LI><A NAME="tex2html267"
+  HREF="phase.html#SECTION000311000000000000000">Nop Eliminator (jj.ne)</A>
+<LI><A NAME="tex2html268"
+  HREF="phase.html#SECTION000312000000000000000">Unreachable Code Eliminator (jj.uce)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html269"
+  HREF="phase.html#SECTION00040000000000000000">Call Graph Constructor (cg)</A>
+<UL>
+<LI><A NAME="tex2html270"
+  HREF="phase.html#SECTION00041000000000000000">Class Hierarchy Analysis (cg.cha)</A>
+<LI><A NAME="tex2html271"
+  HREF="phase.html#SECTION00042000000000000000">Spark (cg.spark)</A>
+<LI><A NAME="tex2html272"
+  HREF="phase.html#SECTION00043000000000000000">Paddle (cg.paddle)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html273"
+  HREF="phase.html#SECTION00050000000000000000">Whole Shimple Transformation Pack (wstp)</A>
+<LI><A NAME="tex2html274"
+  HREF="phase.html#SECTION00060000000000000000">Whole Shimple Optimization Pack (wsop)</A>
+<LI><A NAME="tex2html275"
+  HREF="phase.html#SECTION00070000000000000000">Whole-Jimple Transformation Pack (wjtp)</A>
+<UL>
+<LI><A NAME="tex2html276"
+  HREF="phase.html#SECTION00071000000000000000">Transactional Transformation (wjtp.tn)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html277"
+  HREF="phase.html#SECTION00080000000000000000">Whole-Jimple Optimization Pack (wjop)</A>
+<UL>
+<LI><A NAME="tex2html278"
+  HREF="phase.html#SECTION00081000000000000000">Static Method Binder (wjop.smb)</A>
+<LI><A NAME="tex2html279"
+  HREF="phase.html#SECTION00082000000000000000">Static Inliner (wjop.si)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html280"
+  HREF="phase.html#SECTION00090000000000000000">Whole-Jimple Annotation Pack (wjap)</A>
+<UL>
+<LI><A NAME="tex2html281"
+  HREF="phase.html#SECTION00091000000000000000">Rectangular Array Finder (wjap.ra)</A>
+<LI><A NAME="tex2html282"
+  HREF="phase.html#SECTION00092000000000000000">Unreachable Method Tagger (wjap.umt)</A>
+<LI><A NAME="tex2html283"
+  HREF="phase.html#SECTION00093000000000000000">Unreachable Fields Tagger (wjap.uft)</A>
+<LI><A NAME="tex2html284"
+  HREF="phase.html#SECTION00094000000000000000">Tightest Qualifiers Tagger (wjap.tqt)</A>
+<LI><A NAME="tex2html285"
+  HREF="phase.html#SECTION00095000000000000000">Call Graph Grapher (wjap.cgg)</A>
+<LI><A NAME="tex2html286"
+  HREF="phase.html#SECTION00096000000000000000">Purity Analysis [AM] (wjap.purity)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html287"
+  HREF="phase.html#SECTION000100000000000000000">Shimple Control (shimple)</A>
+<LI><A NAME="tex2html288"
+  HREF="phase.html#SECTION000110000000000000000">Shimple Transformation Pack (stp)</A>
+<LI><A NAME="tex2html289"
+  HREF="phase.html#SECTION000120000000000000000">Shimple Optimization Pack (sop)</A>
+<UL>
+<LI><A NAME="tex2html290"
+  HREF="phase.html#SECTION000121000000000000000">Shimple Constant Propagator and Folder (sop.cpf)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html291"
+  HREF="phase.html#SECTION000130000000000000000">Jimple Transformation Pack (jtp)</A>
+<LI><A NAME="tex2html292"
+  HREF="phase.html#SECTION000140000000000000000">Jimple Optimization Pack (jop)</A>
+<UL>
+<LI><A NAME="tex2html293"
+  HREF="phase.html#SECTION000141000000000000000">Common Subexpression Eliminator (jop.cse)</A>
+<LI><A NAME="tex2html294"
+  HREF="phase.html#SECTION000142000000000000000">Busy Code Motion (jop.bcm)</A>
+<LI><A NAME="tex2html295"
+  HREF="phase.html#SECTION000143000000000000000">Lazy Code Motion (jop.lcm)</A>
+<LI><A NAME="tex2html296"
+  HREF="phase.html#SECTION000144000000000000000">Copy Propagator (jop.cp)</A>
+<LI><A NAME="tex2html297"
+  HREF="phase.html#SECTION000145000000000000000">Jimple Constant Propagator and Folder (jop.cpf)</A>
+<LI><A NAME="tex2html298"
+  HREF="phase.html#SECTION000146000000000000000">Conditional Branch Folder (jop.cbf)</A>
+<LI><A NAME="tex2html299"
+  HREF="phase.html#SECTION000147000000000000000">Dead Assignment Eliminator (jop.dae)</A>
+<LI><A NAME="tex2html300"
+  HREF="phase.html#SECTION000148000000000000000">Null Check Eliminator (jop.nce)</A>
+<LI><A NAME="tex2html301"
+  HREF="phase.html#SECTION000149000000000000000">Unreachable Code Eliminator 1 (jop.uce1)</A>
+<LI><A NAME="tex2html302"
+  HREF="phase.html#SECTION0001410000000000000000">Unconditional Branch Folder 1 (jop.ubf1)</A>
+<LI><A NAME="tex2html303"
+  HREF="phase.html#SECTION0001411000000000000000">Unreachable Code Eliminator 2 (jop.uce2)</A>
+<LI><A NAME="tex2html304"
+  HREF="phase.html#SECTION0001412000000000000000">Unconditional Branch Folder 2 (jop.ubf2)</A>
+<LI><A NAME="tex2html305"
+  HREF="phase.html#SECTION0001413000000000000000">Unused Local Eliminator (jop.ule)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html306"
+  HREF="phase.html#SECTION000150000000000000000">Jimple Annotation Pack (jap)</A>
+<UL>
+<LI><A NAME="tex2html307"
+  HREF="phase.html#SECTION000151000000000000000">Null Pointer Checker (jap.npc)</A>
+<LI><A NAME="tex2html308"
+  HREF="phase.html#SECTION000152000000000000000">Null Pointer Colourer (jap.npcolorer)</A>
+<LI><A NAME="tex2html309"
+  HREF="phase.html#SECTION000153000000000000000">Array Bound Checker (jap.abc)</A>
+<LI><A NAME="tex2html310"
+  HREF="phase.html#SECTION000154000000000000000">Profiling Generator (jap.profiling)</A>
+<LI><A NAME="tex2html311"
+  HREF="phase.html#SECTION000155000000000000000">Side Effect tagger (jap.sea)</A>
+<LI><A NAME="tex2html312"
+  HREF="phase.html#SECTION000156000000000000000">Field Read/Write Tagger (jap.fieldrw)</A>
+<LI><A NAME="tex2html313"
+  HREF="phase.html#SECTION000157000000000000000">Call Graph Tagger (jap.cgtagger)</A>
+<LI><A NAME="tex2html314"
+  HREF="phase.html#SECTION000158000000000000000">Parity Tagger (jap.parity)</A>
+<LI><A NAME="tex2html315"
+  HREF="phase.html#SECTION000159000000000000000">Parameter Alias Tagger (jap.pat)</A>
+<LI><A NAME="tex2html316"
+  HREF="phase.html#SECTION0001510000000000000000">Live Variables Tagger (jap.lvtagger)</A>
+<LI><A NAME="tex2html317"
+  HREF="phase.html#SECTION0001511000000000000000">Reaching Defs Tagger (jap.rdtagger)</A>
+<LI><A NAME="tex2html318"
+  HREF="phase.html#SECTION0001512000000000000000">Cast Elimination Check Tagger (jap.che)</A>
+<LI><A NAME="tex2html319"
+  HREF="phase.html#SECTION0001513000000000000000">Unreachable Method Transformer (jap.umt)</A>
+<LI><A NAME="tex2html320"
+  HREF="phase.html#SECTION0001514000000000000000">Loop Invariant Tagger (jap.lit)</A>
+<LI><A NAME="tex2html321"
+  HREF="phase.html#SECTION0001515000000000000000">Available Expressions Tagger (jap.aet)</A>
+<LI><A NAME="tex2html322"
+  HREF="phase.html#SECTION0001516000000000000000">Dominators Tagger (jap.dmt)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html323"
+  HREF="phase.html#SECTION000160000000000000000">Grimp Body Creation (gb)</A>
+<UL>
+<LI><A NAME="tex2html324"
+  HREF="phase.html#SECTION000161000000000000000">Grimp Pre-folding Aggregator (gb.a1)</A>
+<LI><A NAME="tex2html325"
+  HREF="phase.html#SECTION000162000000000000000">Grimp Constructor Folder (gb.cf)</A>
+<LI><A NAME="tex2html326"
+  HREF="phase.html#SECTION000163000000000000000">Grimp Post-folding Aggregator (gb.a2)</A>
+<LI><A NAME="tex2html327"
+  HREF="phase.html#SECTION000164000000000000000">Grimp Unused Local Eliminator (gb.ule)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html328"
+  HREF="phase.html#SECTION000170000000000000000">Grimp Optimization (gop)</A>
+<LI><A NAME="tex2html329"
+  HREF="phase.html#SECTION000180000000000000000">Baf Body Creation (bb)</A>
+<UL>
+<LI><A NAME="tex2html330"
+  HREF="phase.html#SECTION000181000000000000000">Load Store Optimizer (bb.lso)</A>
+<LI><A NAME="tex2html331"
+  HREF="phase.html#SECTION000182000000000000000">Peephole Optimizer (bb.pho)</A>
+<LI><A NAME="tex2html332"
+  HREF="phase.html#SECTION000183000000000000000">Unused Local Eliminator (bb.ule)</A>
+<LI><A NAME="tex2html333"
+  HREF="phase.html#SECTION000184000000000000000">Local Packer (bb.lp)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html334"
+  HREF="phase.html#SECTION000190000000000000000">Baf Optimization (bop)</A>
+<LI><A NAME="tex2html335"
+  HREF="phase.html#SECTION000200000000000000000">Tag Aggregator (tag)</A>
+<UL>
+<LI><A NAME="tex2html336"
+  HREF="phase.html#SECTION000201000000000000000">Line Number Tag Aggregator (tag.ln)</A>
+<LI><A NAME="tex2html337"
+  HREF="phase.html#SECTION000202000000000000000">Array Bounds and Null Pointer Check Tag Aggregator (tag.an)</A>
+<LI><A NAME="tex2html338"
+  HREF="phase.html#SECTION000203000000000000000">Dependence Tag Aggregator (tag.dep)</A>
+<LI><A NAME="tex2html339"
+  HREF="phase.html#SECTION000204000000000000000">Field Read/Write Tag Aggregator (tag.fieldrw)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html340"
+  HREF="phase.html#SECTION000210000000000000000">Dava Body Creation (db)</A>
+<UL>
+<LI><A NAME="tex2html341"
+  HREF="phase.html#SECTION000211000000000000000">Transformations (db.transformations)</A>
+<LI><A NAME="tex2html342"
+  HREF="phase.html#SECTION000212000000000000000">Renamer (db.renamer)</A>
+<LI><A NAME="tex2html343"
+  HREF="phase.html#SECTION000213000000000000000">De-obfuscate (db.deobfuscate)</A>
+<LI><A NAME="tex2html344"
+  HREF="phase.html#SECTION000214000000000000000">Force Recompilability (db.force-recompile)</A>
+</UL></UL>
+<!--End of Table of Contents-->
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Jimple Body Creation (<TT>jb</TT>)</A>
+</H1>
+
+<P>
+Jimple Body Creation creates a <TT>JimpleBody</TT> for each input
+method, using either coffi, to read <TT>.class</TT> files, or the
+jimple parser, to read <TT>.jimple</TT> files.
+
+<P>
+
+<H4><A NAME="SECTION00020010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Use Original Names (<TT>use-original-names</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Retain the original names for local variables when the source
+includes those names.  Otherwise, Soot gives variables generic
+names based on their types.
+
+<P>
+</DD>
+<DT><STRONG>Preserve source-level annotations (<TT>preserve-source-annotations</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Preserves annotations of retention type SOURCE. (for
+everything but package and local variable annotations) 
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00021000000000000000">
+Local Splitter (<TT>jb.ls</TT>)</A>
+</H2>
+
+<P>
+The Local Splitter identifies DU-UD webs for local variables and
+introduces new variables so that each disjoint web is associated
+with a single local.
+
+<P>
+
+<H4><A NAME="SECTION00021010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00022000000000000000">
+Jimple Local Aggregator (<TT>jb.a</TT>)</A>
+</H2>
+
+<P>
+The Jimple Local Aggregator removes some unnecessary copies by
+combining local variables. Essentially, it finds definitions
+which have only a single use and, if it is safe to do so, removes
+the original definition after replacing the use with the
+definition's right-hand side.
+
+<P>
+At this stage in <TT>JimpleBody</TT> construction, local
+aggregation serves largely to remove the copies to and from stack
+variables which simulate load and store instructions in the
+original bytecode.
+
+<P>
+
+<H4><A NAME="SECTION00022010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Only aggregate locals that represent stack locations in the
+original bytecode.  (Stack locals can be distinguished in Jimple
+by the $ character with which their names begin.)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00023000000000000000">
+Unused Local Eliminator (<TT>jb.ule</TT>)</A>
+</H2>
+
+<P>
+The Unused Local Eliminator removes any unused locals from the
+method.
+
+<P>
+
+<H4><A NAME="SECTION00023010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00024000000000000000">
+Type Assigner (<TT>jb.tr</TT>)</A>
+</H2>
+
+<P>
+The Type Assigner gives local variables types which will
+accommodate the values stored in them over the course of the
+method.
+
+<P>
+
+<H4><A NAME="SECTION00024010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Use older type assigner (<TT>use-older-type-assigner</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+This enables the older type assigner that was in use until May 2008.
+The current type assigner is a reimplementation by Ben Bellamy
+that uses an entirely new and faster algorithm which always assigns
+the most narrow type possible. If compare-type-assigners is on,
+this option causes the older type assigner to execute first.
+(Otherwise the newer one is executed first.)
+
+<P>
+</DD>
+<DT><STRONG>Compare type assigners (<TT>compare-type-assigners</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Enables comparison (both runtime and results) of Ben Bellamy's type assigner with the
+older type assigner that was in Soot.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00025000000000000000">
+Unsplit-originals Local Packer (<TT>jb.ulp</TT>)</A>
+</H2>
+
+<P>
+The Unsplit-originals Local Packer executes only when the
+`<TT>use-original-names</TT>' option is chosen for the
+`<TT>jb</TT>' phase.  The Local Packer attempts to minimize
+the number of local variables required in a method by reusing the
+same variable for disjoint DU-UD webs. Conceptually, it is the
+inverse of the Local Splitter.
+
+<P>
+
+<H4><A NAME="SECTION00025010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Unsplit Original Locals (<TT>unsplit-original-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Use the variable names in the original source as a guide when
+determining how to share local variables among non-interfering
+variable usages. This recombines named locals which were split by
+the Local Splitter.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00026000000000000000">
+Local Name Standardizer (<TT>jb.lns</TT>)</A>
+</H2>
+
+<P>
+The Local Name Standardizer assigns generic names to local variables.
+
+<P>
+
+<H4><A NAME="SECTION00026010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Only standardizes the names of variables that represent stack
+locations in the original bytecode. This becomes the default when
+the `<TT>use-original-names</TT>' option is specified for
+the `<TT>jb</TT>' phase.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00027000000000000000">
+Copy Propagator (<TT>jb.cp</TT>)</A>
+</H2>
+
+<P>
+This phase performs cascaded copy propagation.  
+
+<P>
+If the propagator encounters situations of the form: 
+
+<P><PRE>
+  A: a = ...; 
+    ...
+  B:  x = a;
+    ...
+  C: ... = ... x;
+</PRE>
+
+<P>
+where <TT>a</TT> and <TT>x</TT> are each defined only once (at
+<TT>A</TT> and <TT>B</TT>, respectively), then it can propagate
+immediately without checking between <TT>B</TT> and <TT>C</TT>
+for redefinitions of <TT>a</TT>.  In
+this case the propagator is global.
+
+<P>
+Otherwise, if <TT>a</TT> has multiple definitions then the
+propagator checks for redefinitions and propagates copies
+only within extended basic blocks.
+
+<P>
+
+<H4><A NAME="SECTION00027010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Regular Locals (<TT>only-regular-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Only propagate copies through ``regular'' locals, that is,
+those declared in the source bytecode.
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Only propagate copies through locals that represent stack locations in
+the original bytecode.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00028000000000000000">
+Dead Assignment Eliminator (<TT>jb.dae</TT>)</A>
+</H2>
+
+<P>
+The Dead Assignment Eliminator eliminates assignment statements
+to locals whose values are not subsequently used, unless
+evaluating the right-hand side of the assignment may cause
+side-effects.
+
+<P>
+
+<H4><A NAME="SECTION00028010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Only eliminate dead assignments to locals that represent stack
+locations in the original bytecode.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00029000000000000000">
+Post-copy propagation Unused Local Eliminator (<TT>jb.cp-ule</TT>)</A>
+</H2>
+
+<P>
+This phase removes any locals that are unused after copy propagation.
+
+<P>
+
+<H4><A NAME="SECTION00029010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000210000000000000000">
+Local Packer (<TT>jb.lp</TT>)</A>
+</H2>
+
+<P>
+The Local Packer attempts to minimize the number of local
+variables required in a method by reusing the same variable for
+disjoint DU-UD webs. Conceptually, it is the inverse of the
+Local Splitter.
+
+<P>
+
+<H4><A NAME="SECTION000210010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Unsplit Original Locals (<TT>unsplit-original-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Use the variable names in the original source as a guide when
+determining how to share local variables across non-interfering
+variable usages. This recombines named locals which were split by
+the Local Splitter. 
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000211000000000000000">
+Nop Eliminator (<TT>jb.ne</TT>)</A>
+</H2>
+
+<P>
+The Nop Eliminator removes <TT>nop</TT> statements from the method.
+
+<P>
+
+<H4><A NAME="SECTION000211010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000212000000000000000">
+Unreachable Code Eliminator (<TT>jb.uce</TT>)</A>
+</H2>
+
+<P>
+The Unreachable Code Eliminator removes unreachable code and
+traps whose catch blocks are empty.
+
+<P>
+
+<H4><A NAME="SECTION000212010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Remove unreachable traps (<TT>remove-unreachable-traps</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Remove exception table entries when none of the protected instructions can
+throw the exception being caught.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000213000000000000000">
+Trap Tightener (<TT>jb.tt</TT>)</A>
+</H2>
+
+<P>
+The Trap Tightener changes the area protected by each exception handler,
+so that it begins with the first instruction in the old protected
+area which is actually capable of throwing an exception caught by the
+handler, and ends just after the last instruction in the old
+protected area which can throw an exception caught by the
+handler.  This reduces the chance of producing unverifiable code
+as a byproduct of pruning exceptional control flow within CFGs.
+
+<P>
+
+<H4><A NAME="SECTION000213010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Java To Jimple Body Creation (<TT>jj</TT>)</A>
+</H1>
+
+<P>
+Jimple Body Creation creates a <TT>JimpleBody</TT> for each input
+method, using polyglot, to read <TT>.java</TT> files.
+
+<P>
+
+<H4><A NAME="SECTION00030010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Use Original Names (<TT>use-original-names</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Retain the original names for local variables when the source
+includes those names.  Otherwise, Soot gives variables generic
+names based on their types.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00031000000000000000">
+Local Splitter (<TT>jj.ls</TT>)</A>
+</H2>
+
+<P>
+The Local Splitter identifies DU-UD webs for local variables and
+introduces new variables so that each disjoint web is associated
+with a single local.
+
+<P>
+
+<H4><A NAME="SECTION00031010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00032000000000000000">
+Jimple Local Aggregator (<TT>jj.a</TT>)</A>
+</H2>
+
+<P>
+The Jimple Local Aggregator removes some unnecessary copies by
+combining local variables. Essentially, it finds definitions
+which have only a single use and, if it is safe to do so, removes
+the original definition after replacing the use with the
+definition's right-hand side.
+
+<P>
+At this stage in <TT>JimpleBody</TT> construction, local
+aggregation serves largely to remove the copies to and from stack
+variables which simulate load and store instructions in the
+original bytecode.
+
+<P>
+
+<H4><A NAME="SECTION00032010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Only aggregate locals that represent stack locations in the
+original bytecode.  (Stack locals can be distinguished in Jimple
+by the $ character with which their names begin.)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00033000000000000000">
+Unused Local Eliminator (<TT>jj.ule</TT>)</A>
+</H2>
+
+<P>
+The Unused Local Eliminator removes any unused locals from the
+method.
+
+<P>
+
+<H4><A NAME="SECTION00033010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00034000000000000000">
+Type Assigner (<TT>jj.tr</TT>)</A>
+</H2>
+
+<P>
+The Type Assigner gives local variables types which will
+accommodate the values stored in them over the course of the
+method.
+
+<P>
+
+<H4><A NAME="SECTION00034010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00035000000000000000">
+Unsplit-originals Local Packer (<TT>jj.ulp</TT>)</A>
+</H2>
+
+<P>
+The Unsplit-originals Local Packer executes only when the
+`<TT>use-original-names</TT>' option is chosen for the
+`<TT>jb</TT>' phase.  The Local Packer attempts to minimize
+the number of local variables required in a method by reusing the
+same variable for disjoint DU-UD webs. Conceptually, it is the
+inverse of the Local Splitter.
+
+<P>
+
+<H4><A NAME="SECTION00035010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Unsplit Original Locals (<TT>unsplit-original-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Use the variable names in the original source as a guide when
+determining how to share local variables among non-interfering
+variable usages. This recombines named locals which were split by
+the Local Splitter.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00036000000000000000">
+Local Name Standardizer (<TT>jj.lns</TT>)</A>
+</H2>
+
+<P>
+The Local Name Standardizer assigns generic names to local variables.
+
+<P>
+
+<H4><A NAME="SECTION00036010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Only standardizes the names of variables that represent stack
+locations in the original bytecode. This becomes the default when
+the `<TT>use-original-names</TT>' option is specified for
+the `<TT>jb</TT>' phase.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00037000000000000000">
+Copy Propagator (<TT>jj.cp</TT>)</A>
+</H2>
+
+<P>
+This phase performs cascaded copy propagation.  
+
+<P>
+If the propagator encounters situations of the form: 
+
+<P><PRE>
+  A: a = ...; 
+    ...
+  B:  x = a;
+    ...
+  C: ... = ... x;
+</PRE>
+
+<P>
+where <TT>a</TT> and <TT>x</TT> are each defined only once (at
+<TT>A</TT> and <TT>B</TT>, respectively), then it can propagate
+immediately without checking between <TT>B</TT> and <TT>C</TT>
+for redefinitions of <TT>a</TT>.  In
+this case the propagator is global.
+
+<P>
+Otherwise, if <TT>a</TT> has multiple definitions then the
+propagator checks for redefinitions and propagates copies
+only within extended basic blocks.
+
+<P>
+
+<H4><A NAME="SECTION00037010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Regular Locals (<TT>only-regular-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Only propagate copies through ``regular'' locals, that is,
+those declared in the source bytecode.
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Only propagate copies through locals that represent stack locations in
+the original bytecode.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00038000000000000000">
+Dead Assignment Eliminator (<TT>jj.dae</TT>)</A>
+</H2>
+
+<P>
+The Dead Assignment Eliminator eliminates assignment statements
+to locals whose values are not subsequently used, unless
+evaluating the right-hand side of the assignment may cause
+side-effects.
+
+<P>
+
+<H4><A NAME="SECTION00038010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Only eliminate dead assignments to locals that represent stack
+locations in the original bytecode.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00039000000000000000">
+Post-copy propagation Unused Local Eliminator (<TT>jj.cp-ule</TT>)</A>
+</H2>
+
+<P>
+This phase removes any locals that are unused after copy propagation.
+
+<P>
+
+<H4><A NAME="SECTION00039010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000310000000000000000">
+Local Packer (<TT>jj.lp</TT>)</A>
+</H2>
+
+<P>
+The Local Packer attempts to minimize the number of local
+variables required in a method by reusing the same variable for
+disjoint DU-UD webs. Conceptually, it is the inverse of the
+Local Splitter.
+
+<P>
+
+<H4><A NAME="SECTION000310010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Unsplit Original Locals (<TT>unsplit-original-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Use the variable names in the original source as a guide when
+determining how to share local variables across non-interfering
+variable usages. This recombines named locals which were split by
+the Local Splitter. 
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000311000000000000000">
+Nop Eliminator (<TT>jj.ne</TT>)</A>
+</H2>
+
+<P>
+The Nop Eliminator removes <TT>nop</TT> statements from the method.
+
+<P>
+
+<H4><A NAME="SECTION000311010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000312000000000000000">
+Unreachable Code Eliminator (<TT>jj.uce</TT>)</A>
+</H2>
+
+<P>
+The Unreachable Code Eliminator removes unreachable code and
+traps whose catch blocks are empty.
+
+<P>
+
+<H4><A NAME="SECTION000312010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Call Graph Constructor (<TT>cg</TT>)</A>
+</H1>
+
+<P>
+The Call Graph Constructor computes a call graph for whole
+program analysis. When this pack finishes, a call graph is
+available in the Scene.  The different phases in this pack are
+different ways to construct the call graph. Exactly one phase in
+this pack must be enabled; Soot will raise an error otherwise.
+
+<P>
+
+<H4><A NAME="SECTION00040010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Safe forName (<TT>safe-forname</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When a program calls
+Class.forName(), the named class is resolved, and its static initializer
+executed. In many cases, it cannot be determined statically which
+class will be loaded, and which static initializer executed. When this
+option is set to true, Soot will conservatively assume that any static
+initializer could be executed. This may make the call graph very large.
+When this option is set to false, any calls to Class.forName() for which
+the class cannot be determined statically are assumed to call no
+static initializers.
+
+<P>
+</DD>
+<DT><STRONG>Safe newInstance (<TT>safe-newinstance</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When a program calls
+Class.newInstance(), a new object is created and its constructor
+executed. Soot does not determine statically which
+type of object will be created, and which constructor executed. When this
+option is set to true, Soot will conservatively assume that any constructor
+could be executed. This may make the call graph very large.
+When this option is set to false, any calls to Class.newInstance()
+are assumed not to call the constructor of the created object.
+
+<P>
+</DD>
+<DT><STRONG>Verbose (<TT>verbose</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Due to the effects of native methods and reflection, it may not always be possible to construct a fully conservative call graph. Setting this option to true causes Soot to point out the parts of the call graph that may be incomplete, so that they can be checked by hand.
+
+<P>
+</DD>
+<DT><STRONG>JDK version (<TT>jdkver</TT>)</STRONG></DT>
+<DD>(default value: <TT>3</TT>)
+
+<P>
+This option sets the JDK version of the standard library being analyzed so that Soot can simulate the native methods in the specific version of the library. The default, 3, refers to Java 1.3.x.
+
+<P>
+</DD>
+<DT><STRONG>All Application Class Methods Reachable (<TT>all-reachable</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is false, the call graph is built starting at a set of entry points, and only methods reachable from those entry points are processed. Unreachable methods will not have any call graph edges generated out of them. Setting this option to true makes Soot consider all methods of application classes to be reachable, so call edges are generated for all of them. This leads to a larger call graph. For program visualization purposes, it is sometimes desirable to include edges from unreachable methods; although these methods are unreachable in the version being analyzed, they may become reachable if the program is modified.
+
+<P>
+</DD>
+<DT><STRONG>Implicit Entry Points (<TT>implicit-entry</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+When this option is true, methods that are called implicitly by the VM are considered entry points of the call graph. When it is false, these methods are not considered entry points, leading to a possibly incomplete call graph.
+
+<P>
+</DD>
+<DT><STRONG>Trim Static Initializer Edges (<TT>trim-clinit</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+The call graph contains an edge
+from each statement that could trigger execution of a static initializer to that
+static initializer. However, each static initializer is triggered only once.
+When this option is enabled, after the call graph is built, an intra-procedural
+analysis is performed to detect static initializer edges leading to methods
+that must have already been executed. Since these static initializers cannot be
+executed again, the corresponding call graph edges are removed from the call graph.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+Class Hierarchy Analysis (<TT>cg.cha</TT>)</A>
+</H2>
+This phase uses Class Hierarchy Analysis to generate a call graph.
+
+<P>
+
+<H4><A NAME="SECTION00041010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Verbose (<TT>verbose</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Setting this option to true causes Soot to print out statistics about the call graph computed by this phase, such as the number of methods determined to be reachable.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000">
+Spark (<TT>cg.spark</TT>)</A>
+</H2>
+Spark is a flexible points-to analysis framework. Aside from building a call graph, it also generates information about the targets of pointers. For details about Spark, please see <A NAME="tex2html4"
+  HREF="http://www.sable.mcgill.ca/publications/thesis/#olhotakMastersThesis">Ondrej Lhotak's M.Sc. thesis</A>.
+
+<P>
+
+<H4><A NAME="SECTION00042010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00042100000000000000">
+Spark General Options</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION00042110000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Verbose (<TT>verbose</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, Spark prints detailed information about its execution.
+
+<P>
+</DD>
+<DT><STRONG>Ignore Types Entirely (<TT>ignore-types</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, all parts of Spark completely ignore
+declared types of variables and casts.
+
+<P>
+</DD>
+<DT><STRONG>Force Garbage Collections (<TT>force-gc</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, calls to System.gc() will be made at
+various points to allow memory usage to be measured.
+
+<P>
+</DD>
+<DT><STRONG>Pre Jimplify (<TT>pre-jimplify</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, Spark converts all available methods to Jimple
+before starting the points-to analysis. This allows the Jimplification
+time to be separated from the points-to time. However, it increases the
+total time and memory requirement, because all methods are Jimplified,
+rather than only those deemed reachable by the points-to analysis.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00042200000000000000">
+Spark Pointer Assignment Graph Building Options</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION00042210000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>VTA (<TT>vta</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Setting VTA to true has the effect of setting field-based,
+types-for-sites, and simplify-sccs to true, and on-fly-cg to false,
+to simulate Variable Type
+Analysis, described in <A NAME="tex2html5"
+  HREF="http://www.sable.mcgill.ca/publications/papers/#oopsla2000">our OOPSLA 2000 paper</A>. Note that the
+algorithm differs from the original VTA in that it handles array
+elements more precisely.
+
+<P>
+</DD>
+<DT><STRONG>RTA (<TT>rta</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Setting RTA to true sets types-for-sites to true, and causes Spark to use
+a single points-to set for all variables, giving <A NAME="tex2html6"
+  HREF="http://doi.acm.org/10.1145/236337.236371">Rapid Type
+Analysis</A>.
+
+<P>
+</DD>
+<DT><STRONG>Field Based (<TT>field-based</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, fields are represented by variable
+(Green) nodes, and the object that the field belongs to is ignored
+(all objects are lumped together), giving a field-based analysis. Otherwise, fields are represented by
+field reference (Red) nodes, and the objects that they belong to are
+distinguished, giving a field-sensitive analysis.
+
+<P>
+</DD>
+<DT><STRONG>Types For Sites (<TT>types-for-sites</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, types rather than allocation sites are
+used as the elements of the points-to sets.
+
+<P>
+</DD>
+<DT><STRONG>Merge String Buffer (<TT>merge-stringbuffer</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+When this option is set to true, all allocation sites creating
+<TT>java.lang.StringBuffer</TT> objects are grouped together as a single
+allocation site.
+
+<P>
+</DD>
+<DT><STRONG>Propagate All String Constants (<TT>string-constants</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to false, Spark only distinguishes string constants that
+may be the name of a class loaded dynamically using reflection, and all other
+string constants are lumped together into a single string constant node.
+Setting this option to true causes all string constants to be propagated
+individually.
+
+<P>
+</DD>
+<DT><STRONG>Simulate Natives (<TT>simulate-natives</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+When this option is set to true, the effects of native methods in the standard Java class library are simulated.
+
+<P>
+</DD>
+<DT><STRONG>Treat EMPTY as Alloc (<TT>empties-as-allocs</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, Spark treats references to EMPTYSET, EMPTYMAP, and 
+EMPTYLIST as allocation sites for HashSet, HashMap and LinkedList objects respectively, and references to Hashtable.emptyIterator as allocation sites for Hashtable.EmptyIterator. This enables subsequent analyses to differentiate different uses of Java's immutable empty collections.
+
+<P>
+</DD>
+<DT><STRONG>Simple Edges Bidirectional (<TT>simple-edges-bidirectional</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, all edges connecting variable (Green)
+nodes are made bidirectional, as in <A NAME="tex2html7"
+  HREF="http://doi.acm.org/10.1145/237721.237727">Steensgaard's analysis</A>.
+
+<P>
+</DD>
+<DT><STRONG>On Fly Call Graph (<TT>on-fly-cg</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+When this option is set to true, the call graph is computed on-the-fly
+as points-to information is computed. Otherwise, an initial
+CHA approximation to the call graph is used.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00042300000000000000">
+Spark Pointer Assignment Graph Simplification Options</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION00042310000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Simplify Offline (<TT>simplify-offline</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, variable (Green) nodes which form
+single-entry subgraphs (so they must have the same points-to set) are
+merged before propagation begins.
+
+<P>
+</DD>
+<DT><STRONG>Simplify SCCs (<TT>simplify-sccs</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, variable (Green) nodes which form
+strongly-connected components (so they must have the same points-to set)
+are merged before propagation begins.
+
+<P>
+</DD>
+<DT><STRONG>Ignore Types For SCCs (<TT>ignore-types-for-sccs</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, when collapsing strongly-connected
+components, nodes forming SCCs are collapsed regardless of their declared type.
+The collapsed SCC is given the most general type of all the nodes in the
+component.
+
+<P>
+When this option is set to false, only edges connecting nodes of the
+same type are considered when detecting SCCs.
+
+<P>
+This option has no effect unless <TT>simplify-sccs</TT> is true.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00042400000000000000">
+Spark Points-To Set Flowing Options</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION00042410000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Propagator (<TT>propagator</TT>)</STRONG></DT>
+<DD>(default value: <TT>worklist</TT>)
+
+<P>
+This option tells Spark which propagation algorithm to use.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>iter </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Iter is a simple, iterative algorithm, which propagates everything until the
+graph does not change.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>worklist </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Worklist is a worklist-based algorithm that tries
+to do as little work as possible. This is currently the fastest algorithm.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>cycle </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>This algorithm finds cycles in the PAG on-the-fly. It is not yet finished.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>merge </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Merge is an algorithm that merges all concrete field (yellow) nodes with their corresponding
+field reference (red) nodes. This algorithm is not yet finished.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>alias </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Alias is an alias-edge based algorithm. This algorithm tends to take
+the least memory for very large problems, because it does not represent
+explicitly points-to sets of fields of heap objects.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>none </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+None means that propagation is not done; the graph is only built and
+simplified. This is useful if an external solver is being used to perform the
+propagation.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Set Implementation (<TT>set-impl</TT>)</STRONG></DT>
+<DD>(default value: <TT>double</TT>)
+
+<P>
+Select an implementation of points-to sets for Spark to use.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hash </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hash is an implementation based on Java's built-in hash-set.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>bit </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Bit is an implementation using a bit vector.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hybrid </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hybrid is an implementation that keeps an explicit list of up to
+16 elements, and switches to a bit-vector when the set gets
+larger than this.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>array </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Array is an implementation that keeps the elements of the
+points-to set in a sorted array. Set membership is tested using
+binary search, and set union and intersection are computed using
+an algorithm based on the merge step from merge sort.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>heintze </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>Heintze's representation has elements represented by a bit-vector + a small
+									'overflow' list of some maximum number of elements.  The bit-vectors can be shared
+									by multiple points-to sets, while the overflow lists are not.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>sharedlist </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>Shared List stores its elements in a linked list, and might share
+									its tail with other similar points-to sets.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>double </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Double is an implementation that itself uses a pair of sets for
+each points-to set. The first set in the pair stores new pointed-to
+objects that have not yet been propagated, while the second set stores
+old pointed-to objects that have been propagated and need not be
+reconsidered. This allows the propagation algorithms to be incremental,
+often speeding them up significantly.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Double Set Old (<TT>double-set-old</TT>)</STRONG></DT>
+<DD>(default value: <TT>hybrid</TT>)
+
+<P>
+Select an implementation for sets of old objects in the double
+points-to set implementation.
+
+<P>
+This option has no effect unless Set Implementation is set to double.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hash </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hash is an implementation based on Java's built-in hash-set.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>bit </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Bit is an implementation using a bit vector.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hybrid </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hybrid is an implementation that keeps an explicit list of up to
+16 elements, and switches to a bit-vector when the set gets
+larger than this.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>array </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Array is an implementation that keeps the elements of the
+points-to set in a sorted array. Set membership is tested using
+binary search, and set union and intersection are computed using
+an algorithm based on the merge step from merge sort.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>heintze </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>Heintze's representation has elements represented by a bit-vector + a small
+									'overflow' list of some maximum number of elements.  The bit-vectors can be shared
+									by multiple points-to sets, while the overflow lists are not.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>sharedlist </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>Shared List stores its elements in a linked list, and might share
+									its tail with other similar points-to sets.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Double Set New (<TT>double-set-new</TT>)</STRONG></DT>
+<DD>(default value: <TT>hybrid</TT>)
+
+<P>
+Select an implementation for sets of new objects in the double
+points-to set implementation.
+
+<P>
+This option has no effect unless Set Implementation is set to double.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hash </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hash is an implementation based on Java's built-in hash-set.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>bit </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Bit is an implementation using a bit vector.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hybrid </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hybrid is an implementation that keeps an explicit list of up to
+16 elements, and switches to a bit-vector when the set gets
+larger than this.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>array </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Array is an implementation that keeps the elements of the
+points-to set in a sorted array. Set membership is tested using
+binary search, and set union and intersection are computed using
+an algorithm based on the merge step from merge sort.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>heintze </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>Heintze's representation has elements represented by a bit-vector + a small
+									'overflow' list of some maximum number of elements.  The bit-vectors can be shared
+									by multiple points-to sets, while the overflow lists are not.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>sharedlist </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>Shared List stores its elements in a linked list, and might share
+									its tail with other similar points-to sets.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00042500000000000000">
+Spark Output Options</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION00042510000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Dump HTML (<TT>dump-html</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, a browseable HTML representation of the
+pointer assignment graph is output to a file called <TT>pag.jar</TT> after the analysis completes. Note
+that this representation is typically very large.
+
+<P>
+</DD>
+<DT><STRONG>Dump PAG (<TT>dump-pag</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, a representation of the pointer assignment graph
+suitable for processing with other solvers (such as the BDD-based solver) is
+output before the analysis begins.
+
+<P>
+</DD>
+<DT><STRONG>Dump Solution (<TT>dump-solution</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, a representation of the resulting points-to
+sets is dumped. The format is similar to that of the Dump PAG
+option, and is therefore suitable for comparison with the results of other
+solvers.
+
+<P>
+</DD>
+<DT><STRONG>Topological Sort (<TT>topo-sort</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, the representation dumped by the
+Dump PAG option
+is dumped with the variable (green) nodes in (pseudo-)topological order.
+
+<P>
+This option has no effect unless Dump PAG is true.
+
+<P>
+</DD>
+<DT><STRONG>Dump Types (<TT>dump-types</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+When this option is set to true, the representation dumped by the
+Dump PAG option
+includes type information for all nodes.
+
+<P>
+This option has no effect unless Dump PAG is true.
+
+<P>
+</DD>
+<DT><STRONG>Class Method Var (<TT>class-method-var</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+When this option is set to true, the representation dumped by the
+Dump PAG option
+represents nodes by numbering each class, method, and variable within
+the method separately, rather than assigning a single integer to each
+node.
+
+<P>
+This option has no effect unless Dump PAG is true.  Setting Class
+Method Var to true has the effect of setting Topological Sort to
+false.
+
+<P>
+</DD>
+<DT><STRONG>Dump Answer (<TT>dump-answer</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, the computed reaching types for each variable are
+dumped to a file, so that they can be compared with the results of
+other analyses (such as the old VTA).
+
+<P>
+</DD>
+<DT><STRONG>Add Tags (<TT>add-tags</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, the results of the analysis are encoded within
+tags and printed with the resulting Jimple code.
+
+<P>
+</DD>
+<DT><STRONG>Calculate Set Mass (<TT>set-mass</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, Spark computes and prints various
+cryptic statistics about the size of the points-to sets computed.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00042600000000000000">
+Context-sensitive refinement</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION00042610000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Demand-driven refinement-based context-sensitive points-to analysis (<TT>cs-demand</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, Manu Sridharan's demand-driven,
+refinement-based points-to analysis (PLDI 06) is applied after Spark
+was run.
+
+<P>
+</DD>
+<DT><STRONG>Maximal traversal (<TT>traversal</TT>)</STRONG></DT>
+<DD>(default value: <TT>75000</TT>)
+
+<P>
+Make the analysis traverse at most this number of nodes per query.
+This quota is evenly shared between multiple passes (see next option).
+
+<P>
+</DD>
+<DT><STRONG>Maximal number of passes (<TT>passes</TT>)</STRONG></DT>
+<DD>(default value: <TT>10</TT>)
+
+<P>
+Perform at most this number of refinement iterations.
+Each iteration traverses at most ( traverse / passes ) nodes.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00043000000000000000">
+Paddle (<TT>cg.paddle</TT>)</A>
+</H2>
+Paddle is a BDD-based interprocedural analysis framework. It includes points-to analysis, call graph construction, and various client analyses.
+
+<P>
+
+<H4><A NAME="SECTION00043010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00043100000000000000">
+Paddle General Options</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION00043110000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Verbose (<TT>verbose</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, Paddle prints detailed information about its execution.
+
+<P>
+</DD>
+<DT><STRONG>Configuration (<TT>conf</TT>)</STRONG></DT>
+<DD>(default value: <TT>ofcg</TT>)
+
+<P>
+Selects the configuration of points-to analysis and call graph construction
+to be used in Paddle.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>ofcg </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Performs points-to analysis and builds call graph together, on-the-fly.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>cha </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Builds only a call graph using Class Hieararchy Analysis, and performs no
+points-to analysis.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>cha-aot </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+First builds a call graph using CHA, then uses the call graph in a fixed-call-graph points-to analysis.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>ofcg-aot </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+First builds a call graph on-the-fly during a points-to analysis, then
+uses the resulting call graph to perform a second points-to analysis
+with a fixed call graph.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>cha-context-aot </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+First builds a call graph using CHA, then makes it context-sensitive using
+the technique described by Calman and Zhu in PLDI 04,
+then uses the call graph in a fixed-call-graph points-to analysis.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>ofcg-context-aot </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+First builds a call graph on-the-fly during a points-to analysis, then
+makes it context-sensitive using the technique described by Calman and
+Zhu in PLDI 04, then uses the resulting call graph to perform a second
+points-to analysis with a fixed call graph.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>cha-context </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+First builds a call graph using CHA, then makes it context-sensitive using
+the technique described by Calman and Zhu in PLDI 04. Does not produce
+points-to information.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>ofcg-context </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+First builds a call graph on-the-fly during a points-to analysis, then
+makes it context-sensitive using the technique described by Calman and
+Zhu in PLDI 04. Does not perform a subsequent points-to analysis.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Use BDDs (<TT>bdd</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Causes Paddle to use BDD versions of its components
+
+<P>
+</DD>
+<DT><STRONG>Variable ordering (<TT>order</TT>)</STRONG></DT>
+<DD>(default value: <TT>32</TT>)
+
+<P>
+Selects one of the BDD variable orderings hard-coded in Paddle.
+
+<P>
+</DD>
+<DT><STRONG>Dynamic reordering (<TT>dynamic-order</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Allows the BDD package to perform dynamic variable ordering.
+
+<P>
+</DD>
+<DT><STRONG>Profile (<TT>profile</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Turns on JeddProfiler for profiling BDD operations.
+
+<P>
+</DD>
+<DT><STRONG>Verbose GC (<TT>verbosegc</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Print memory usage at each BDD garbage collection.
+
+<P>
+</DD>
+<DT><STRONG>Worklist Implementation (<TT>q</TT>)</STRONG></DT>
+<DD>(default value: <TT>auto</TT>)
+
+<P>
+Select the implementation of worklists to be used in Paddle.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>auto </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+When the bdd option is true, the BDD-based worklist implementation will be used.
+When the bdd option is false, the Traditional worklist implementation will be used.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>trad </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Normal worklist queue implementation</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>bdd </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+BDD-based queue implementation</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>debug </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+An implementation of worklists that includes both traditional and BDD-based
+implementations, and signals an error whenever their contents differ.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>trace </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+A worklist implementation that prints out all tuples added to every worklist.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>numtrace </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+A worklist implementation that prints out the number of tuples added to
+each worklist after each operation.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Backend (<TT>backend</TT>)</STRONG></DT>
+<DD>(default value: <TT>auto</TT>)
+
+<P>
+This option tells Paddle which implementation of BDDs to use.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>auto </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+When the bdd option is true, the BuDDy backend will be used.
+When the bdd option is false, the backend will be set to none, to avoid
+loading any BDD backend.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>buddy </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Use BuDDy implementation of BDDs.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>cudd </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Use CUDD implementation of BDDs.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>sable </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>Use SableJBDD implementation of BDDs.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>javabdd </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Use JavaBDD implementation of BDDs.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>none </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Don't use any BDD backend. Any attempted use of BDDs will cause Paddle to crash.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>BDD Nodes (<TT>bdd-nodes</TT>)</STRONG></DT>
+<DD>(default value: <TT>0</TT>)
+
+<P>
+This option specifies the number of BDD nodes to be used by the BDD backend.
+A value of 0 causes the backend to start with one million nodes, and allocate
+more as required. A value other than zero causes the backend to start with
+the specified size, and prevents it from ever allocating any more nodes.
+
+<P>
+</DD>
+<DT><STRONG>Ignore Types Entirely (<TT>ignore-types</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, all parts of Paddle completely ignore
+declared types of variables and casts.
+
+<P>
+</DD>
+<DT><STRONG>Pre Jimplify (<TT>pre-jimplify</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, Paddle converts all available methods to Jimple
+before starting the points-to analysis. This allows the Jimplification
+time to be separated from the points-to time. However, it increases the
+total time and memory requirement, because all methods are Jimplified,
+rather than only those deemed reachable by the points-to analysis.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00043200000000000000">
+Paddle Context Sensitivity Options</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION00043210000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Context abstraction (<TT>context</TT>)</STRONG></DT>
+<DD>(default value: <TT>insens</TT>)
+
+<P>
+This option tells Paddle which level of context-sensitivity to use in constructing the call graph.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>insens </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Builds a context-insensitive call graph.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>1cfa </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Builds a 1-CFA call graph.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>kcfa </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Builds a k-CFA call graph.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>objsens </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Builds an object-sensitive call graph.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>kobjsens </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Builds a context-sensitive call graph where the context is a string of up to
+k receiver objects.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>uniqkobjsens </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Builds a context-sensitive call graph where the context is a string of up to
+k unique receiver objects. If the receiver of a call already appears in the
+context string, the context string is just reused as is.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>threadkobjsens </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Experimental option for thread-entry-point sensitivity.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Context length (k) (<TT>k</TT>)</STRONG></DT>
+<DD>(default value: <TT>2</TT>)
+
+<P>
+The maximum length of call string or receiver object string used as context.
+
+<P>
+</DD>
+<DT><STRONG>Context-sensitive Heap Locations (<TT>context-heap</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, the context-sensitivity level that is set
+for the context-sensitive call graph and for pointer variables is also used
+to model heap locations context-sensitively. When this option is false,
+heap locations are modelled context-insensitively regardless of the
+context-sensitivity level.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00043300000000000000">
+Paddle Pointer Assignment Graph Building Options</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION00043310000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>RTA (<TT>rta</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Setting RTA to true sets types-for-sites to true, and causes Paddle to use
+a single points-to set for all variables, giving <A NAME="tex2html8"
+  HREF="http://doi.acm.org/10.1145/236337.236371">Rapid Type
+Analysis</A>.
+
+<P>
+</DD>
+<DT><STRONG>Field Based (<TT>field-based</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, fields are represented by variable
+(Green) nodes, and the object that the field belongs to is ignored
+(all objects are lumped together), giving a field-based analysis. Otherwise, fields are represented by
+field reference (Red) nodes, and the objects that they belong to are
+distinguished, giving a field-sensitive analysis.
+
+<P>
+</DD>
+<DT><STRONG>Types For Sites (<TT>types-for-sites</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, types rather than allocation sites are
+used as the elements of the points-to sets.
+
+<P>
+</DD>
+<DT><STRONG>Merge String Buffer (<TT>merge-stringbuffer</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+When this option is set to true, all allocation sites creating
+<TT>java.lang.StringBuffer</TT> objects are grouped together as a single
+allocation site.
+
+<P>
+</DD>
+<DT><STRONG>Propagate All String Constants (<TT>string-constants</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to false, Paddle only distinguishes string constants that
+may be the name of a class loaded dynamically using reflection, and all other
+string constants are lumped together into a single string constant node.
+Setting this option to true causes all string constants to be propagated
+individually.
+
+<P>
+</DD>
+<DT><STRONG>Simulate Natives (<TT>simulate-natives</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+When this option is set to true, the effects of native methods in the standard Java class library are simulated.
+
+<P>
+</DD>
+<DT><STRONG>Global Nodes in Simulated Natives (<TT>global-nodes-in-natives</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+The simulations of native methods such as System.arraycopy() use
+temporary local variable nodes. Setting this switch to true causes them
+to use global variable nodes instead, reducing precision. The switch
+exists only to make it possible to measure this effect on precision;
+there is no other practical reason to set it to true.
+
+<P>
+</DD>
+<DT><STRONG>Simple Edges Bidirectional (<TT>simple-edges-bidirectional</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, all edges connecting variable (Green)
+nodes are made bidirectional, as in <A NAME="tex2html9"
+  HREF="http://doi.acm.org/10.1145/237721.237727">Steensgaard's analysis</A>.
+
+<P>
+</DD>
+<DT><STRONG>this Pointer Assignment Edge (<TT>this-edges</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When constructing a call graph on-the-fly during points-to analysis, Paddle
+normally propagates only those receivers that cause a method to be invoked
+to the this pointer of the method. When this option is set to true, however,
+Paddle instead models flow of receivers as an assignnment edge from the
+receiver at the call site to the this pointer of the method, reducing
+precision.
+
+<P>
+</DD>
+<DT><STRONG>Precise newInstance (<TT>precise-newinstance</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Normally, newInstance() calls are treated as if they may return an object
+    of any type. Setting this option to true causes them to be treated as if
+    they return only objects of the type of some dynamic class.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00043400000000000000">
+Paddle Points-To Set Flowing Options</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION00043410000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Propagator (<TT>propagator</TT>)</STRONG></DT>
+<DD>(default value: <TT>auto</TT>)
+
+<P>
+This option tells Paddle which propagation algorithm to use.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>auto </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+When the bdd option is true, the Incremental BDD propagation algorithm will be used.
+When the bdd option is false, the Worklist propagation algorithm will be used.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>iter </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Iter is a simple, iterative algorithm, which propagates everything until the
+graph does not change.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>worklist </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Worklist is a worklist-based algorithm that tries
+to do as little work as possible. This is currently the fastest algorithm.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>alias </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Alias is an alias-edge based algorithm. This algorithm tends to take
+the least memory for very large problems, because it does not represent
+explicitly points-to sets of fields of heap objects.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>bdd </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+BDD is a propagator that stores points-to sets in binary decision diagrams.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>incbdd </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+A propagator that stores points-to sets in binary decision diagrams, and propagates them incrementally.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Set Implementation (<TT>set-impl</TT>)</STRONG></DT>
+<DD>(default value: <TT>double</TT>)
+
+<P>
+Select an implementation of points-to sets for Paddle to use.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hash </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hash is an implementation based on Java's built-in hash-set.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>bit </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Bit is an implementation using a bit vector.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hybrid </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hybrid is an implementation that keeps an explicit list of up to
+16 elements, and switches to a bit-vector when the set gets
+larger than this.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>array </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Array is an implementation that keeps the elements of the
+points-to set in a sorted array. Set membership is tested using
+binary search, and set union and intersection are computed using
+an algorithm based on the merge step from merge sort.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>heintze </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>Heintze's representation has elements represented by a bit-vector + a small
+									'overflow' list of some maximum number of elements.  The bit-vectors can be shared
+									by multiple points-to sets, while the overflow lists are not.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>double </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Double is an implementation that itself uses a pair of sets for
+each points-to set. The first set in the pair stores new pointed-to
+objects that have not yet been propagated, while the second set stores
+old pointed-to objects that have been propagated and need not be
+reconsidered. This allows the propagation algorithms to be incremental,
+often speeding them up significantly.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Double Set Old (<TT>double-set-old</TT>)</STRONG></DT>
+<DD>(default value: <TT>hybrid</TT>)
+
+<P>
+Select an implementation for sets of old objects in the double
+points-to set implementation.
+
+<P>
+This option has no effect unless Set Implementation is set to double.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hash </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hash is an implementation based on Java's built-in hash-set.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>bit </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Bit is an implementation using a bit vector.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hybrid </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hybrid is an implementation that keeps an explicit list of up to
+16 elements, and switches to a bit-vector when the set gets
+larger than this.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>array </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Array is an implementation that keeps the elements of the
+points-to set in a sorted array. Set membership is tested using
+binary search, and set union and intersection are computed using
+an algorithm based on the merge step from merge sort.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>heintze </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>Heintze's representation has elements represented by a bit-vector + a small
+									'overflow' list of some maximum number of elements.  The bit-vectors can be shared
+									by multiple points-to sets, while the overflow lists are not.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Double Set New (<TT>double-set-new</TT>)</STRONG></DT>
+<DD>(default value: <TT>hybrid</TT>)
+
+<P>
+Select an implementation for sets of new objects in the double
+points-to set implementation.
+
+<P>
+This option has no effect unless Set Implementation is set to double.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hash </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hash is an implementation based on Java's built-in hash-set.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>bit </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Bit is an implementation using a bit vector.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>hybrid </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Hybrid is an implementation that keeps an explicit list of up to
+16 elements, and switches to a bit-vector when the set gets
+larger than this.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>array </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Array is an implementation that keeps the elements of the
+points-to set in a sorted array. Set membership is tested using
+binary search, and set union and intersection are computed using
+an algorithm based on the merge step from merge sort.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>heintze </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>Heintze's representation has elements represented by a bit-vector + a small
+									'overflow' list of some maximum number of elements.  The bit-vectors can be shared
+									by multiple points-to sets, while the overflow lists are not.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00043500000000000000">
+Paddle Output Options</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION00043510000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Print Context Counts (<TT>context-counts</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Causes Paddle to print the number of contexts for each method and
+call edge, and the number of equivalence classes of contexts for
+each variable node.
+
+<P>
+</DD>
+<DT><STRONG>Print Context Counts (Totals only) (<TT>total-context-counts</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Causes Paddle to print the number of contexts and number of context
+equivalence classes.
+
+<P>
+</DD>
+<DT><STRONG>Method Context Counts (Totals only) (<TT>method-context-counts</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Causes Paddle to print the number of contexts and number of context
+equivalence classes split out by method. Requires total-context-counts to also be turned on.
+
+<P>
+</DD>
+<DT><STRONG>Calculate Set Mass (<TT>set-mass</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When this option is set to true, Paddle computes and prints various
+cryptic statistics about the size of the points-to sets computed.
+
+<P>
+</DD>
+<DT><STRONG>Number nodes (<TT>number-nodes</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+When printing debug information about nodes, this option causes the node number
+of each node to be printed.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+Whole Shimple Transformation Pack (<TT>wstp</TT>)</A>
+</H1>
+
+<P>
+Soot can perform whole-program analyses.  In whole-shimple mode, Soot
+applies the contents of the Whole-Shimple Transformation Pack to the
+scene as a whole after constructing a call graph for the program.
+
+<P>
+In an unmodified copy of Soot the Whole-Shimple Transformation
+Pack is empty.
+
+<P>
+
+<H4><A NAME="SECTION00050010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+Whole Shimple Optimization Pack (<TT>wsop</TT>)</A>
+</H1>
+
+<P>
+If Soot is running in whole shimple mode and the Whole-Shimple
+Optimization Pack is enabled, the pack's transformations are
+applied to the scene as a whole after construction of the call
+graph and application of any enabled Whole-Shimple
+Transformations.
+
+<P>
+In an unmodified copy of Soot the Whole-Shimple Optimization
+Pack is empty.
+
+<P>
+
+<H4><A NAME="SECTION00060010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00070000000000000000">
+Whole-Jimple Transformation Pack (<TT>wjtp</TT>)</A>
+</H1>
+
+<P>
+Soot can perform whole-program analyses.  In whole-program mode,
+Soot applies the contents of the Whole-Jimple Transformation Pack
+to the scene as a whole after constructing a call graph for the
+program.
+
+<P>
+
+<H4><A NAME="SECTION00070010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00071000000000000000">
+Transactional Transformation (<TT>wjtp.tn</TT>)</A>
+</H2>
+
+<P>
+The Transactional Transformation find transactional regions in
+Java programs and prepares them for transactional execution on
+both optimistic and pessimistic JVMs.
+
+<P>
+
+<H4><A NAME="SECTION00071010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Locking Scheme (<TT>locking-scheme</TT>)</STRONG></DT>
+<DD>(default value: <TT>medium-grained</TT>)
+
+<P>
+Selects the granularity of the generated lock allocation
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>medium-grained </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Try to identify transactional regions that can employ a dynamic lock to
+increase parallelism.  All side effects must be protected by a single object.
+This locking scheme aims to approximate typical Java Monitor usage.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>coarse-grained </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Insert static objects into the program for synchronization.  One object will be
+used for each group of conflicting synchronized regions.  This locking scheme
+achieves code-level locking.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>single-static </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Insert one static object into the program for synchronization for all
+transactional regions.  This locking scheme is for research purposes.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>leave-original </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Analyse the existing lock structure of the program, but do not change it.  With
+one of the print options, this can be useful for comparison between the original
+program and one of the generated locking schemes.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Perform Deadlock Avoidance (<TT>avoid-deadlock</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Perform Deadlock Avoidance by enforcing a lock ordering where necessary.
+
+<P>
+</DD>
+<DT><STRONG>Use Open Nesting (<TT>open-nesting</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Use an open nesting model, where inner transactions are allowed to commit
+independently of any outer transaction.
+
+<P>
+</DD>
+<DT><STRONG>Perform May-Happen-in-Parallel Analysis (<TT>do-mhp</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Perform a May-Happen-in-Parallel analysis to assist in allocating locks.
+
+<P>
+</DD>
+<DT><STRONG>Perform Local Objects Analysis (<TT>do-tlo</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Perform a Local-Objects analysis to assist in allocating locks.
+
+<P>
+</DD>
+<DT><STRONG>Print Topological Graph (<TT>print-graph</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Print a topological graph of the program's transactions in the format used by the graphviz package.
+
+<P>
+</DD>
+<DT><STRONG>Print Table (<TT>print-table</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Print a table of information about the program's transactions.
+
+<P>
+</DD>
+<DT><STRONG>Print Debugging Info (<TT>print-debug</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Print debugging info, including every statement visited.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00080000000000000000">
+Whole-Jimple Optimization Pack (<TT>wjop</TT>)</A>
+</H1>
+
+<P>
+If Soot is running in whole program mode and the Whole-Jimple
+Optimization Pack is enabled, the pack's transformations are
+applied to the scene as a whole after construction of the call
+graph and application of any enabled Whole-Jimple
+Transformations.
+
+<P>
+
+<H4><A NAME="SECTION00080010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00081000000000000000">
+Static Method Binder (<TT>wjop.smb</TT>)</A>
+</H2>
+
+<P>
+The Static Method Binder statically binds monomorphic call
+sites. That is, it searches the call graph for virtual method
+invocations that can be determined statically to call only a single
+implementation of the called method.  Then it replaces such virtual
+invocations with invocations of a static copy of the single called
+implementation.
+
+<P>
+
+<H4><A NAME="SECTION00081010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Insert Null Checks (<TT>insert-null-checks</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Insert a check that, before invoking the static copy of the
+target method, throws a <TT>NullPointerException</TT> if the
+receiver object is null.  This ensures that static method binding does
+not eliminate exceptions which would have occurred in its absence.
+
+<P>
+</DD>
+<DT><STRONG>Insert Redundant Casts (<TT>insert-redundant-casts</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Insert extra casts for the Java bytecode verifier.  If the target
+method uses its <TT>this</TT> parameter, a reference to the
+receiver object must be passed to the static copy of the target
+method. The verifier may complain if the declared type of the
+receiver parameter does not match the type implementing the
+target method.
+
+<P>
+Say, for example, that <TT>Singer</TT> is an interface declaring
+the <TT>sing()</TT> method and that the call graph shows all
+receiver objects at a particular call site,
+<TT>singer.sing()</TT> (with <TT>singer</TT> declared as a
+<TT>Singer</TT>) are in fact <TT>Bird</TT> objects (<TT>Bird</TT>
+being a class that implements <TT>Singer</TT>). The virtual call
+<TT>singer.sing()</TT> is effectively replaced with the static
+call <TT>Bird.staticsing(singer)</TT>. <TT>Bird.staticsing()</TT>
+may perform operations on its parameter which are only allowed on
+<TT>Bird</TT>s, rather than <TT>Singer</TT>s.  The Insert
+Redundant Casts option inserts a cast of <TT>singer</TT> to the
+<TT>Bird</TT> type, to prevent complaints from the verifier.
+
+<P>
+</DD>
+<DT><STRONG>Allowed Modifier Changes (<TT>allowed-modifier-changes</TT>)</STRONG></DT>
+<DD>(default value: <TT>unsafe</TT>)
+
+<P>
+Specify which changes in visibility modifiers
+are allowed.  
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>unsafe </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Modify the visibility on code so that all inlining is permitted.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>safe </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Preserve the exact meaning of the analyzed program.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>none </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Change no modifiers whatsoever.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00082000000000000000">
+Static Inliner (<TT>wjop.si</TT>)</A>
+</H2>
+
+<P>
+The Static Inliner visits all call sites in the call graph in a
+bottom-up fashion, replacing monomorphic calls with inlined
+copies of the invoked methods.
+
+<P>
+
+<H4><A NAME="SECTION00082010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Reconstruct Jimple body after inlining (<TT>rerun-jb</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+When a method with array parameters is inlined, its variables may need to
+be assigned different types than they had in the original method to produce
+compilable code. When this option is set, Soot re-runs the Jimple Body pack
+on each method body which has had another method inlined into it so that
+the typing algorithm can reassign the types.
+
+<P>
+</DD>
+<DT><STRONG>Insert Null Checks (<TT>insert-null-checks</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Insert, before the inlined body of the target method, a check
+that throws a <TT>NullPointerException</TT> if the receiver
+object is null.  This ensures that inlining will not eliminate
+exceptions which would have occurred in its absence.
+
+<P>
+</DD>
+<DT><STRONG>Insert Redundant Casts (<TT>insert-redundant-casts</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Insert extra casts for the Java bytecode verifier.  The verifier
+may complain if the inlined method uses <TT>this</TT> and the
+declared type of the receiver of the call being inlined is
+different from the type implementing the target method being
+inlined.
+
+<P>
+Say, for example, that <TT>Singer</TT> is an interface declaring
+the <TT>sing()</TT> method and that the call graph shows that all
+receiver objects at a particular call site,
+<TT>singer.sing()</TT> (with <TT>singer</TT> declared as a
+<TT>Singer</TT>) are in fact <TT>Bird</TT> objects (<TT>Bird</TT>
+being a class that implements <TT>Singer</TT>). The
+implementation of <TT>Bird.sing()</TT> may perform operations on
+<TT>this</TT> which are only allowed on <TT>Bird</TT>s, rather
+than <TT>Singer</TT>s.  The Insert Redundant Casts option ensures that
+this cannot lead to verification errors, by inserting a cast of
+<TT>bird</TT> to the <TT>Bird</TT> type before inlining the body
+of <TT>Bird.sing()</TT>.
+
+<P>
+</DD>
+<DT><STRONG>Allowed Modifier Changes (<TT>allowed-modifier-changes</TT>)</STRONG></DT>
+<DD>(default value: <TT>unsafe</TT>)
+
+<P>
+Specify which changes in visibility modifiers
+are allowed.  
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>unsafe </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Modify the visibility on code so that all inlining is permitted.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>safe </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Preserve the exact meaning of the analyzed program.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>none </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Change no modifiers whatsoever.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Expansion Factor (<TT>expansion-factor</TT>)</STRONG></DT>
+<DD>(default value: <TT>3</TT>)
+
+<P>
+Determines the maximum allowed expansion of a method.  Inlining
+will cause the method to grow by a factor of no more than
+the Expansion Factor.
+
+<P>
+</DD>
+<DT><STRONG>Max Container Size (<TT>max-container-size</TT>)</STRONG></DT>
+<DD>(default value: <TT>5000</TT>)
+
+<P>
+Determines the maximum number of Jimple statements for a container
+method.  If a method has more than this number of Jimple statements,
+then no methods will be inlined into it.
+
+<P>
+</DD>
+<DT><STRONG>Max Inlinee Size (<TT>max-inlinee-size</TT>)</STRONG></DT>
+<DD>(default value: <TT>20</TT>)
+
+<P>
+Determines the maximum number of Jimple statements for an inlinee
+method.  If a method has more than this number of Jimple statements,
+then it will not be inlined into other methods.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00090000000000000000">
+Whole-Jimple Annotation Pack (<TT>wjap</TT>)</A>
+</H1>
+
+<P>
+Some analyses do not transform Jimple body directly, but annotate
+statements or values with tags. Whole-Jimple annotation pack provides
+a place for annotation-oriented analyses in whole program mode.
+
+<P>
+
+<H4><A NAME="SECTION00090010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00091000000000000000">
+Rectangular Array Finder (<TT>wjap.ra</TT>)</A>
+</H2>
+
+<P>
+The Rectangular Array Finder traverses Jimple statements
+based on the static call graph, and finds array variables which always
+hold rectangular two-dimensional array objects.
+
+<P>
+In Java, a multi-dimensional array is an array of arrays, which
+means the shape of the array can be ragged. Nevertheless, many
+applications use rectangular arrays. Knowing that an array is
+rectangular can be very helpful in proving safe array bounds
+checks.
+
+<P>
+The Rectangular Array Finder does not change the
+program being analyzed. Its results are used by the Array Bound
+Checker.
+
+<P>
+
+<H4><A NAME="SECTION00091010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00092000000000000000">
+Unreachable Method Tagger (<TT>wjap.umt</TT>)</A>
+</H2>
+
+<P>
+Uses the call graph to determine which methods are unreachable and adds color tags so they can be highlighted in a source browser.
+
+<P>
+
+<H4><A NAME="SECTION00092010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00093000000000000000">
+Unreachable Fields Tagger (<TT>wjap.uft</TT>)</A>
+</H2>
+
+<P>
+Uses the call graph to determine which fields are unreachable and adds color tags so they can be highlighted in a source browser.
+
+<P>
+
+<H4><A NAME="SECTION00093010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00094000000000000000">
+Tightest Qualifiers Tagger (<TT>wjap.tqt</TT>)</A>
+</H2>
+
+<P>
+Determines which methods and fields have qualifiers that could be tightened. For example: if a field or method has the qualifier of public but is only used within the declaring class it could be private. This, this field or method is tagged with color tags so that the results can be highlighted in a source browser.
+
+<P>
+
+<H4><A NAME="SECTION00094010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00095000000000000000">
+Call Graph Grapher (<TT>wjap.cgg</TT>)</A>
+</H2>
+
+<P>
+Creates graphical call graph.
+
+<P>
+
+<H4><A NAME="SECTION00095010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Show Library Methods (<TT>show-lib-meths</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00096000000000000000">
+Purity Analysis [AM] (<TT>wjap.purity</TT>)</A>
+</H2>
+
+<P>
+Purity anaysis implemented by Antoine Mine and based on the paper
+A Combined Pointer and Purity Analysis for Java Programs by 
+Alexandru Salcianu and Martin Rinard.
+
+<P>
+
+<H4><A NAME="SECTION00096010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Dump one .dot files for each method summary (<TT>dump-summaries</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Dump .dot call-graph annotated with method summaries (huge) (<TT>dump-cg</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Dump one .dot for each intra-procedural method analysis (long) (<TT>dump-intra</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Print analysis results (<TT>print</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Be (quite) verbose (<TT>verbose</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000100000000000000000">
+Shimple Control (<TT>shimple</TT>)</A>
+</H1>
+
+<P>
+Shimple Control sets parameters which apply throughout the
+creation and manipulation of Shimple bodies. Shimple is Soot's
+SSA representation.
+
+<P>
+
+<H4><A NAME="SECTION000100010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Shimple Node Elimination Optimizations (<TT>node-elim-opt</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Perform some optimizations, such as dead code elimination
+          and local aggregation, before/after eliminating nodes.
+
+<P>
+</DD>
+<DT><STRONG>Local Name Standardization (<TT>standard-local-names</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+If enabled, the Local Name Standardizer is applied whenever
+            Shimple creates new locals.  Normally, Shimple will retain
+            the original local names as far as possible and use an
+            underscore notation to denote SSA subscripts.  This
+            transformation does not otherwise affect Shimple
+            behaviour.
+
+<P>
+</DD>
+<DT><STRONG>Extended SSA (SSI) (<TT>extended</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+If enabled, Shimple will created extended SSA (SSI) form.
+
+<P>
+</DD>
+<DT><STRONG>Debugging Output (<TT>debug</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+If enabled, Soot may print out warnings and messages
+            useful for debugging the Shimple module.  Automatically
+            enabled by the global debug switch.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000110000000000000000">
+Shimple Transformation Pack (<TT>stp</TT>)</A>
+</H1>
+
+<P>
+When the Shimple representation is produced, Soot applies the
+            contents of the Shimple Transformation Pack to each method
+            under analysis.  This pack contains no transformations in an
+            unmodified version of Soot.
+
+<P>
+
+<H4><A NAME="SECTION000110010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000120000000000000000">
+Shimple Optimization Pack (<TT>sop</TT>)</A>
+</H1>
+
+<P>
+The Shimple Optimization Pack contains transformations that
+            perform optimizations on Shimple, Soot's SSA
+            representation.
+
+<P>
+
+<H4><A NAME="SECTION000120010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000121000000000000000">
+Shimple Constant Propagator and Folder (<TT>sop.cpf</TT>)</A>
+</H2>
+
+<P>
+A powerful constant propagator and folder based on an
+              algorithm sketched by Cytron et al that takes
+              conditional control flow into account.  This
+              optimization demonstrates some of the benefits of SSA
+              - particularly the fact that Phi nodes represent
+              natural merge points in the control flow.
+
+<P>
+
+<H4><A NAME="SECTION000121010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Prune Control Flow Graph (<TT>prune-cfg</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Conditional branching statements that are found to
+                branch unconditionally (or fall through) are replaced
+                with unconditional branches (or removed).  This
+                transformation exposes more opportunities for dead
+                code removal.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000130000000000000000">
+Jimple Transformation Pack (<TT>jtp</TT>)</A>
+</H1>
+
+<P>
+Soot applies the contents of the Jimple Transformation Pack to
+each method under analysis.  This pack contains no
+transformations in an unmodified version of Soot.
+
+<P>
+
+<H4><A NAME="SECTION000130010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000140000000000000000">
+Jimple Optimization Pack (<TT>jop</TT>)</A>
+</H1>
+
+<P>
+When Soot's Optimize option is on, Soot applies the
+Jimple Optimization Pack to every <TT>JimpleBody</TT> in
+application classes.  This section lists the default
+transformations in the Jimple Optimization Pack.
+
+<P>
+
+<H4><A NAME="SECTION000140010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000141000000000000000">
+Common Subexpression Eliminator (<TT>jop.cse</TT>)</A>
+</H2>
+
+<P>
+The Common Subexpression Eliminator runs an available expressions
+analysis on the method body, then eliminates common
+subexpressions.
+
+<P>
+This implementation is especially slow, as it runs on individual
+statements rather than on basic blocks.  A better implementation
+(which would find most common subexpressions, but not all) would use
+basic blocks instead.
+
+<P>
+This implementation is also slow because the flow universe is
+explicitly created; it need not be.  A better implementation
+would implicitly compute the kill sets at every node.
+
+<P>
+Because of its current slowness, this transformation is not
+enabled by default.
+
+<P>
+
+<H4><A NAME="SECTION000141010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Naive Side Effect Tester (<TT>naive-side-effect</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+If Naive Side Effect Tester is <TT>true</TT>, the Common
+Subexpression Eliminator uses the conservative side effect
+information provided by the <TT>NaiveSideEffectTester</TT> class,
+even if interprocedural information about side effects is
+available.
+
+<P>
+The naive side effect analysis is based solely on the information
+available locally about a statement. It assumes, for example,
+that any method call has the potential to write and read all
+instance and static fields in the program.
+
+<P>
+If Naive Side Effect Tester is set to <TT>false</TT> and Soot is
+in whole program mode, then the Common Subexpression
+Eliminator uses the side effect information provided by the
+<TT>PASideEffectTester</TT> class. <TT>PASideEffectTester</TT>
+uses a points-to analysis to
+determine which fields and statics may be written or read by a
+given statement.
+
+<P>
+If whole program analysis is not performed, naive side effect
+information is used regardless of the setting of
+Naive Side Effect Tester.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000142000000000000000">
+Busy Code Motion (<TT>jop.bcm</TT>)</A>
+</H2>
+
+<P>
+Busy Code Motion is a straightforward implementation of Partial
+Redundancy Elimination. This implementation is not very
+aggressive.  Lazy Code Motion is an improved version which
+should be used instead of Busy Code Motion.
+
+<P>
+
+<H4><A NAME="SECTION000142010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Naive Side Effect Tester (<TT>naive-side-effect</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+If Naive Side Effect Tester is set to <TT>true</TT>, Busy Code
+Motion uses the conservative side effect information provided by
+the <TT>NaiveSideEffectTester</TT> class, even if interprocedural
+information about side effects is available.
+
+<P>
+The naive side effect analysis is based solely on the information
+available locally about a statement. It assumes, for example,
+that any method call has the potential to write and read all
+instance and static fields in the program.
+
+<P>
+If Naive Side Effect Tester is set to <TT>false</TT> and Soot is
+in whole program mode, then Busy Code Motion uses the side effect
+information provided by the <TT>PASideEffectTester</TT>
+class. <TT>PASideEffectTester</TT> uses a points-to analysis to
+determine which fields and statics may be written or read by a
+given statement.
+
+<P>
+If whole program analysis is not performed, naive side effect
+information is used regardless of the setting of
+Naive Side Effect Tester.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000143000000000000000">
+Lazy Code Motion (<TT>jop.lcm</TT>)</A>
+</H2>
+
+<P>
+Lazy Code Motion is an enhanced version of Busy Code Motion, a
+Partial Redundancy Eliminator. Before doing Partial Redundancy Elimination,
+this optimization performs loop inversion (turning <TT>while</TT> loops
+into <TT>do while</TT> loops inside an <TT>if</TT> statement).
+This allows the Partial Redundancy Eliminator
+to optimize loop invariants of <TT>while</TT> loops.
+
+<P>
+
+<H4><A NAME="SECTION000143010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Safety (<TT>safety</TT>)</STRONG></DT>
+<DD>(default value: <TT>safe</TT>)
+
+<P>
+This option controls which fields and statements are candidates
+for code motion.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>safe </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Safe, but only considers moving additions,
+subtractions and multiplications.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>medium </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Unsafe in multi-threaded programs, as it may reuse the values
+read from field accesses.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>unsafe </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+May violate Java's exception semantics, as it may move or reorder
+exception-throwing statements, potentially outside of
+<TT>try-catch</TT> blocks.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>Unroll (<TT>unroll</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+If <TT>true</TT>, perform loop inversion before doing the
+transformation.
+
+<P>
+</DD>
+<DT><STRONG>Naive Side Effect Tester (<TT>naive-side-effect</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+If Naive Side Effect Tester is set to <TT>true</TT>, Lazy Code
+Motion uses the conservative side effect information provided by
+the <TT>NaiveSideEffectTester</TT> class, even if interprocedural
+information about side effects is available.
+
+<P>
+The naive side effect analysis is based solely on the information
+available locally about a statement. It assumes, for example,
+that any method call has the potential to write and read all
+instance and static fields in the program.
+
+<P>
+If Naive Side Effect Tester is set to <TT>false</TT> and Soot is
+in whole program mode, then Lazy Code Motion uses the side effect
+information provided by the <TT>PASideEffectTester</TT>
+class. <TT>PASideEffectTester</TT> uses a points-to analysis to
+determine which fields and statics may be written or read by a
+given statement.
+
+<P>
+If whole program analysis is not performed, naive side effect
+information is used regardless of the setting of
+Naive Side Effect Tester.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000144000000000000000">
+Copy Propagator (<TT>jop.cp</TT>)</A>
+</H2>
+
+<P>
+This phase performs cascaded copy propagation.
+
+<P>
+
+<H4><A NAME="SECTION000144010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Regular Locals (<TT>only-regular-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Only propagate copies through ``regular'' locals, that is,
+those declared in the source bytecode.
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Only propagate copies through locals that represent stack locations in
+the original bytecode.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000145000000000000000">
+Jimple Constant Propagator and Folder (<TT>jop.cpf</TT>)</A>
+</H2>
+
+<P>
+The Jimple Constant Propagator and Folder evaluates any expressions
+consisting entirely of compile-time constants, for example <TT>2
+* 3</TT>, and replaces the expression with the constant result,
+in this case <TT>6</TT>.
+
+<P>
+
+<H4><A NAME="SECTION000145010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000146000000000000000">
+Conditional Branch Folder (<TT>jop.cbf</TT>)</A>
+</H2>
+
+<P>
+The Conditional Branch Folder statically evaluates the
+conditional expression of Jimple <TT>if</TT> statements.  If the
+condition is identically <TT>true</TT> or
+<TT>false</TT>, the Folder replaces the conditional branch
+statement with an unconditional <TT>goto</TT> statement.
+
+<P>
+
+<H4><A NAME="SECTION000146010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000147000000000000000">
+Dead Assignment Eliminator (<TT>jop.dae</TT>)</A>
+</H2>
+
+<P>
+The Dead Assignment Eliminator eliminates assignment statements
+to locals whose values are not subsequently used, unless
+evaluating the right-hand side of the assignment may cause
+side-effects.
+
+<P>
+
+<H4><A NAME="SECTION000147010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Tag Dead Code (<TT>only-tag</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Only tag dead assignment statements instead of eliminaing them.
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Only eliminate dead assignments to locals that represent stack
+locations in the original bytecode.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000148000000000000000">
+Null Check Eliminator (<TT>jop.nce</TT>)</A>
+</H2>
+
+<P>
+Replaces statements 'if(x!=null) goto y' with 'goto y' if x is
+known to be non-null or with 'nop' if it is known to be null,
+etc. Generates dead code and is hence followed by unreachable
+code elimination. Disabled by default because it can be
+expensive on methods with many locals.
+
+<P>
+
+<H4><A NAME="SECTION000148010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000149000000000000000">
+Unreachable Code Eliminator 1 (<TT>jop.uce1</TT>)</A>
+</H2>
+
+<P>
+The Unreachable Code Eliminator removes unreachable code and
+traps whose catch blocks are empty.
+
+<P>
+
+<H4><A NAME="SECTION000149010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Remove unreachable traps (<TT>remove-unreachable-traps</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Remove exception table entries when none of the protected instructions can
+throw the exception being caught.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0001410000000000000000">
+Unconditional Branch Folder 1 (<TT>jop.ubf1</TT>)</A>
+</H2>
+
+<P>
+The Unconditional Branch Folder removes unnecessary `<TT>goto</TT>'
+statements from a <TT>JimpleBody</TT>.
+
+<P>
+If a <TT>goto</TT> statement's target is the next instruction,
+then the statement is removed.  If a <TT>goto</TT>'s target is
+another <TT>goto</TT>, with target <TT>y</TT>, then the first
+statement's target is changed to <TT>y</TT>.
+
+<P>
+If some <TT>if</TT> statement's target is a <TT>goto</TT>
+statement, then the <TT>if</TT>'s target can be replaced with the
+<TT>goto</TT>'s target.
+
+<P>
+(These situations can result from other optimizations, and branch
+folding may itself generate more unreachable code.)
+
+<P>
+
+<H4><A NAME="SECTION0001410010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0001411000000000000000">
+Unreachable Code Eliminator 2 (<TT>jop.uce2</TT>)</A>
+</H2>
+
+<P>
+Another iteration of the Unreachable Code Eliminator.
+
+<P>
+
+<H4><A NAME="SECTION0001411010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Remove unreachable traps (<TT>remove-unreachable-traps</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Remove exception table entries when none of the protected instructions can
+throw the exception being caught.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0001412000000000000000">
+Unconditional Branch Folder 2 (<TT>jop.ubf2</TT>)</A>
+</H2>
+
+<P>
+Another iteration of the Unconditional Branch Folder.
+
+<P>
+
+<H4><A NAME="SECTION0001412010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0001413000000000000000">
+Unused Local Eliminator (<TT>jop.ule</TT>)</A>
+</H2>
+
+<P>
+The Unused Local Eliminator phase removes any unused locals from
+the method.
+
+<P>
+
+<H4><A NAME="SECTION0001413010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000150000000000000000">
+Jimple Annotation Pack (<TT>jap</TT>)</A>
+</H1>
+
+<P>
+The Jimple Annotation Pack contains phases which add annotations
+to Jimple bodies individually (as opposed to the Whole-Jimple
+Annotation Pack, which adds annotations based on the analysis of
+the whole program).
+
+<P>
+
+<H4><A NAME="SECTION000150010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000151000000000000000">
+Null Pointer Checker (<TT>jap.npc</TT>)</A>
+</H2>
+
+<P>
+The Null Pointer Checker finds instruction which have the potential
+to throw <TT>NullPointerException</TT>s and adds annotations
+indicating whether or not the pointer being dereferenced can be
+determined statically not to be null.
+
+<P>
+
+<H4><A NAME="SECTION000151010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Array Ref (<TT>only-array-ref</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Annotate only array-referencing instructions, instead of all
+instructions that need null pointer checks.
+
+<P>
+</DD>
+<DT><STRONG>Profiling (<TT>profiling</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Insert profiling instructions that at runtime count the number of
+eliminated safe null pointer checks. The inserted profiling code
+assumes the existence of a <TT>MultiCounter</TT> class
+implementing the methods invoked. For details, see the
+<TT>NullPointerChecker</TT> source code.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000152000000000000000">
+Null Pointer Colourer (<TT>jap.npcolorer</TT>)</A>
+</H2>
+
+<P>
+Produce colour tags that the Soot plug-in for Eclipse can use to
+highlight null and non-null references.
+
+<P>
+
+<H4><A NAME="SECTION000152010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000153000000000000000">
+Array Bound Checker (<TT>jap.abc</TT>)</A>
+</H2>
+
+<P>
+The Array Bound Checker performs a static analysis to determine
+which array bounds checks may safely be eliminated and then annotates
+statements with the results of the analysis.
+
+<P>
+If Soot is in whole-program mode, the Array Bound Checker can
+use the results provided by the Rectangular Array Finder.
+
+<P>
+
+<H4><A NAME="SECTION000153010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>With All (<TT>with-all</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Setting the With All option to true is equivalent to setting each
+of With CSE, With Array Ref, With Field Ref,
+With Class Field, and  With Rectangular Array to true.
+
+<P>
+</DD>
+<DT><STRONG>With Common Sub-expressions (<TT>with-cse</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+The analysis will consider common subexpressions.  For example,
+consider the situation where <TT>r1</TT> is assigned
+<TT>a*b</TT>; later, <TT>r2</TT> is assigned <TT>a*b</TT>, where
+neither <TT>a</TT> nor <TT>b</TT> have changed between the two
+statements. The analysis can conclude that <TT>r2</TT> has the
+same value as <TT>r1</TT>. Experiments show that this option can
+improve the result slightly.
+
+<P>
+</DD>
+<DT><STRONG>With Array References (<TT>with-arrayref</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+With this option enabled, array references can be considered as
+common subexpressions; however, we are more conservative when
+writing into an array, because array objects may be aliased. We
+also assume that the application is single-threaded or that the
+array references occur in a synchronized block. That is, we
+assume that an array element may not be changed by other threads
+between two array references.
+
+<P>
+</DD>
+<DT><STRONG>With Field References (<TT>with-fieldref</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+The analysis treats field references (static and instance) as
+common subexpressions; however, we are more conservative when
+writing to a field, because the base of the field reference may
+be aliased. We also assume that the application is
+single-threaded or that the field references occur in a
+synchronized block. That is, we assume that a field may
+not be changed by other threads between two field references.
+
+<P>
+</DD>
+<DT><STRONG>With Class Field (<TT>with-classfield</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+This option makes the analysis work on the class level. The
+algorithm analyzes <TT>final</TT> or <TT>private</TT> class
+fields first. It can recognize the fields that hold array objects
+of constant length.  In an application using lots of array
+fields, this option can improve the analysis results
+dramatically.
+
+<P>
+</DD>
+<DT><STRONG>With Rectangular Array (<TT>with-rectarray</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+This option is used together with <TT>wjap.ra</TT> to make Soot run the whole-program
+analysis for rectangular array objects. This analysis is based on the
+call graph, and it usually takes a long time. If the application uses
+rectangular arrays, these options can improve the analysis
+result.
+
+<P>
+</DD>
+<DT><STRONG>Profiling (<TT>profiling</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Profile the results of array bounds check analysis.  The inserted
+profiling code assumes the existence of a <TT>MultiCounter</TT>
+class implementing the methods invoked. For details, see the
+<TT>ArrayBoundsChecker</TT> source code.
+
+<P>
+</DD>
+<DT><STRONG>Add Color Tags (<TT>add-color-tags</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Add color tags to the results of the array bounds check analysis.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000154000000000000000">
+Profiling Generator (<TT>jap.profiling</TT>)</A>
+</H2>
+
+<P>
+The Profiling Generator inserts the method invocations required
+to initialize and to report the results of any profiling
+performed by the Null Pointer Checker and Array Bound
+Checker. Users of the Profiling Generator must provide a
+<TT>MultiCounter</TT> class implementing the methods invoked. For
+details, see the <TT>ProfilingGenerator</TT> source code.
+
+<P>
+
+<H4><A NAME="SECTION000154010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Not Main Entry (<TT>notmainentry</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Insert the calls to the <TT>MultiCounter</TT> at the
+beginning and end of methods with the signature
+<TT>long runBenchmark(java.lang.String[])</TT>
+instead of the signature
+<TT>void main(java.lang.String[])</TT>.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000155000000000000000">
+Side Effect tagger (<TT>jap.sea</TT>)</A>
+</H2>
+
+<P>
+The Side Effect Tagger
+uses the active invoke graph to produce side-effect attributes, as
+described in the <A NAME="tex2html10"
+  HREF="http://www.sable.mcgill.ca/publications/thesis/#olhotakMastersThesis">Spark
+thesis</A>, chapter 6.
+
+<P>
+
+<H4><A NAME="SECTION000155010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Build naive dependence graph (<TT>naive</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+When set to true, the dependence graph is built with a node for
+each statement, without merging the nodes for equivalent
+statements. This makes it possible to measure the effect of
+merging nodes for equivalent statements on the size of the
+dependence graph.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000156000000000000000">
+Field Read/Write Tagger (<TT>jap.fieldrw</TT>)</A>
+</H2>
+
+<P>
+The Field Read/Write Tagger uses the active invoke graph to
+produce tags indicating which fields may be read or written by
+each statement, including invoke statements.
+
+<P>
+
+<H4><A NAME="SECTION000156010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Maximum number of fields (<TT>threshold</TT>)</STRONG></DT>
+<DD>(default value: <TT>100</TT>)
+
+<P>
+If a statement reads/writes more than this number of fields, no tag will be
+produced for it, in order to keep the size of the tags reasonable.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000157000000000000000">
+Call Graph Tagger (<TT>jap.cgtagger</TT>)</A>
+</H2>
+
+<P>
+The Call Graph Tagger produces LinkTags based on the call
+graph. The Eclipse plugin uses these tags to produce
+linked popup lists which indicate the source and target methods
+of the statement. Selecting a link from the list moves the
+cursor to the indicated method.
+
+<P>
+
+<H4><A NAME="SECTION000157010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000158000000000000000">
+Parity Tagger (<TT>jap.parity</TT>)</A>
+</H2>
+
+<P>
+The Parity Tagger produces StringTags and ColorTags indicating
+the parity of a variable (even, odd, top, or bottom).  The eclipse
+plugin can use tooltips and variable colouring to display the
+information in these tags.  For example, even variables (such as
+<TT>x</TT> in <TT>x = 2</TT>) are coloured yellow.
+
+<P>
+
+<H4><A NAME="SECTION000158010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000159000000000000000">
+Parameter Alias Tagger (<TT>jap.pat</TT>)</A>
+</H2>
+For each method with parameters of reference type, this tagger indicates the aliasing relationships between the parameters using colour tags. Parameters that may be aliased are the same colour. Parameters that may not be aliased are in different colours.
+
+<P>
+
+<H4><A NAME="SECTION000159010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0001510000000000000000">
+Live Variables Tagger (<TT>jap.lvtagger</TT>)</A>
+</H2>
+Colors live variables.
+
+<P>
+
+<H4><A NAME="SECTION0001510010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0001511000000000000000">
+Reaching Defs Tagger (<TT>jap.rdtagger</TT>)</A>
+</H2>
+For each use of a local in a stmt creates a link to the reaching def.
+
+<P>
+
+<H4><A NAME="SECTION0001511010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0001512000000000000000">
+Cast Elimination Check Tagger (<TT>jap.che</TT>)</A>
+</H2>
+Indicates whether cast checks can be eliminated.
+
+<P>
+
+<H4><A NAME="SECTION0001512010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0001513000000000000000">
+Unreachable Method Transformer (<TT>jap.umt</TT>)</A>
+</H2>
+When the whole-program analysis determines a method to be unreachable, this transformer inserts an assertion into the method to check that it is indeed unreachable.
+
+<P>
+
+<H4><A NAME="SECTION0001513010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0001514000000000000000">
+Loop Invariant Tagger (<TT>jap.lit</TT>)</A>
+</H2>
+An expression whose operands are constant or have reaching definitions from outside the loop body are tagged as loop invariant.
+
+<P>
+
+<H4><A NAME="SECTION0001514010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0001515000000000000000">
+Available Expressions Tagger (<TT>jap.aet</TT>)</A>
+</H2>
+A each statement a set of available expressions is after the statement is added as a tag.
+
+<P>
+
+<H4><A NAME="SECTION0001515010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Kind (<TT>kind</TT>)</STRONG></DT>
+<DD>(default value: <TT>optimistic</TT>)
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>optimistic </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>pessimistic </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288>&nbsp;</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0001516000000000000000">
+Dominators Tagger (<TT>jap.dmt</TT>)</A>
+</H2>
+Provides link tags at a statement to all of the satements dominators.
+
+<P>
+
+<H4><A NAME="SECTION0001516010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000160000000000000000">
+Grimp Body Creation (<TT>gb</TT>)</A>
+</H1>
+
+<P>
+The Grimp Body Creation phase creates a <TT>GrimpBody</TT> for
+each source method. It is run only if the output format is
+<TT>grimp</TT> or <TT>grimple</TT>, or if class files are being
+output and the Via Grimp option has been specified.
+
+<P>
+
+<H4><A NAME="SECTION000160010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000161000000000000000">
+Grimp Pre-folding Aggregator (<TT>gb.a1</TT>)</A>
+</H2>
+
+<P>
+The Grimp Pre-folding Aggregator combines some local variables,
+finding definitions with only a single use and removing the
+definition after replacing the use with the definition's
+right-hand side, if it is safe to do so. While the mechanism is
+the same as that employed by the Jimple Local Aggregator, there
+is more scope for aggregation because of Grimp's more complicated
+expressions.
+
+<P>
+
+<H4><A NAME="SECTION000161010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Aggregate only values stored in stack locals.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000162000000000000000">
+Grimp Constructor Folder (<TT>gb.cf</TT>)</A>
+</H2>
+
+<P>
+The Grimp Constructor Folder combines <TT>new</TT> statements
+with the <TT>specialinvoke</TT> statement that calls the new
+object's constructor. For example, it turns
+
+<P><PRE>
+r2 = new java.util.ArrayList;
+r2.&lt;init&gt;();
+</PRE>
+
+<P>
+into
+
+<P><PRE>
+r2 = new java.util.ArrayList();
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION000162010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000163000000000000000">
+Grimp Post-folding Aggregator (<TT>gb.a2</TT>)</A>
+</H2>
+
+<P>
+The Grimp Post-folding Aggregator combines local variables after
+constructors have been folded. Constructor folding typically
+introduces new opportunities for aggregation, since when a
+sequence of instructions like
+
+<P><PRE>
+r2 = new java.util.ArrayList;
+r2.&lt;init&gt;();
+r3 = r2
+</PRE>
+is replaced by
+
+<P><PRE>
+r2 = new java.util.ArrayList();
+r3 = r2
+</PRE>
+the invocation of <TT><!-- MATH
+ $\ensuremath{<}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="16" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.png"
+ ALT="\ensuremath{&lt;}"></SPAN>init<!-- MATH
+ $\ensuremath{>}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="16" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.png"
+ ALT="\ensuremath{&gt;}"></SPAN></TT> no longer represents a potential side-effect 
+separating the two definitions, so they can be combined into
+
+<P><PRE>
+r3 = new java.util.ArrayList();
+</PRE>
+(assuming there are no subsequent uses of <TT>r2</TT>).
+
+<P>
+
+<H4><A NAME="SECTION000163010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Only Stack Locals (<TT>only-stack-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Aggregate only values stored in stack locals.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000164000000000000000">
+Grimp Unused Local Eliminator (<TT>gb.ule</TT>)</A>
+</H2>
+
+<P>
+This phase removes any locals that are unused after constructor
+folding and aggregation.
+
+<P>
+
+<H4><A NAME="SECTION000164010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000170000000000000000">
+Grimp Optimization (<TT>gop</TT>)</A>
+</H1>
+
+<P>
+The Grimp Optimization pack performs optimizations on
+<TT>GrimpBody</TT>s (currently there are no optimizations
+performed specifically on <TT>GrimpBody</TT>s, and the pack is
+empty). It is run only if the output format is <TT>grimp</TT> or
+<TT>grimple</TT>, or if class files are being output and the Via
+Grimp option has been specified.
+
+<P>
+
+<H4><A NAME="SECTION000170010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000180000000000000000">
+Baf Body Creation (<TT>bb</TT>)</A>
+</H1>
+
+<P>
+The Baf Body Creation phase creates a
+<TT>BafBody</TT> from each source method. It is
+run if the output format is <TT>baf</TT> or <TT>b</TT>, or
+if class files are being output and the Via Grimp option
+has not been specified.
+
+<P>
+
+<H4><A NAME="SECTION000180010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000181000000000000000">
+Load Store Optimizer (<TT>bb.lso</TT>)</A>
+</H2>
+
+<P>
+The Load Store Optimizer replaces some combinations of loads to and stores from local variables with stack instructions. A simple example would be the replacement of
+
+<P><PRE>
+store.r $r2;
+load.r $r2;
+</PRE>
+
+<P>
+with 
+
+<P><PRE>
+dup1.r
+</PRE>
+
+<P>
+in cases where the value of <TT>$r2</TT> is not used subsequently.
+
+<P>
+
+<H4><A NAME="SECTION000181010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Debug (<TT>debug</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Produces voluminous debugging output describing the progress of
+the load store optimizer.
+
+<P>
+</DD>
+<DT><STRONG>Inter (<TT>inter</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Enables two simple inter-block optimizations which attempt to
+keep some variables on the stack between blocks.  Both are
+intended to catch <TT>if</TT>-like constructions where control
+flow branches temporarily into two paths that converge at a later
+point.
+
+<P>
+</DD>
+<DT><STRONG>sl (<TT>sl</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Enables an optimization which attempts to eliminate
+<TT>store</TT>/<TT>load</TT> pairs.
+
+<P>
+</DD>
+<DT><STRONG>sl2 (<TT>sl2</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Enables an a second pass of the optimization which attempts to
+eliminate <TT>store</TT>/<TT>load</TT> pairs.
+
+<P>
+</DD>
+<DT><STRONG>sll (<TT>sll</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+Enables an optimization which attempts to eliminate 
+<TT>store</TT>/<TT>load</TT>/<TT>load</TT>
+trios with some variant of <TT>dup</TT>.
+
+<P>
+</DD>
+<DT><STRONG>sll2 (<TT>sll2</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Enables an a second pass of the optimization which attempts to
+eliminate <TT>store</TT>/<TT>load</TT>/<TT>load</TT> trios with
+some variant of <TT>dup</TT>.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000182000000000000000">
+Peephole Optimizer (<TT>bb.pho</TT>)</A>
+</H2>
+
+<P>
+Applies peephole optimizations to the Baf intermediate
+representation.  Individual optimizations must be implemented by
+classes implementing the <TT>Peephole</TT> interface. The
+Peephole Optimizer reads the names of the <TT>Peephole</TT>
+classes at runtime from the file <TT>peephole.dat</TT> and loads
+them dynamically. Then it continues to apply the
+<TT>Peephole</TT>s repeatedly until none of them are able to
+perform any further optimizations.
+
+<P>
+Soot provides only one <TT>Peephole</TT>, named
+<TT>ExamplePeephole</TT>, which is not enabled by the delivered
+<TT>peephole.dat</TT> file.
+<TT>ExamplePeephole</TT> removes all <TT>checkcast</TT>
+instructions.
+
+<P>
+
+<H4><A NAME="SECTION000182010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000183000000000000000">
+Unused Local Eliminator (<TT>bb.ule</TT>)</A>
+</H2>
+
+<P>
+This phase removes any locals that are unused after load store optimization
+and peephole optimization.
+
+<P>
+
+<H4><A NAME="SECTION000183010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000184000000000000000">
+Local Packer (<TT>bb.lp</TT>)</A>
+</H2>
+
+<P>
+The Local Packer attempts to minimize the number of local
+variables required in a method by reusing the same variable for
+disjoint DU-UD webs. Conceptually, it is the inverse of the
+Local Splitter.
+
+<P>
+
+<H4><A NAME="SECTION000184010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Unsplit Original Locals (<TT>unsplit-original-locals</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+Use the variable names in the original source as a guide when
+determining how to share local variables across non-interfering
+variable usages. This recombines named locals which were split by
+the Local Splitter. 
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000190000000000000000">
+Baf Optimization (<TT>bop</TT>)</A>
+</H1>
+
+<P>
+The Baf Optimization pack performs optimizations on
+<TT>BafBody</TT>s (currently there are no optimizations performed
+specifically on <TT>BafBody</TT>s, and the pack is empty). It is
+run only if the output format is <TT>baf</TT> or <TT>b</TT>, or
+if class files are being output and the Via Grimp option
+has not been specified.
+
+<P>
+
+<H4><A NAME="SECTION000190010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000200000000000000000">
+Tag Aggregator (<TT>tag</TT>)</A>
+</H1>
+
+<P>
+The Tag Aggregator pack aggregates tags attached to individual units
+into a code attribute for each method, so that these attributes can be
+encoded in Java class files.
+
+<P>
+
+<H4><A NAME="SECTION000200010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000201000000000000000">
+Line Number Tag Aggregator (<TT>tag.ln</TT>)</A>
+</H2>
+
+<P>
+The Line Number Tag Aggregator aggregates line number
+tags.
+
+<P>
+
+<H4><A NAME="SECTION000201010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000202000000000000000">
+Array Bounds and Null Pointer Check Tag Aggregator (<TT>tag.an</TT>)</A>
+</H2>
+
+<P>
+The Array Bounds and Null Pointer Tag Aggregator aggregates
+tags produced by the Array Bound Checker and Null Pointer Checker.
+
+<P>
+
+<H4><A NAME="SECTION000202010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000203000000000000000">
+Dependence Tag Aggregator (<TT>tag.dep</TT>)</A>
+</H2>
+
+<P>
+The Dependence Tag Aggregator aggregates
+tags produced by the Side Effect Tagger.
+
+<P>
+
+<H4><A NAME="SECTION000203010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000204000000000000000">
+Field Read/Write Tag Aggregator (<TT>tag.fieldrw</TT>)</A>
+</H2>
+
+<P>
+The Field Read/Write Tag Aggregator aggregates field read/write
+tags produced by the Field Read/Write Tagger, phase
+<TT>jap.fieldrw</TT>.
+
+<P>
+
+<H4><A NAME="SECTION000204010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000210000000000000000">
+Dava Body Creation (<TT>db</TT>)</A>
+</H1>
+
+<P>
+The decompile (Dava) option is set using the -f dava options in Soot.
+Options provided by Dava are added to this dummy phase so as not to clutter the soot general arguments.
+-p db (option name):(value) will be used to set all required values for Dava. 
+
+<P>
+
+<H4><A NAME="SECTION000210010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+<DT><STRONG>Source (<TT>source-is-javac</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+check out soot.dava.toolkits.base.misc.ThrowFinder
+					In short we want to ensure that if there are throw exception info in the class file dava uses this info.					
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000211000000000000000">
+Transformations (<TT>db.transformations</TT>)</A>
+</H2>
+
+<P>
+The transformations implemented using AST Traversal and structural flow analses on Dava's AST
+
+<P>
+
+<H4><A NAME="SECTION000211010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000212000000000000000">
+Renamer (<TT>db.renamer</TT>)</A>
+</H2>
+If set, the renaming analyses implemented in Dava are applied to each method body being decompiled. The analyses use heuristics to choose potentially better names for local variables. (As of February 14th 2006, work is still under progress on these analyses (dava.toolkits.base.renamer).
+
+<P>
+
+<H4><A NAME="SECTION000212010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>false</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000213000000000000000">
+De-obfuscate (<TT>db.deobfuscate</TT>)</A>
+</H2>
+Certain analyses make sense only when the bytecode is obfuscated code. 
+There are plans to implement such analyses and apply them on methods only if this flag is set. 
+Dead Code elimination which includes removing code guarded by some condition which is always false or always true is one such
+analysis. Another suggested analysis is giving default names to classes and fields. Onfuscators love to use weird names
+for fields and classes and even a simple re-naming of these could be a good help to the user. 
+Another more advanced analysis would be to check for redundant constant fields added by obfuscators and then remove uses 
+of these constant fields from the code.
+
+<P>
+
+<H4><A NAME="SECTION000213010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000214000000000000000">
+Force Recompilability (<TT>db.force-recompile</TT>)</A>
+</H2>
+While decompiling we have to be clear what our aim is: do we want to convert bytecode
+to Java syntax and stay as close to the actual execution of bytecode or do we want recompilably Java source representing
+the bytecode. This distinction is important because some restrictions present in Java source are absent from the bytecode.
+Examples of this include that fact that in Java a call to a constructor or super needs to be the first statement in
+a constructors body. This restriction is absent from the bytecode. Similarly final fields HAVE to be initialized
+once and only once in either the static initializer (static fields) or all the constructors (non-static fields). Additionally
+the fields should be initialized on all possible execution paths. These restrictions are again absent from the bytecode.
+In doing a one-one conversion of bytecode to Java source then no attempt should be made to fix any of these and similar problems
+in the Java source. However, if the aim is to get recompilable code then these and similar issues need to be fixed. 
+Setting the force-recompilability flag will ensure that the decompiler tries its best to produce recompilable Java source.
+
+<P>
+
+<H4><A NAME="SECTION000214010000000000000">
+Accepted phase options:</A>
+</H4> 
+
+<P>
+<DL>
+<DT><STRONG>Enabled (<TT>enabled</TT>)</STRONG></DT>
+<DD>(default value: <TT>true</TT>)
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000220000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>Soot phase options</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>phase -split 0 -nonavigation -dir ./</TT>
+<P>
+The translation was initiated by Eric BODDEN on 2008-06-03
+<BR><HR>
+<ADDRESS>
+Eric BODDEN
+2008-06-03
+</ADDRESS>
+</BODY>
+</HTML>

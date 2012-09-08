@@ -1,0 +1,6 @@
+These files test a bug we found with disambiguation of member classes.
+To run the test, compile CollectionsTester.  In addition, either
+(1) none of the other object (.class or .java) files should exist, or
+(2) run the test with the -noserial flag.
+The point being that if those files do exist, and are used instead of the
+source file being recompiled, the bug won't occur.

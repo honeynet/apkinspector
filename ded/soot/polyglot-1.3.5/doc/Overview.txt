@@ -1,0 +1,492 @@
+Introduction
+------------
+
+Polyglot is an extensible Java compiler toolkit designed for experimentation
+with new language extensions.
+
+The base polyglot compiler, jlc ("Java language compiler"), is a
+mostly-complete Java front end; that is, it parses and performs semantic
+checking on Java source code.  The compiler outputs Java source code.  Thus,
+the base compiler implements the identity translation.
+
+Language extensions are implemented on top of the base compiler by
+extending the concrete and abstract syntax and the type system.
+After type checking the language extension, the abstract syntax
+tree (AST) is translated into a Java AST and the existing code is output
+into a Java source file which can then be compiled with javac.  For
+historical reasons, some extensions just override some portions of
+the Java output code to handle the extended syntax of the particular
+language extension being compiled rather than rewriting the AST.
+
+
+Architecture
+------------
+
+The Polyglot compiler is structured as a set of passes over source files
+that ends with the output of Java source code.  The passes parse the
+original source language and create an AST, rewrite the AST to eliminate
+any ambiguities, type check the AST, possibly rewrite the AST to another
+AST, then output the AST as Java source code.
+
+When the compiler is invoked (through polyglot.main.Main.main()), it
+parses the command line (setting options in polyglot.main.Options), then
+creates a compiler object (an instance of polyglot.frontend.Compiler) to
+manage the compilation process.  An important job of the command line
+parser is to identify the language extension (specified on the command
+line with -ext L, where L is the name of the extension), and load the
+extension (from polyglot.ext.L.ExtensionInfo).  The compiler uses the
+extension to determine several important features of the language,
+including its source file extension, AST node factory, type system, and
+pass schedule.
+
+Parsing is done with the Java CUP parser generator and a Polyglot
+extension to CUP called PPG.  PPG allows CUP files to be selectively
+extended to create parsers for extension languages by providing
+operations on a CUP grammar, including adding, dropping, and renaming of
+productions.  The JFlex lexer generator is used to create a lexer for
+the source language.  The semantic actions in the parser create an AST
+through a NodeFactory, which is a class containing factory methods for
+creating AST nodes.
+
+After the AST has been created by the parser, a series of passes is
+performed upon it.  The passes for a language extension, as well as
+the order in which they should be run, are defined in the extension's
+ExtensionInfo class.  The compiler object runs the passes in the order
+specified so that that dependencies between compilation units are
+satisfied.  Most passes are implemented using a modified version of the
+Visitor design pattern, described later (see also TR 2002-1871).  The
+default set of passes is:
+
+    * parsing, as described above
+    * build-types (TypeBuilder):  Constructs a Type object representing
+      each type in the source file and stores it in a Resolver associated
+      with the source file.  Resolvers are used to lookup types by name.
+    * clean-super (AmbiguityRemover):  Removes any ambiguities found
+      in the declaration of the supertypes of a type (e.g., the "extends"
+      clause).
+    * clean-sigs (AmbiguityRemover):  Removes any ambiguities found in
+      the signatures of class or interface members.
+    * add-members (AddMemberVisitor):  Adds the members of a class or
+      interface to its type object.
+    * disambiguate (AmbiguityRemover):  Removes any ambiguities found
+      in the bodies of methods, constructors, or initializers.
+    * type checking (TypeChecker):  Performs semantic analysis for Java.
+    * exception checking (ExceptionChecker):  Performs semantic analysis
+      upon exception declaration and propagation.
+    * reachability checking (ReachChecker):  Checks that all statements
+      in each method are reachable from the method entry.
+    * exit checking (ExitChecker):  Checks that all paths through methods
+      that should return a value do so.
+    * initialization checking (InitChecker): Checks that local variables
+      are initialized before use.
+    * dump (PrettyPrinter):  Optional.  A debugging pass that outputs the AST.
+    * serialization (ClassSerializer):  Optional.  Serializes information
+      about a compiled class and injects it into the class for output
+      during translation.  This enables separate compilation of
+      extension languages.
+    * translation (Translator):  Transforms each AST node to a String
+      and writes it to an output file.
+
+After many of these passes are "barrier" passes (implemented by
+BarrierPass).  A barrier pass compiles all source files on which a given
+source depends up to the same barrier.  This ensures that enough of
+the type information of dependent sources has been computed before the
+compilation continues.
+
+The ambiguities referred to in the above passes are ambiguities
+resulting from classification of names in Java.  Some names are
+syntactically ambiguous because their meaning cannot be determined
+without some semantic analysis (see JLS2 6.5.2).  Extensions may also
+introduce new ambiguities that require resolution.
+
+Extensions will usually insert passes before type checking to perform
+some initial semantic analysis or after it to do some final semantic
+analysis, and between exception checking and translation to rewrite the
+AST.
+
+
+
+Source code hierarchy
+---------------------
+
+All Polyglot code is in the package polyglot.  The subpackages are as
+follows:
+
+    ast - contains the AST node interface files.  All AST nodes
+    implement the polyglot.ast.Node interface.
+
+    types - contains the type system interface.
+
+    types/reflect - contains class file parsing code.
+
+    visit - contains visitor classes which iterate over abstract syntax
+    trees.
+
+    frontend - contains compiler pass scheduling code.
+
+    main - contains the code for the main method of the compiler in the
+    class polyglot.main.Main.  It includes code for parsing command line
+    options and for debug output.
+
+    util - contains utility code.  This includes the parser generator in
+    util/ppg.
+
+    lex - contains some lexer utility code.
+
+    parse - contains some parser utility code.
+
+    ext - contains the code for the language extensions.  Source code for
+    a language extension lives in the package polyglot.ext.<ext-name>.  The
+    default language extension is the "jl" extension which implements Java
+    parsing and type checking.  Extensions are usually implemented by
+    inheriting from the "jl" extension code.  Extensions usually have the
+    following subpackages:
+
+	ext.<ext-name>.ast - AST nodes specific to the extension
+	ext.<ext-name>.extension - New extenson and delegate objects specific
+                                   to the extension
+        ext.<ext-name>.types - type objects and typing judgments specific to
+                               the extension
+	ext.<ext-name>.visit - visitors specific to the extension
+	ext.<ext-name>.parse - the parser and lexer for the language extension
+
+    In addition, an extension must define the class
+    ext.<ext-name>.ExtensionInfo, which contains the objects which
+    define how the language is to be parsed and type checked. There should
+    also be a class ext.<ext-name>.Version defined, which specifies the 
+    version number of the extension.  The Version class is used as a check
+    when extracting extension-specific type information from .class files.
+
+
+AST nodes, extensions, and delegates
+------------------------------------
+
+To allow for greater flexibility in overriding the behavior of an AST node,
+each node has a pointer to a delegate object and a (possibly null) list of
+extension objects.  Extension objects are useful for adding a field or a method
+to many different AST nodes.  They provide functionality similar to mixins.
+Their purpose is to allow a uniform extension of many AST nodes, not to be the
+primary vehicle through which a language extension is implemented.  Delegate
+objects are similar to extension objects and are used for overriding existing
+methods of many different AST nodes.  For more details, see the tech report
+(Cornell CS-TR 2002-1883).
+
+In order for the delegates to override the AST node, most calls to the AST node
+object should be dispatched through the delegate object.  The default delegate
+of every AST node just calls the corresponding method in the AST node.
+
+So for instance, to invoke the typeCheck() method on an AST node n, we
+do:
+
+	n.del().typeCheck(type_checker);
+
+instead of directly calling:
+
+	n.typeCheck(type_checker);
+
+To reduce the proliferation of classes, all nodes in the base compiler use the
+same delegate class. For each compiler pass, the delegate invokes a method in
+the AST node that implements the pass. Thus, in the base compiler, passes are
+implemented in the AST nodes themselves. Besides reducing the number of
+classes, this approach also permits more convenient access to instance
+variables of the nodes; delegates access the instance variables of their
+associated node through accessor methods. 
+
+In writing a language extension, the designer should avoid using this approach
+and put the pass implementation in the delegates themselves; this leads to less
+work in the number of AST nodes that need to be extended.
+
+In deciding whether to put add functionality via inheritance, an extension
+object, or a delegate object, use the following guidelines:
+
+1. If extending the interface of many different AST node classes, including
+adding a member to the common base class of several classes, use an extension.
+
+2. If overriding an existing method of many different AST node classes,
+use a delegate.
+
+3. Otherwise, use inheritance.
+
+
+If the designer chooses to use delegates or extensions, delegate
+factories and extension factories simplify the task of instantiating
+appropriate delegate and extension objects respectively. See below for
+more information on node, extension and delegate factories.
+  
+
+Writing an extension
+--------------------
+
+Suppose you want to create language L that extends the Java language.
+
+First, you need to design L.  Your design process should include the
+following tasks.
+
+    1. Define the syntactic differences between L and Java, based on the
+    Java grammar found in polyglot/ext/jl/parse/java12.cup.
+
+    2. Define any new AST nodes that L requires.  The existing
+    Java nodes can be found in polyglot.ast (interfaces) and
+    polyglot.ext.jl.ast (implementations).
+
+    3. Define the semantic differences between L and Java. The Polyglot base
+    compiler (jlc) implements most of the static semantic of Java as defined in
+    the Java Language Specification 2.
+
+    4. Define a translation from L to Java.  The translation should produce a
+    legal Java program that can be compiled by javac.
+
+Next, you can implement L by creating a Polyglot extension.  Implementing
+the extension will require the following tasks.
+
+    0. Modify build.xml to add a target for the new extension.  This can
+    usually be done by copying and modifying the "skel" target.
+
+    (Optionally) Begin with the skeleton extension found in polyglot/ext/skel.
+    Run the customization script found at polyglot/ext/newext, which will copy
+    the skeleton to polyglot/ext/L, and substitute your language's name at all
+    the appropriate places in the skeleton.
+    
+    1. Implement a new parser using PPG.  To do this, modify
+    polyglot/ext/L/parse/L.ppg using the syntactic changes you defined above.
+
+    2. Implement any new AST nodes.  Modify the node factory
+    polyglot/ext/L/ast/LNodeFactory_c.java to produce these nodes.
+
+    3. Implement semantic checking for L based on the rules you defined
+    above.
+
+	a. If L involves changing the semantics of Java, you will
+	probably want to implement these as part of the type check
+	pass already defined by Polyglot.
+
+        b. If L introduces new semantics that are orthogonal to Java,
+        you may wish to implement an entirely new pass that runs
+        separately from the type checker.
+
+    Semantic changes that are localized to an AST node will probably
+    be implemented by overriding that node's typeCheck() method.
+    Semantic changes that affect more fundamental properties of the
+    Java type system will probably be implemented by overriding
+    appropriate methods in polyglot/ext/L/types/LTypeSystemc.java.
+
+    4. Implement the translation from L to Java based on the translation
+    you defined above.  This should be implemented as a visitor pass
+    that rewrites the AST into an AST representing a legal Java program.
+
+Let's make this more concrete by introducing an actual extension.  We'll
+use the "Primitives as Objects" (Pao) extension, which extends Java with the
+ability to use primitive types (e.g., int, float) as Objects.  For
+example, in Pao we can write:
+
+    Map m = new HashMap();
+    m.put(1, 2);
+    int x = (int) m.get(1);
+
+The changes to Java needed to support this feature are quite minimal.
+
+    1. We modify the grammar to allow instanceof to operate on primitive
+    types.  The existing production for instanceof in java12.cup is:
+
+	    relational_expression ::=
+            ...
+        |   relational_expression:a INSTANCEOF reference_type:b
+        ;
+
+    In order to allow primitives, we should change this to:
+
+       	relational_expression ::=
+            ...
+        |   relational_expression:a INSTANCEOF type:b
+        ;
+
+    2. We modify type checking so that primitive values may be used at
+    type Object.  That means for all primitive types P where P != void,
+    P <: Object (Polyglot defines void as a primitive type, but void has
+    no values).  We'll want to use this relationship in assignments and
+    casting, as shown in the example above.  Also, we'll need to allow
+    primitive types to appear inside an instanceof operator.
+
+    3. We rewrite the AST to make it a legal Java program.  This means
+    that anywhere we see a primitive value being used at Object, we
+    should box the value and insert a cast to Object.  We also need to unbox
+    primitives when casting from Object to a primitive type.  For completeness,
+    we also rewrite '==' to have this operation compare boxed values by value
+    rather than by pointer.  This gives the illusion that all primitives
+    with the same value are boxed into the same object.
+
+
+We created the extension as follows.  The complete extension is in
+polyglot/ext/pao.
+
+    1. We used the newext script to generate a skeleton for the extension.
+
+        $ cd $POLYGLOT/polyglot/ext/pao
+        $ sh ./newext pao Pao pao
+        $ cd $POLYGLOT/polyglot/ext/pao
+
+    2. We modified parse/pao.ppg to redefine the "instanceof" production to
+    allow any type to be used in an "instanceof" expression.  This required
+    only appending the following code to pao.ppg: 
+
+        extend relational_expression ::=
+                relational_expression:a INSTANCEOF type:b
+                {: RESULT = parser.nf.Instanceof(parser.util.pos(a), a, b); :}
+                ;
+
+        drop { relational_expression ::=
+                relational_expression:a INSTANCEOF reference_type:b; }
+
+    The remainder of the file is boiler plate code.
+
+    4. We next extended the Java type system to handle Pao's semantics.
+
+        $ cd $POLYGLOT/polyglot/ext/pao/types
+
+    We edited PaoTypeSystem_c.java to override the factory methods for
+    primitive types and top-level class types.  We also inserted methods to 
+    provide access to the runtime boxing classes.
+
+    We next create a subclass of PrimitiveType that overrides the methods:
+    descendsFrom(), isImplicitCastValid(), and isCastValid() to
+    allow primitives to be used as Objects.
+    
+    We also create a subclass of ParsedClassType to allow primitives
+    to be cast to Object.
+
+    5. We create a new extension interface, PaoExt, that extends the Ext
+    interface. This extension interface has the signature for a new method,
+    rewrite, which we will use to rewrite the the new Pao code into valid Java
+    code.  We also create a class PaoExt_c which extends Ext_c and implements
+    PaoExt.  The default action for the rewrite function is to return the node
+    unchanged, which is the behavior that is desired for most nodes.
+
+    6. We override type checking for the instanceof operation.  To do so, we
+    create a new delegate, PaoInstanceofDel_c, that subclasses the JL_c class
+    in the base compiler.  In it, we override the typeCheck() to allow
+    primitive types to occur in the instanceof expression.  JL_c implements all
+    other methods of the JL interface by dispatching back to the node.
+
+    7. We define the translation that will take our Pao language to standard
+    Java by defining the implementation of the rewrite function. 
+
+    By the translation rules that we have defined, three things will need
+    to be rewritten: casts, instanceof operations, and the == and !=
+    operations.
+
+    In PaoInstanceofExt_c, we override the rewrite method to allow for
+    instanceof operations on primitive types.
+
+    We also create a PaoCastExt_c which extends PaoExt_c, in which we override
+    the rewrite method to box and unbox primitives appropriately to allow
+    casting to and from primitive types.
+
+    In addition, we create a PaoBinaryExt_c that also exends PaoExt_c, which
+    overrides the rewrite method to rewrite == and != expressions to call
+    Primitive.equals(o, p) when comparing two Objects or boxed primitives.
+    This method allows boxed primitives to be compared using == and !=.
+
+    8. We add a pass to insert explicit casts to Object when assigning
+    a primitive to an object.  We call this pass PaoBoxer and
+    implement it as a visitor.
+
+    PaoBoxer is a subclass of AscriptionVisitor, which contains code
+    to locate places where expressions are used.  The ascribe() method
+    is called for each expression and is passed the type the expression
+    is _used at_ rather than the type the type checker assigns to it.
+    For instance, with the following Pao code:
+
+        Object o = 3;
+
+    ascribe() will be called with expression 3 and type Object.
+
+    We override ascribe to insert casts when assigning a primitive to
+    an Object.  We override the visitors leaveCall() method to call the
+    rewrite method if the node's delegate is an instanceof a PaoDel. This
+    makes sure that all the appropriate nodes are rewritten to ensure a 
+    proper translation.
+
+    9. We create a new NodeFactory, PaoNodeFactory_c, that extends
+    NodeFactory_c. In this new NodeFactory we over-ride the defaultExt() 
+    method to make the default delegate the PaoDel_c, and also over-ride the
+    InstanceOf, Cast, and Binary methods to return instatiations of the nodes
+    with the PaoInstanceofDel_c, PaoCastDel_c, and PaoBinaryDel_c delegates.
+
+    10. We create the ExtensionInfo that defines our extension.
+    
+        $ cd $POLYGLOT/polyglot/ext/pao
+
+    The skeleton generator created most of the necessary code.  We modify
+    the passes() method to add our new boxing pass. We also create a Version
+    class that defines the version of Pao that is being worked on.
+
+
+Node, Extension and Delegate Factories
+--------------------------------------
+
+Node factories are used to create instances of AST nodes. Extension
+and delegate factories simplify the task of instantiating appropriate
+delegate and extension objects for the AST nodes.
+
+Language extensions will typically implement node factories by
+extending the NodeFactory_c class in the package
+polyglot.ext.jl.ast. The NodeFactory_c class can be given a delegate
+factory and/or an extension factory to use. The classes
+AbstractDelFactory_c and AbstractExtFactory_c in the same package
+provide convenient base classes for language extensions to extend.
+
+For any AST node type <node>, the node factory typically has one or more
+methods called <node>, to create instances of <node>. The
+implementation of these methods in NodeFactory_c have the following
+form:
+
+    public <node> <node>(Position pos, ...) {
+        <node> n = new <node>_c(pos, ...);
+        n = (<node>) n.ext(extFactory.ext<node>());
+        n = (<node>) n.del(delFactory.del<node>());
+        return n;
+    }
+
+Note that first an object that implements the interface <node> is
+created: <node>_c. An extension object for the newly created AST node
+is obtained by calling the appropriate method on the extension
+factory. A delegate object is obtained by a similar call to the
+delegate factory. The extension object and/or the delegate object
+returned by these calls may be null.
+
+The AbstractExtFactory_c class implements the ext<node> methods and
+provides convenient hooks for language extensions to override. The
+implementation of the ext<node> method in AbstractExtFactory_c has the
+following form:
+
+    public final Ext ext<node>() {
+        Ext e = ext<node>Impl();
+        return postExt<node>(e);
+    }
+
+The ext<node>Impl() is responsible for creating an appropriate Ext
+object. The default implementation of these methods in
+AbstractExtFactory_c is simply to call the ext<super>Impl() method,
+where <super> is the superclass of <node>. Thus, for example, the
+implementation of extArrayAccessImpl in AbstractExtFactory_c is:
+
+    protected Ext extArrayAccessImpl() {
+        return extExprImpl();
+    }
+
+For example, a language extension that needs to provide extension
+objects for all expressions and also for class declarations would thus
+need to override only two methods of AbstractExtFactory_c:
+extExprImpl() and extClassDeclImpl(). Another example: if a language
+extension needs to use a single Ext class for all AST nodes, then only
+the single method extNodeImpl() needs to be overridden.
+
+The postExt<node>(Ext) methods provide hooks for subclasses to
+manipulate Ext objects after they have been created. The default
+implementation of these methods in AbstractExtFactory_c is simply to
+call the postExt<super>(Ext) method, where <super> is the superclass
+of <node>.
+
+The structure of the delegate factory AbstractDelFactory_c class is
+analogous to that of AbstractExtFactory_c.
+

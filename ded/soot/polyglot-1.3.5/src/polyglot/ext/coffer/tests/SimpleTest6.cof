@@ -1,0 +1,22 @@
+
+tracked(F) class File {
+    public File() [] -> [F] { }
+
+    public int read() [F] -> [F] { return 0; }
+
+    public void close() [F] -> [] {
+        free this;
+    }
+}
+
+public class SimpleTest6 {
+    public static void main(String[] args) {
+        tracked(I) File is;
+        is = new tracked(I) File();
+        is.read();
+        is.close();
+        new tracked(I) File(); // ok
+        is.close(); // expected error: I not stored in is
+    }
+}
+

@@ -1,0 +1,21 @@
+<body>
+Contains helper classes for the frontend that are used by {@link
+polyglot.main polyglot.main}.  The 
+{@link polyglot.frontend.Compiler Compiler} class manages the input
+and output files and starts the compilation process for a given
+language extension.  
+Language extensions implement the {@link polyglot.frontend.ExtensionInfo ExtensionInfo} interface.  The
+The class {@link polyglot.frontend.AbstractExtensionInfo AbstractExtensionInfo}
+contains code for invoking the individual passes of the extension.
+Subclasses of {@link polyglot.frontend.AbstractExtensionInfo AbstractExtensionInfo} define the passes for the extension.
+The base Java compiler is implemented in the
+{@link polyglot.ext.jl.ExtensionInfo polyglot.ext.jl.ExtensionInfo} class.
+Language extensions typically (but not necessarily) subclass
+{@link polyglot.ext.jl.ExtensionInfo polyglot.ext.jl.ExtensionInfo}.
+
+@see polyglot.frontend.Compiler
+@see polyglot.frontend.ExtensionInfo
+@see polyglot.frontend.AbstractExtensionInfo 
+@see polyglot.ext.jl.ExtensionInfo 
+
+</body> 

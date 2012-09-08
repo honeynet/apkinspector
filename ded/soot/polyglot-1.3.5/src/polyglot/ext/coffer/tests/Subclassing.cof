@@ -1,0 +1,10 @@
+tracked(F) class C {
+        C() [] -> [F] { }
+        void m() [F] -> [F] { }
+}
+
+tracked(G) class D extends tracked(G) C {
+        D() [] -> [G] { }
+        void m() [G] -> [G] { super.m(); }
+        void n(tracked(H) D x) [G,H] -> [G,H] { }
+}

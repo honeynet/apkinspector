@@ -1,0 +1,17 @@
+tracked(F) class File {
+    public File() [] -> [F] { }
+    public void close() [F] -> [] {
+        free this;
+    }
+}
+
+public class SimpleTest8 {
+    public static void main(String[] args) {
+        tracked(I) File is;
+        is = new tracked(I) File();
+        is.close();
+        is = new tracked(I) File(); // ok
+        is.close(); // ok
+    }
+}
+

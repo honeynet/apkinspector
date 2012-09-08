@@ -1,0 +1,1114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Soot command-line options</TITLE>
+<META NAME="description" CONTENT="Soot command-line options">
+<META NAME="keywords" CONTENT="usage">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="usage.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<H1 ALIGN="CENTER">Soot command-line options</H1>
+<DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Patrick Lam (<A NAME="tex2html1"
+  HREF="mailto:plam@sable.mcgill.ca">plam@sable.mcgill.ca</A>)</STRONG></P>
+<P ALIGN="CENTER"><I>Feng Qian (<A NAME="tex2html2"
+  HREF="mailto:fqian@sable.mcgill.ca">fqian@sable.mcgill.ca</A>)</I></P>
+<P ALIGN="LEFT"><SMALL>Ondrej Lhot&#225;k (<A NAME="tex2html3"
+  HREF="mailto:olhotak@sable.mcgill.ca">olhotak@sable.mcgill.ca</A>)</SMALL></P>
+</DIV>
+
+<P>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Contents</A>
+</H2>
+<!--Table of Contents-->
+
+<UL CLASS="TofC">
+<LI><A NAME="tex2html17"
+  HREF="usage.html#SECTION00020000000000000000">SYNOPSIS</A>
+<LI><A NAME="tex2html18"
+  HREF="usage.html#SECTION00030000000000000000">DESCRIPTION</A>
+<LI><A NAME="tex2html19"
+  HREF="usage.html#SECTION00040000000000000000">OPTIONS</A>
+<UL>
+<LI><A NAME="tex2html20"
+  HREF="usage.html#SECTION00041000000000000000">General Options</A>
+<LI><A NAME="tex2html21"
+  HREF="usage.html#SECTION00042000000000000000">Input Options</A>
+<LI><A NAME="tex2html22"
+  HREF="usage.html#SECTION00043000000000000000">Output Options</A>
+<LI><A NAME="tex2html23"
+  HREF="usage.html#SECTION00044000000000000000">Processing Options</A>
+<LI><A NAME="tex2html24"
+  HREF="usage.html#SECTION00045000000000000000">Application Mode Options</A>
+<LI><A NAME="tex2html25"
+  HREF="usage.html#SECTION00046000000000000000">Input Attribute Options</A>
+<LI><A NAME="tex2html26"
+  HREF="usage.html#SECTION00047000000000000000">Annotation Options</A>
+<LI><A NAME="tex2html27"
+  HREF="usage.html#SECTION00048000000000000000">Miscellaneous Options</A>
+</UL></UL>
+<!--End of Table of Contents-->
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+SYNOPSIS</A>
+</H1>
+
+<P>
+Soot is invoked as follows:
+<BLOCKQUOTE>
+<TT>java</TT> <I>javaOptions</I> <TT>soot.Main</TT> [ <I>sootOption</I>* ] <I>classname</I>*
+
+</BLOCKQUOTE>
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+DESCRIPTION</A>
+</H1> 
+This manual documents the command line options of the Soot
+bytecode compiler/optimizer tool. In essence, it tells you what you can
+use to replace the <I>sootOption</I> placeholder which appears in the SYNOPSIS.
+
+<P>
+The descriptions of Soot options talk about three categories of
+classes: argument classes, application classes, and library classes.
+
+<P>
+<I>Argument classes</I> are those you specify explicitly to
+Soot. When you use Soot's command line interface, argument
+classes are those classes which are either listed explicitly on
+the command line or found in a directory specified with the
+<TT>-process-dir</TT> option. When you use the Soot's Eclipse
+plug-in, argument classes are those which you selected before
+starting Soot from the Navigator popup menu, or all classes in
+the current project if you started Soot from the Project
+menu.
+
+<P>
+<I>Application classes</I> are classes that Soot analyzes,
+transforms, and turns into output files.
+
+<P>
+<I>Library classes</I> are classes which are referred to,
+directly or indirectly, by the application classes, but which are
+not themselves application classes. Soot resolves these classes
+and reads <TT>.class</TT> or <TT>.jimple</TT> source files for
+them, but it does not perform transformations on library classes
+or write output files for them.
+
+<P>
+All argument classes are necessarily application classes.  When
+Soot is not in ``application mode'', argument
+classes are the only application classes; other classes
+referenced from the argument classes become library classes.
+
+<P>
+When Soot is in application mode, every class
+referenced from the argument classes, directly or indirectly, is
+also an application class, unless its package name indicates that
+it is part of the standard Java runtime system.
+
+<P>
+Users may fine-tune the designation of application and library
+classes using the Application Mode Options.
+
+<P>
+Here is a simple example to clarify things. Suppose your program
+consists of three class files generated from the following
+source:
+
+<P><PRE>
+// UI.java
+interface UI {
+  public void display(String msg);
+}
+
+// HelloWorld.java
+class HelloWorld {
+  public static void main(String[] arg) {
+    UI ui = new TextUI();
+    ui.display("Hello World");
+  }
+}
+
+// TextUI.java
+import java.io.*;
+class TextUI implements UI {
+  public void display(String msg) {
+      System.out.println(msg);
+  }
+}
+</PRE>
+
+<P>
+If you run 
+
+<P><PRE>
+java soot.Main HelloWorld
+</PRE>
+
+<P>
+<TT>HelloWorld</TT> is the only argument class and the only
+application class.  <TT>UI</TT> and <TT>TextUI</TT> are library
+classes, along with <TT>java.lang.System</TT>,
+<TT>java.lang.String</TT>, <TT>java.io.PrintStream</TT>, and a
+host of other classes from the Java runtime system that get
+dragged in indirectly by the references to <TT>String</TT> and
+<TT>System.out</TT>.
+
+<P>
+If you run 
+
+<P><PRE>
+java soot.Main --app HelloWorld
+</PRE>
+
+<P>
+<TT>HelloWorld</TT> remains the
+only argument class, but the application classes include <TT>UI</TT>
+and <TT>TextUI</TT> as well as <TT>HelloWorld</TT>.
+<TT>java.lang.System</TT> et. al. remain library classes.
+
+<P>
+If you run 
+
+<P><PRE>
+java soot.Main -i java. --app HelloWorld
+</PRE>
+
+<P>
+<TT>HelloWorld</TT> is still the only argument class, but the set
+of application classes includes the referenced Java runtime
+classes in packages whose names start with <TT>java.</TT> as well
+as <TT>HelloWorld</TT>, <TT>UI</TT>, and <TT>textUI</TT>. The set
+of library classes includes the referenced classes from other
+packages in the Java runtime.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+OPTIONS</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+General Options</A>
+</H2>
+
+<P>
+<DL>
+<DT><STRONG>
+  <TT>-h</TT>, 
+  <TT>-help</TT></STRONG></DT>
+<DD><P>
+Display the textual help message and exit immediately without
+further processing.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-pl</TT>, 
+  <TT>-phase-list</TT></STRONG></DT>
+<DD><P>
+Print a list of the available phases and sub-phases, then exit.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-ph</TT> <I>phase</I>, 
+  <TT>-phase-help</TT> <I>phase</I></STRONG></DT>
+<DD><P>
+Print a help message about the phase or sub-phase named
+<I>phase</I>, then exit.  To see the help message of
+more than one phase, specify multiple phase-help options.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-version</TT></STRONG></DT>
+<DD><P>
+Display information about the version of Soot being run, then
+exit without further processing.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-v</TT>, 
+  <TT>-verbose</TT></STRONG></DT>
+<DD><P>
+Provide detailed information about what Soot is doing as it runs.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-interactive-mode</TT></STRONG></DT>
+<DD><P>
+Runs interactively, with Soot providing detailed information as it iterates through intra-procedural analyses.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-app</TT></STRONG></DT>
+<DD><P>
+Run in application mode, processing all classes referenced by
+argument classes.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-w</TT>, 
+  <TT>-whole-program</TT></STRONG></DT>
+<DD><P>
+Run in whole program mode, taking into consideration the whole
+program when performing analyses and transformations. Soot
+uses the Call Graph Constructor to build a call graph for the
+program, then applies enabled transformations in the Whole-Jimple
+Transformation, Whole-Jimple Optimization, and Whole-Jimple
+Annotation packs before applying enabled intraprocedural
+transformations.
+
+<P>
+Note that the Whole-Jimple Optimization pack is normally disabled
+(and thus not applied by whole program mode), unless you also
+specify the Whole Program Optimize option.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-ws</TT>, 
+  <TT>-whole-shimple</TT></STRONG></DT>
+<DD><P>
+Run in whole shimple mode, taking into consideration the whole program
+when performing Shimple analyses and transformations. Soot uses the
+Call Graph Constructor to build a call graph for the program, then
+applies enabled transformations in the Whole-Shimple Transformation
+and Whole-Shimple Optimization before applying enabled intraprocedural
+transformations.
+
+<P>
+Note that the Whole-Shimple Optimization pack is normally disabled
+(and thus not applied by whole shimple mode), unless you also
+specify the Whole Program Optimize option.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-validate</TT></STRONG></DT>
+<DD><P>
+Causes internal checks to be done on bodies in the various Soot IRs,
+to make sure the transformations have not done something strange.
+This option may degrade Soot's performance.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-debug</TT></STRONG></DT>
+<DD><P>
+Print various debugging information as Soot runs, particularly
+from the Baf Body Phase and the Jimple Annotation Pack Phase.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-debug-resolver</TT></STRONG></DT>
+<DD><P>
+Print debugging information about class resolving.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000">
+Input Options</A>
+</H2>
+
+<P>
+<DL>
+<DT><STRONG>
+  <TT>-cp</TT> <I>path</I>, 
+  <TT>-soot-class-path</TT> <I>path</I>, 
+  <TT>-soot-classpath</TT> <I>path</I></STRONG></DT>
+<DD><P>
+Use <I>path</I> as the list of directories in which Soot
+should search for classes. <I>path</I> should be a series of
+directories, separated by the path separator character for your
+system.
+
+<P>
+If no classpath is set on the command line, but the system
+property <TT>soot.class.path</TT> has been set, Soot uses its
+value as the classpath.
+
+<P>
+If neither the command line nor the system properties specify a
+Soot classpath, Soot falls back on a default classpath consisting
+of the value of the system property <TT>java.class.path</TT>
+followed <I>java.home</I><TT>/lib/rt.jar</TT>, where
+<I>java.home</I> stands for the contents of the system property
+<TT>java.home</TT> and <TT>/</TT> stands for the system file
+separator.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-pp</TT>, 
+  <TT>-prepend-classpath</TT></STRONG></DT>
+<DD><P>
+Instead of replacing the default soot classpath with the classpath given on the command line,
+prepent it with that classpath.
+The default classpath holds whatever is set in the CLASSPATH environment variable,
+followed by rt.jar (resolved through the JAVA-UNDERSCORE-HOME environment variable).
+If whole-program mode is enabled, jce.jar is also appended in the end.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-process-dir</TT> <I>dir</I></STRONG></DT>
+<DD><P>
+Add all classes found in <I>dir</I> to the set of argument classes
+which is analyzed and transformed by Soot.  You can specify the
+option more than once, to add argument classes from multiple directories.
+
+<P>
+If subdirectories of <I>dir</I> contain <TT>.class</TT> or
+<TT>.jimple</TT> files, Soot assumes that the subdirectory names
+correspond to components of the classes' package names. If
+<I>dir</I> contains <TT>subA/subB/MyClass.class</TT>, for
+instance, then Soot assumes <TT>MyClass</TT> is in package
+<TT>subA.subB</TT>.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-ast-metrics</TT></STRONG></DT>
+<DD><P>
+If this flag is set and soot converts java to jimple then AST metrics will be computed.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-src-prec</TT> <I>format</I></STRONG></DT>
+<DD><P>
+(default value: <TT>c</TT>)
+
+<P>
+Sets <I>format</I> as Soot's preference for the type of source files to read when
+it looks for a class.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>c</TT>, <TT>class</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Try to resolve classes first from <TT>.class</TT> files found in
+the Soot classpath.  Fall back to <TT>.jimple</TT> files
+only when unable to find a <TT>.class</TT> file.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>only-class</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Try to resolve classes first from <TT>.class</TT> files found in
+the Soot classpath.  Do not try any other types of files even when
+unable to find a <TT>.class</TT> file.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>J</TT>, <TT>jimple</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Try to resolve classes first from <TT>.jimple</TT> files found in
+the Soot classpath.  Fall back to <TT>.class</TT> files only when
+unable to find a <TT>.jimple</TT> file.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>java</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Try to resolve classes first from <TT>.java</TT> files found in
+the Soot classpath.  Fall back to <TT>.class</TT> files only when
+unable to find a <TT>.java</TT> file.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-full-resolver</TT></STRONG></DT>
+<DD><P>
+Normally, Soot resolves only that application classes and any classes that they
+refer to, along with any classes it needs for the Jimple typing, but it does not
+transitively resolve references in these additional classes that were resolved
+only because they were referenced. This switch forces full transitive resolution
+of all references found in all classes that are resolved, regardless of why they
+were resolved.
+
+<P>
+In whole-program mode, class resolution is always fully transitive. Therefore,
+in whole-program mode, this switch has no effect, and class resolution is
+always performed as if it were turned on.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-allow-phantom-refs</TT></STRONG></DT>
+<DD><P>
+Allow Soot to process a class even if it cannot find all classes
+referenced by that class. This may cause Soot to produce
+incorrect results.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-j2me</TT></STRONG></DT>
+<DD><P>
+(default value: <TT>false</TT>)
+
+<P>
+Use J2ME mode. J2ME does not have class Cloneable nor Serializable, so we have
+to change type assignment to not refer to those classes.			
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-main-class</TT> <I>class</I></STRONG></DT>
+<DD><P>
+By default, the first class encountered with a main method is treated
+as the main class (entry point) in whole-program analysis. This option
+overrides this default.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-polyglot</TT></STRONG></DT>
+<DD><P>
+(default value: <TT>false</TT>)
+
+<P>
+Use Java 1.4 Polyglot frontend instead of JastAdd, which supports Java 5 syntax.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00043000000000000000">
+Output Options</A>
+</H2>
+
+<P>
+<DL>
+<DT><STRONG>
+  <TT>-d</TT> <I>dir</I>, 
+  <TT>-output-dir</TT> <I>dir</I></STRONG></DT>
+<DD><P>
+(default value: <TT>./sootOutput</TT>)
+
+<P>
+Store output files in <I>dir</I>. <I>dir</I> may be
+relative to the working directory.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-f</TT> <I>format</I>, 
+  <TT>-output-format</TT> <I>format</I></STRONG></DT>
+<DD><P>
+(default value: <TT>c</TT>)
+
+<P>
+Specify the format of output files Soot should produce, if
+any.
+
+<P>
+Note that while the abbreviated formats (<TT>jimp</TT>,
+<TT>shimp</TT>, <TT>b</TT>, and <TT>grimp</TT>) are easier to
+read than their unabbreviated counterparts (<TT>jimple</TT>,
+<TT>shimple</TT>, <TT>baf</TT>, and <TT>grimple</TT>), they may
+contain ambiguities. Method signatures in the abbreviated
+formats, for instance, are not uniquely determined.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>J</TT>, <TT>jimple</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce <TT>.jimple</TT> files, which contain a textual
+form of Soot's Jimple internal representation.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>j</TT>, <TT>jimp</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce <TT>.jimp</TT> files, which contain an abbreviated form
+of Jimple.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>S</TT>, <TT>shimple</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce <TT>.shimple files</TT>, containing a textual form of
+Soot's SSA Shimple internal representation.  Shimple adds
+Phi nodes to Jimple.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>s</TT>, <TT>shimp</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce .shimp files, which contain an abbreviated form of
+Shimple.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>B</TT>, <TT>baf</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce <TT>.baf</TT> files, which contain a textual form of
+Soot's Baf internal representation.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>b</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce <TT>.b</TT> files, which contain an abbreviated form of Baf.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>G</TT>, <TT>grimple</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce <TT>.grimple</TT> files, which contain a textual
+form of Soot's Grimp internal representation.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>g</TT>, <TT>grimp</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce <TT>.grimp</TT> files, which contain an abbreviated form
+of Grimp.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>X</TT>, <TT>xml</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce <TT>.xml</TT> files containing an annotated
+version of the Soot's Jimple internal representation.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>n</TT>, <TT>none</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce no output files.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>jasmin</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce <TT>.jasmin</TT> files, suitable as input to the jasmin
+bytecode assembler.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>c</TT>, <TT>class</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce Java <TT>.class</TT> files, executable by any Java
+Virtual Machine.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>d</TT>, <TT>dava</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Produce <TT>.java</TT> files generated by the Dava decompiler.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-outjar</TT>, 
+  <TT>-output-jar</TT></STRONG></DT>
+<DD><P>
+Saves output files into a Jar file instead of a directory. The output
+Jar file name should be specified using the Output Directory
+(<TT>output-dir</TT>) option. Note that if the output Jar file exists
+before Soot runs, any files inside it will first be removed.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-xml-attributes</TT></STRONG></DT>
+<DD><P>
+Save in XML format a variety of tags which Soot has attached to
+its internal representations of the application classes. The XML
+file can then be read by the Soot plug-in for the Eclipse IDE,
+which can display the annotations together with the program
+source, to aid program understanding.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-print-tags</TT>, 
+  <TT>-print-tags-in-output</TT></STRONG></DT>
+<DD><P>
+Print in output files (either in Jimple or Dave) a variety of tags which
+Soot has attached to
+its internal representations of the application classes. The tags will
+be printed on the line succeeding the stmt that they are attached to.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-no-output-source-file-attribute</TT></STRONG></DT>
+<DD><P>
+Don't output Source File Attribute when producing class files.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-no-output-inner-classes-attribute</TT></STRONG></DT>
+<DD><P>
+Don't output inner classes attribute in class files.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-dump-body</TT> <I>phaseName</I></STRONG></DT>
+<DD><P>
+Specify that <I>phaseName</I> is one of the phases to be dumped.
+For example -dump-body jb -dump-body jb.a would dump each
+method before and after the jb and jb.a
+phases.  The pseudo phase name ``ALL''
+causes all phases to be dumped.
+
+<P>
+Output files appear in subdirectories under the
+soot output directory, with names like
+<I>className</I>/<I>methodSignature</I>/<I>phasename</I>-<I>graphType</I>-<I>number</I>.in
+and
+<I>className</I>/<I>methodSignature</I>/<I>phasename</I>-<I>graphType</I>-<I>number</I>.out.
+The ``in'' and
+``out'' suffixes distinguish the internal
+representations of the method before and after the phase
+executed.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-dump-cfg</TT> <I>phaseName</I></STRONG></DT>
+<DD><P>
+Specify that any control flow graphs constructed during the
+<I>phaseName</I> phases should be dumped.
+For example -dump-cfg jb -dump-cfg bb.lso would dump
+all
+CFGs constructed during the jb and bb.lso
+phases.  The pseudo phase name ``ALL''
+causes CFGs constructed in all phases to be dumped.
+
+<P>
+The control flow graphs are dumped in the form
+of a file containing input to dot graph visualization
+tool.  Output dot files are stored beneath the soot
+output directory, in files with names like:
+<I>className</I>/<I>methodSignature</I>/<I>phasename</I>-<I>graphType</I>-<I>number</I>.dot,
+where <I>number</I> serves to distinguish graphs in phases
+that produce more than one (for example, the Aggregator may
+produce multiple ExceptionalUnitGraphs).
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-show-exception-dests</TT></STRONG></DT>
+<DD><P>
+(default value: <TT>true</TT>)
+
+<P>
+Indicate whether to show exception destination edges as
+well as control flow edges in
+dumps of exceptional control flow graphs.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-gzip</TT></STRONG></DT>
+<DD><P>
+(default value: <TT>false</TT>)
+
+<P>
+This option causes Soot to compress output files of intermediate representations
+with GZip. It does not apply to class files output by Soot.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00044000000000000000">
+Processing Options</A>
+</H2>
+
+<P>
+<DL>
+<DT><STRONG>
+  <TT>-p</TT> <I>phase opt:val</I>, 
+  <TT>-phase-option</TT> <I>phase opt:val</I></STRONG></DT>
+<DD><P>
+Set <I>phase</I>'s run-time option named <I>opt</I> to
+<I>value</I>.
+
+<P>
+This is a mechanism for specifying phase-specific options to
+different parts of Soot. See <I>Soot phase options</I> for
+details about the available phases and options.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-O</TT>, 
+  <TT>-optimize</TT></STRONG></DT>
+<DD><P>
+Perform intraprocedural optimizations on the application classes.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-W</TT>, 
+  <TT>-whole-optimize</TT></STRONG></DT>
+<DD><P>
+Perform whole program optimizations on the application
+classes. This enables the Whole-Jimple Optimization pack as well
+as whole program mode and intraprocedural optimizations.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-via-grimp</TT></STRONG></DT>
+<DD><P>
+Convert Jimple to bytecode via the Grimp intermediate
+representation instead of via the Baf intermediate
+representation.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-via-shimple</TT></STRONG></DT>
+<DD><P>
+Enable Shimple, Soot's SSA representation. This generates Shimple
+bodies for the application classes, optionally transforms them
+with analyses that run on SSA form, then turns them back into
+Jimple for processing by the rest of Soot. For more information,
+see the documentation for the <TT>shimp</TT>, <TT>stp</TT>, and
+<TT>sop</TT> phases.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-throw-analysis</TT> <I>arg</I></STRONG></DT>
+<DD><P>
+(default value: <TT>pedantic</TT>)
+
+<P>
+This option specifies how to estimate the exceptions which each statement
+may throw when constructing exceptional CFGs.
+
+<P>
+Possible values:
+<BR><TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>pedantic</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Says that any instruction may throw any
+Throwable whatsoever. Strictly speaking this is
+correct, since the Java libraries include the
+Thread.stop(Throwable)
+method, which allows other threads to cause arbitrary exceptions
+to occur at arbitrary points in the execution of a victim thread.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=72><TT>unit</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=288><P>
+Says that each statement in the intermediate representation
+may throw those exception types associated with the corresponding
+Java bytecode instructions in the JVM Specification.  The
+analysis deals with each statement in isolation, without regard
+to the surrounding program.</TD>
+</TR>
+</TABLE>
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-omit-excepting-unit-edges</TT></STRONG></DT>
+<DD><P>
+When constructing an ExceptionalUnitGraph or
+ExceptionalBlockGraph, include edges to an exception
+handler only from the predecessors of an instruction which may
+throw an exception to the handler, and not from the excepting
+instruction itself, unless the excepting instruction has
+potential side effects.
+
+<P>
+Omitting edges from excepting units allows more accurate flow
+analyses (since if an instruction without side effects throws an
+exception, it has not changed the state of the computation). This
+accuracy, though, could lead optimizations to generate
+unverifiable code, since the dataflow analyses performed by
+bytecode verifiers might include paths to exception handlers from
+all protected instructions, regardless of whether the
+instructions have side effects.  (In practice, the pedantic throw
+analysis suffices to pass verification in all VMs tested with
+Soot to date, but the JVM specification does allow for less
+discriminating verifiers which would reject some code that might
+be generated using the pedantic throw analysis without also
+adding edges from all excepting units.)
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-trim-cfgs</TT></STRONG></DT>
+<DD><P>
+When constructing CFGs which include exceptional edges, minimize
+the number of edges leading to exception handlers by analyzing
+which instructions might actually be executed before an exception
+is thrown, instead of assuming that every instruction protected
+by a handler has the potential to throw an exception the handler
+catches.
+
+<P>
+-trim-cfgs is shorthand for -throw-analysis
+unit -omit-excepting-unit-edges -p jb.tt enabled:true.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00045000000000000000">
+Application Mode Options</A>
+</H2>
+
+<P>
+<DL>
+<DT><STRONG>
+  <TT>-i</TT> <I>pkg</I>, 
+  <TT>-include</TT> <I>pkg</I></STRONG></DT>
+<DD><P>
+Designate classes in packages whose names begin with
+<I>pkg</I> (e.g. <TT>java.util.</TT>) as application
+classes which should be analyzed and output. This option allows
+you to selectively analyze classes in some packages that Soot
+normally treats as library classes.
+
+<P>
+You can use the include option multiple times, to designate
+the classes of multiple packages as application classes.
+
+<P>
+If you specify both include and exclude options, first the
+classes from all excluded packages are marked as library classes,
+then the classes from all included packages are marked as
+application classes.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-x</TT> <I>pkg</I>, 
+  <TT>-exclude</TT> <I>pkg</I></STRONG></DT>
+<DD><P>
+Excludes any classes in packages whose names begin with
+<I>pkg</I> from the set of application classes which are
+analyzed and output, treating them as library classes instead.
+This option allows you to selectively exclude classes
+which would normally be treated as application classes
+
+<P>
+You can use the exclude option multiple times, to designate
+the classes of multiple packages as library classes.
+
+<P>
+If you specify both include and exclude options, first the
+classes from all excluded packages are marked as library classes,
+then the classes from all included packages are marked as
+application classes.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-include-all</TT></STRONG></DT>
+<DD><P>
+Soot uses a default list of packages (such as java.) which are deemed
+to contain library classes. This switch removes the default packages from the
+list of packages containing library classes.
+Individual packages can then be added using the exclude option.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-dynamic-class</TT> <I>class</I></STRONG></DT>
+<DD><P>
+Mark <I>class</I> as a class which the application may load
+dynamically. Soot will read it as a library class even if it is
+not referenced from the argument classes.  This permits whole
+program optimizations on programs which load classes dynamically
+if the set of classes that can be loaded is known at compile
+time.
+
+<P>
+You can use the dynamic class option multiple
+times to specify more than one dynamic class.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-dynamic-dir</TT> <I>dir</I></STRONG></DT>
+<DD><P>
+Mark all class files in <I>dir</I> as classes that may
+be loaded dynamically. Soot will read them as library classes
+even if they are not referenced from the argument classes. 
+
+<P>
+You can specify more than one directory of potentially dynamic
+classes by specifying multiple dynamic directory options.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-dynamic-package</TT> <I>pkg</I></STRONG></DT>
+<DD><P>
+Marks all class files belonging to the package <I>pkg</I>
+or any of its subpackages as classes which the application may
+load dynamically. Soot will read all classes in <I>pkg</I> as
+library classes, even if they are not referenced by any of the
+argument classes. 
+
+<P>
+To specify more than one dynamic package, use the dynamic
+package option multiple times.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00046000000000000000">
+Input Attribute Options</A>
+</H2>
+
+<P>
+<DL>
+<DT><STRONG>
+  <TT>-keep-line-number</TT></STRONG></DT>
+<DD><P>
+Preserve line number tables for class files throughout the
+transformations.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-keep-bytecode-offset</TT>, 
+  <TT>-keep-offset</TT></STRONG></DT>
+<DD>Maintain bytecode offset tables for class files throughout the transformations.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00047000000000000000">
+Annotation Options</A>
+</H2>
+
+<P>
+<DL>
+<DT><STRONG>
+  <TT>-annot-purity</TT></STRONG></DT>
+<DD><P>
+Purity anaysis implemented by Antoine Mine and based on the paper
+A Combined Pointer and Purity Analysis Java Programs
+by Alexandru Salcianu and Martin Rinard.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-annot-nullpointer</TT></STRONG></DT>
+<DD><P>
+Perform a static analysis of which dereferenced pointers may have
+null values, and annotate class files with attributes
+encoding the results of the analysis.  For details, see the 
+documentation for Null Pointer Annotation and for the 
+Array Bounds and Null Pointer Check Tag Aggregator.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-annot-arraybounds</TT></STRONG></DT>
+<DD><P>
+Perform a static analysis of which array bounds checks may safely
+be eliminated and annotate output class files with attributes
+encoding the results of the analysis. For details, see the
+documentation for Array Bounds Annotation and for the Array
+Bounds and Null Pointer Check Tag Aggregator.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-annot-side-effect</TT></STRONG></DT>
+<DD><P>
+Enable the generation of side-effect attributes.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-annot-fieldrw</TT></STRONG></DT>
+<DD>Enable the generation of field read/write attributes.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00048000000000000000">
+Miscellaneous Options</A>
+</H2>
+
+<P>
+<DL>
+<DT><STRONG>
+  <TT>-time</TT></STRONG></DT>
+<DD><P>
+Report the time required to perform some of Soot's transformations.
+
+<P>
+</DD>
+<DT><STRONG>
+  <TT>-subtract-gc</TT></STRONG></DT>
+<DD><P>
+Attempt to subtract time spent in garbage collection from
+the reports of times required for transformations.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>Soot command-line options</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>usage -split 0 -nonavigation -dir ./</TT>
+<P>
+The translation was initiated by Eric BODDEN on 2008-06-03
+<BR><HR>
+<ADDRESS>
+Eric BODDEN
+2008-06-03
+</ADDRESS>
+</BODY>
+</HTML>

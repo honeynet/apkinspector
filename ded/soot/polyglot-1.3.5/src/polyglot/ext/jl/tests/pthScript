@@ -1,0 +1,268 @@
+# pth test script
+#
+# This file is a test script for pth (Polyglot Test Harness). It
+# conforms to the following grammar.
+#
+#      ScriptFile   ::= CompilerTest+
+#      CompilerTest ::= ExtClassName ["CmdLineArgs"] { FileTest [; FileTest]* }
+#      FileTest     ::= Filenames [Description] [FailureSet]
+#      Filenames    ::= Filename [Filename]*
+#      Description  ::= LitString
+#      FailureSet   ::= Failure [, Failure]*
+#      Failure      ::= ( ErrorKind )
+#                    |  ( ErrorKind, "RegExp" )
+#                    |  ( "RegExp" )
+#                    |  ( )
+#      ErrorKind    :   one of, or a unique prefix of one of the following 
+#                       strings: "Warning", "Internal Error", "I/O Error", 
+#                       "Lexical Error", "Syntax Error", "Semantic Error"
+#                       or "Post-compiler Error".
+#      Filename     :   the name of a file. Is interpreted from the 
+#                       directory where pth is run.
+#      LitString    :   a literal string, enclosed in quotes.
+#      RegExp       :   a regular expression, as in java.util.regex; 
+#                       is always enclosed in quotes.
+#      CmdLineArgs  :   additional command line args for the Polyglot 
+#                       compiler; is always enclosed in quotes.
+
+polyglot.ext.jl.ExtensionInfo "-cp ." {
+        ArrayInit.jl ;
+        BoolTest.jl ;
+        BoolTest2.jl (Semantic, "may not have been initialized");
+        ClassLit.jl ;
+        Conditional1.jl ;
+	ConformanceCheck1.jl (Semantic, "cannot override.*attempting to assign weaker access");
+	ConformanceCheck2.jl (Semantic, "cannot override.*throw set is not a subset");
+        ConformanceCheck3.jl ;        
+        ConformanceCheck4.jl ConformanceCheck4a.jl (Semantic, "should be declared abstract");
+        ConformanceCheck5.jl ;        
+        ConformanceCheck6.jl ;         
+        ConformanceCheck7.jl (Semantic, "should be declared abstract");        
+        ConformanceCheck9.jl ;
+        packA/ConformanceCheck8.jl packB/ConformanceCheck8b.jl (Semantic, "should be declared abstract"); 
+        packA/ProtectedAccess1.jl packB/ProtectedAccess2.jl (Semantic, "No valid method call");
+        package1/ProtectedTest.jl package2/ProtectedTestBase.jl (Semantic, "No valid method call");
+        package1/InnerClassAccess.jl package1/InnerClassProblem.jl ;
+        Constants.jl ;  Constants2.jl ; Constants3.jl ; Constants4.jl ;
+        Constants5.jl ; Constants6.jl ; Constants7.jl ; Constants8.jl;
+        Constants9.jl ;
+        Constants11.jl ;
+        Constants13.jl ;
+        Ctor.jl ;
+        Dep1.jl ;
+        DiamondInh.jl ; DiamondInh2.jl ;
+        Empty.jl ;
+        Equality.jl ;
+        Equality2.jl ;
+        ExcTest.jl ;
+        Except.jl ; Except2.jl ; Except3.jl ; Except4.jl ;
+        Except5.jl ;
+        Except6.jl ;
+        Field.jl ;
+        FieldAccess.jl ;
+        FieldAccess2.jl (Semantic, "Cannot access field");
+        FieldAccess3.jl ;
+        FieldAccess4.jl (Semantic, "Field.*ambiguous");
+        FieldAccess5.jl (Semantic, "Field.*ambiguous");
+        FinalInit1.jl ; FinalInit2.jl ; FinalInit3.jl ; FinalInit4.jl ;
+        FinalInit5.jl ; FinalInit6.jl ; FinalInit7.jl ;
+        ForInit.jl ;
+        ForwardRef.jl ; ForwardRef2.jl ; ForwardRef3.jl ;
+        Import.jl ;
+        Increment.jl ;
+        Infinite.jl ;
+        Inherit.jl (Semantic, "No valid method call found");
+        InheritClass.jl ;
+        Init1.jl ; Init2.jl ; Init3.jl ; Init4.jl ; Init5.jl ;
+        LiteralsCf.jl   (Lexical, "Illegal float literal"),
+                        (Lexical, "Illegal float literal"),
+                        (Lexical, "Illegal float literal"),
+                        (Lexical, "Illegal double literal"),
+                        (Lexical, "Illegal double literal"),
+                        (Syntax),
+                        (Syntax),
+                        (Lexical, "Integer literal.*out of range"),
+                        (Lexical, "Integer literal.*out of range"),
+                        (Lexical, "Integer literal.*out of range"),
+                        (Lexical, "Integer literal.*out of range"),
+                        (Lexical, "Integer literal.*out of range"),
+                        (Lexical, "Integer literal.*out of range"),
+                        (Lexical, "Integer literal.*out of range"),
+                        (Syntax),
+                        (Lexical, "Long literal.*out of range"),
+                        (Lexical, "Long literal.*out of range"),
+                        (Lexical, "Long literal.*out of range"),
+                        (Lexical, "Long literal.*out of range"),
+                        (Lexical, "Long literal.*out of range"),
+                        (Lexical, "Long literal.*out of range"),
+                        (Lexical, "Long literal.*out of range"),
+                        (Syntax),
+                        (Syntax, "Unable to parse");
+        Init6.jl ;
+        Init7.jl ; Init8.jl ; Init9.jl ;
+        InitializerType1.jl ;
+        Initializer1.jl (Semantic, "Initializers must be able to complete normally");
+        Initializer2.jl (Semantic, "Initializers must be able to complete normally");
+        Initializer3.jl ;
+        Initializer4.jl ;
+        InitCheckerBug.jl ;
+        Inner0.jl ; Inner1.jl ; Inner2.jl ; Inner3.jl ; Inner4.jl ;
+        Inner5.jl ; Inner6.jl ; Inner7.jl ; Inner8.jl ; Inner9.jl ;
+        Inner10.jl ; Inner11.jl ; Inner12.jl ;
+        InnerSuperConstructor1.jl;
+        InnerSuperConstructor2.jl (Semantic, ".*must have an enclosing instance that is a subtype.*");
+        InnerSuperConstructor3.jl;
+        InnerSuperConstructor4.jl;
+        InnerSuperConstructor5.jl (Semantic, ".*must have an enclosing instance that is a subtype.*");
+        InnerSuperConstructor6.jl;
+        InnerSuperConstructor7.jl (Semantic, ".*an enclosing instance .* must be specified");
+        InnerSuperConstructor8.jl;
+        InterfaceOverride.jl ;
+        LabeledBreak.jl ;
+        Local.jl ;
+        LocalClass.jl ; LocalClass2.jl ; LocalClass3.jl ; LocalClass4.jl ;
+        LocalInners2.jl ;
+        LocalInit.jl ;
+        MemberClassFlags.jl ;
+        Narrowing.jl ;
+        Prim.jl ;
+        Prec.jl ; Prec2.jl ;
+        Return1.jl ; Return2.jl ; Return3.jl ;
+        Return4.jl ;
+        Return5.jl ;
+        Semicolon.jl ;
+        SemicolonClass.jl ;
+        Shadowing.jl ;
+        Statements.jl ;
+        StaticContext.jl ;
+        StaticOps.jl ;
+        Switch1.jl ; Switch2.jl ; Switch3.jl ; Switch4.jl ; Switch5.jl ;
+        Switch6.jl ; Switch7.jl ;
+        TernaryPrimitiveOps.jl ;
+        TypeShadowing.jl ;
+        xIterator.jl ;
+        AbstractSuperMethod.jl (Semantic, "Cannot call an abstract method of the super class");
+        BadAbstract.jl (Semantic, "should be declared abstract");
+        BadAlloc.jl (Semantic, "Cannot instantiate an interface");
+        BadCtor.jl (Semantic, "Constructor name .* does not match name of containing class"), ();
+        BadExcept.jl (Semantic, "cannot override method1.* throw set is not a subset"),
+                     (Semantic, "cannot override method3.* throw set is not a subset");
+        BadExcept2.jl (Semantic, "Could not find type");
+        BadExtends.jl (Semantic, "Cannot extend final class");
+	BadInterfaceMethod.jl (Semantic, "weaker access privileges");
+        BadFinalInit1.jl (Semantic, "Local variable .* may not have been initialized");
+        BadFinalInit10.jl (Semantic, "field .* might already have been assigned to");
+        BadFinalInit11.jl (Semantic, "field .* might already have been assigned to");
+        BadFinalInit12.jl (Semantic, "Cannot assign a value to final field");
+        BadFinalInit2.jl (Semantic, "variable .* might already have been assigned to");
+        BadFinalInit3.jl (Semantic, "variable .* might already have been assigned to");
+        BadFinalInit4.jl (Semantic, "variable .* might already have been assigned to");
+        BadFinalInit5.jl (Semantic, "field .* might not have been initialized");
+        BadFinalInit6.jl (Semantic, "field .* might already have been assigned to");
+        BadFinalInit7.jl (Semantic, "Cannot assign a value to final field .*");
+        BadFinalInit8.jl (Semantic, "field .* might already have been assigned to");
+        BadFinalInit9.jl (Semantic, "variable .* might already have been assigned to");
+        BadIncrement1.jl (Semantic, "Operand of .* operator must be a variable");
+        BadIncrement2.jl (Semantic, "Operand of .* operator must be a variable");
+        BadIncrement3.jl (Semantic, "Operand of .* operator must be a variable");
+        BadIncrement4.jl (Semantic, "Operand of .* operator must be a variable");
+
+        BadInit.jl (Semantic, "Method .* not found"),
+                   (Semantic, "Method .* not found");
+        BadInner.jl (Semantic, "Could not find non-static member class");
+        BadInner2.jl (Semantic, "Cannot provide a containing instance for non-inner class"),
+                     (Semantic, "Cannot provide a containing instance for non-inner class");
+        BadInner3.jl (Semantic, "The nested class .* does not have an enclosing instance of type .*");
+        BadInner4.jl (Semantic, "The type of the qualifier .* does not match the immediately enclosing class  of the super class .*");
+	BadInner5.jl (Semantic, "Class .* not found in scope of ");
+	BadInner6.jl (Semantic, "The nested class .* does not have an enclosing instance of type");
+	BadInner7.jl (Semantic, "Cannot declare member class .* inside class with the same name");
+	BadInner8.jl (Semantic, "The nested class .* does not have an enclosing instance of type");
+	BadInner9.jl (Semantic, "Inner classes cannot declare static member classes");
+	BadInterface.jl (Semantic, "Interface methods must be public");
+	BadInterface2.jl (Semantic, "Could not find type");
+	BadInterface3.jl (Semantic, "Cannot instantiate an interface");
+	BadMultipleVarDef.jl (Semantic, "Local variable .* multiply defined"),
+			     (Semantic, "Local variable .* multiply defined");
+	BadOverride.jl (Semantic, "cannot override.*attempting to assign weaker access privileges");
+	BadPrim.jl (Semantic, "No valid method call found"); 
+	BadProt.jl (Semantic, "Interface methods must be public");
+	BadReferences.jl (Semantic, "Member type.*ambiguous");
+	BadReferences2.jl (Semantic, "Field.*ambiguous");
+	BadStaticContext.jl (Semantic); 
+	BadStaticContext2.jl (Semantic, "The nested class.*does not have an enclosing instance of type");
+        BadSwitch1.jl (Semantic, "Case label must be an integral constant");
+	BadSwitch2.jl (Semantic, "Duplicate case label");
+	Constants12.jl (Semantic, "Duplicate case label"),
+                       (Semantic, "Duplicate case label"),
+                       (Semantic, "Duplicate case label"),
+                       (Semantic, "Duplicate case label"),
+                       (Semantic, "Duplicate case label");
+	CircularConstructor.jl (Semantic, "Recursive constructor invocation");
+        CircularInheritance1.jl (Semantic, "Circular inheritance");
+        CircularInheritance2.jl (Semantic, "Circular inheritance");
+        CircularInheritance3.jl (Semantic, "Circular inheritance");
+	Errors.jl (Semantic, "No valid method call found");
+	Errors2.jl (Semantic, "Could not find type"); 
+	LabeledBreak2.jl (Semantic, "Unreachable statement"); 
+	NoInit1.jl (Semantic, "Local variable .* may not have been initialized"); 
+	NoInit10.jl (Semantic, "Local variable .* may not have been initialized"); 
+	NoInit11.jl (Semantic, "Local variable .* may not have been initialized"); 
+	NoInit12.jl (Semantic, "Local variable .* may not have been initialized"); 
+	NoInit2.jl (Semantic, "Local variable .* may not have been initialized"); 
+	NoInit3.jl (Semantic, "Unreachable statement");
+	NoInit4.jl (Semantic, "Local variable .* may not have been initialized"); 
+	NoInit5.jl (Semantic, "Local variable .* may not have been initialized"); 
+	NoInit6.jl (Semantic, "Local variable .* may not have been initialized"); 
+	NoInit7.jl (Semantic, "Local variable .* may not have been initialized"); 
+	NoInit8.jl (Semantic, "Local variable .* may not have been initialized"); 
+	NoInit9.jl (Semantic, "Local variable .* may not have been initialized"); 
+	StaticContext2.jl (Semantic, "Inner classes cannot declare static methods");
+	NoReturn1.jl  (Semantic, "Missing return statement");
+	NoReturn2.jl (Semantic, "Missing return statement");
+	NoReturn3.jl (Semantic, "Missing return statement");
+	NoReturn4.jl (Semantic, "Missing return statement");
+	NoReturn5.jl (Semantic, "Missing return statement");
+	Unreachable1.jl (Semantic, "Unreachable statement");
+	Unreachable10.jl (Semantic, "Unreachable statement");
+	Unreachable11.jl (Semantic, "Unreachable statement");
+	Unreachable12.jl (Semantic, "Unreachable statement");
+	Unreachable13.jl (Semantic, "Unreachable statement");
+	Unreachable14.jl (Semantic, "Unreachable statement");
+	Unreachable15.jl (Semantic, "Unreachable statement");
+	Unreachable16.jl (Semantic, "Unreachable statement");
+	Unreachable2.jl (Semantic, "Unreachable statement");
+	Unreachable3.jl (Semantic, "Unreachable statement");
+	Unreachable4.jl (Semantic, "Unreachable statement");
+	Unreachable5.jl (Semantic, "Unreachable statement");
+	Unreachable6.jl (Semantic, "Unreachable statement");
+	Unreachable7.jl (Semantic, "Unreachable statement");
+	Unreachable8.jl (Semantic, "Unreachable statement");
+	Unreachable9.jl (Semantic, "Unreachable statement");
+	BadExpCC.jl (Syntax), (); // misplaced constructor call
+	BadOverride2.jl (Semantic, "weaker access");
+	DoubleFlags.jl (Syntax), ();
+	LocalClass5.jl ;
+	LocalClass6.jl (Semantic, "Circular inheritance");
+	Protection.jl (Semantic, "Cannot declare method that is both abstract and static"),
+		      (Semantic, "Cannot declare method that is both abstract and final"),
+		      (Semantic, "Cannot declare method that is both abstract and native");
+	Protection2.jl (Semantic, "cannot override.*overridden method is final");
+
+        // on the following file, javac produces an error, but we intentionally do not.
+        //  BadFinalInit13.jl (Post); 
+
+	BadForwardRef.jl (Semantic, "Illegal forward ref"); 
+	BadForwardRef2.jl (Semantic, "Illegal forward ref"); 
+	BadForwardRef3.jl (Semantic, "Illegal forward ref"); 
+        Continue1.jl (Semantic, "Target.*not found");
+        Continue2.jl (Semantic, "must be a loop");
+	ForwardRef4.jl (Semantic, "Illegal forward ref"); 
+	ForwardRef5.jl; 
+	// the following test has exactly 4 errors in it
+	ForwardRef6.jl (Semantic, "Illegal forward ref"), 
+		       (Semantic, "Illegal forward ref"), 
+		       (Semantic, "Illegal forward ref"), 
+		       (Semantic, "Illegal forward ref"); 
+	InitCheckerBug.jl; 
+}

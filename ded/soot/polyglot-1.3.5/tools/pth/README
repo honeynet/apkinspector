@@ -1,0 +1,81 @@
+		      Pth: Polyglot Test Harness
+		      --------------------------
+
+Pth is a small tool to assist automated regression testing of Polyglot
+extensions. pth is given as input a test script, which lists test
+programs and the expected result of compiling them with the Polyglot
+extension.
+
+Using Pth
+---------
+When configuring the Polyglot distribution, the executable script
+$POLYGLOT/bin/pth is created. This script should be used to execute
+pth. The command line option "-h" will provide a summary of the
+command line options available for pth.
+
+Pth Test Scripts
+----------------
+An example test script can be found in the JL extension test
+directory: $POLYGLOT/src/polyglot/ext/jl/tests/pthScript.
+
+The following BNF grammar describes the structure of pth test
+scripts. Comments may be included anywhere in test scripts; Java-style
+comments ("/*...*/" and "// ...") and lines beginning with a pound
+sign ('#') are treated as comments.
+
+
+  ScriptFile   ::= CompilerTest+
+  CompilerTest ::= ExtClassName ["CmdLineArgs"] { FileTest [; FileTest]* }
+  FileTest     ::= Filenames [Description] [FailureSet]
+  Filenames    ::= Filename [Filename]*
+  Description  ::= LitString
+  FailureSet   ::= Failure [, Failure]*
+  Failure      ::= ( ErrorKind )
+                |  ( ErrorKind, "RegExp" )
+                |  ( "RegExp" )
+                |  ( )
+  ErrorKind    :   one of, or a unique prefix of one of the following 
+                   strings: "Warning", "Internal Error", "I/O Error", 
+                   "Lexical Error", "Syntax Error", "Semantic Error"
+                   or "Post-compiler Error".
+  Filename     :   the name of a file. Is interpreted from the 
+                   directory where pth is run.
+  LitString    :   a literal string, enclosed in quotes.
+  RegExp       :   a regular expression, as in java.util.regex; 
+                   is always enclosed in quotes.
+  CmdLineArgs  :   additional command line args for the Polyglot 
+                   compiler; is always enclosed in quotes.
+
+
+
+For example, the following is a valid test script, and illustrates
+common usage of the test script files.
+
+	    polyglot.ext.jl.ExtensionInfo {
+		 // this is a test that is meant to succeed
+		 SuccessfulTest1.jl ; 
+
+		 // another succesful test, with a description
+		 SuccessfulTest2.jl "test array initialization" ; 
+
+		 // this test should generate a compiler warning
+		 FailTest1.jl ( Warning ) ; 
+
+		 // this test should fail with a semantic error containing 
+		 // the substring "might already have been assigned"
+		 FailTest2.jl ( Semantic, ".*might already have been assigned.*"); 
+
+		 // this test should fail, genearting both a warning and a
+		 // post-compiler error
+		 FailTest3.jl ( Warning ), ( Post, ".*finally block.*"); 
+
+		 // this test requires compiling two files at the same time.
+		 MutualA.jl MutualB.jl ; 
+
+		 // this test fails with a syntax failure, and the
+		 // special expected failure "()" ignores all other failures.
+		 FailTest4.jl ( Syntax ), () ; 
+	    }
+
+
+

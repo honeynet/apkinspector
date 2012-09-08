@@ -1,0 +1,362 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Annotating Java Class Files with Array Bounds Check and Null Pointer Check Information</TITLE>
+<META NAME="description" CONTENT="Annotating Java Class Files with Array Bounds Check and Null Pointer Check Information">
+<META NAME="keywords" CONTENT="useannotation">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="useannotation.css">
+
+</HEAD>
+
+<BODY >
+
+<H1 ALIGN="CENTER">Annotating Java Class Files with 
+<BR>
+Array Bounds Check and Null Pointer Check Information</H1>
+<DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Feng Qian (<A NAME="tex2html1"
+  HREF="mailto:fqian@sable.mcgill.ca">fqian@sable.mcgill.ca</A>)</STRONG></P>
+<P ALIGN="CENTER"><STRONG>June 3, 2008</STRONG></P>
+</DIV>
+
+<P>
+This note explains how to use Soot annotation options to add array
+bounds check and null pointer check attributes to a class file and
+how to use these attributes in a JIT or ahead-of-time compiler.
+
+<P>
+
+<H1><A NAME="SECTION00010000000000000000">
+Array References and Object References</A>
+</H1>
+Java requires array bounds checks when accessing arrays, and null
+pointer checks when accessing objects.  Array bounds checks are
+implemented at the virtual machine level by inserting comparison
+instructions before accessing an array element.  Most of operating systems
+can raise a hardware exception when a bytecode accesses a null
+pointer, so the nullness check on an object reference is 
+free at most of the time.  However, some bytecodes, like the <I>invokespecial</I> and <TT>athrow</TT> instructions, do need explicit comparison
+instructions to detect null pointers.  Both of these safety checking
+mechanisms do cause heavy runtime overhead.
+
+<P>
+Soot provides static analyses for detecting safe array and object
+accesses in a method.  These analyses mark array and object reference bytecodes as
+either safe or unsafe.  The results of these analyses are encoded into the
+class file as attributes, which can then be understood by an
+interpreter or JIT compiler. If a bytecode is marked as safe in its
+attribute, the associated comparison instructions can be eliminated.
+This can speed up the execution of Java applications. Our process of
+encoding class files with attributes is called <EM>annotation</EM>.
+
+<P>
+Soot can be used as a compiler framework to support any attributes you
+would like to define; they can then be encoded into the class file.
+The process of adding new analyses and attributes is documented in
+``Adding attributes to class files via Soot''.
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Annotation options in Soot</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00021000000000000000">
+Description of new options</A>
+</H2>
+
+<P>
+Soot has new command-line options <TT>-annot-nullpointer</TT> and
+<TT>-annot-arraybounds</TT> to enable the phases required to emit
+null pointer check and array bounds check annotations, respectively.
+
+<P>
+Soot has some phase options to configure the annotation process.
+These phase options only take effect when annotation is enabled.  
+Note that the array bounds check analysis and null pointer
+check analysis constitute two different phases, but that the results
+are combined and stored in the same attribute in the class files. 
+
+<P>
+The null pointer check analysis has the phase name ``<EM>jap.npc</EM>''. It has one phase option (aside from the default option
+<EM>enabled</EM>).
+
+<P>
+<DL>
+<DT><STRONG>-p jap.npc only-array-ref</STRONG></DT>
+<DD> 
+<BR>
+By default, all bytecodes that need null pointer checks are 
+  annotated with the analysis result. When this option is set to true, 
+  Soot will annotate only array reference bytecodes with null 
+  pointer check information; other bytecodes, such as <TT>getfield</TT> 
+  and <TT>putfield</TT>, will not be annotated. 
+</DD>
+</DL>
+
+<P>
+Soot also has phase options for the array bounds check analysis.
+These options affect three levels of analyses: intraprocedural,
+class-level, and whole-program. The array bounds check analysis has
+the phase name ``<EM>jap.abc</EM>''.  If the whole-program analysis is
+required, an extra phase ``<EM>wjap.ra</EM>'' for finding rectangular
+arrays is required.  This phase can be also enabled with
+phase options.
+
+<P>
+By default, our array bounds check analysis is intraprocedual, since
+it only examines local variables. This is fast, but
+conservative. Other options can improve the analysis result; however,
+it will usually take longer to carry out the analysis, and some
+options assume that the application is single-threaded.
+
+<P>
+<DL>
+<DT><STRONG>-p jap.abc with-cse</STRONG></DT>
+<DD> 
+<BR>
+The analysis will consider common subexpressions.  For example,
+  consider the situation where <TT>r1</TT> is assigned <TT>a*b</TT>; later,
+  <TT>r2</TT> is assigned <TT>a*b</TT>, where both <TT>a</TT> and <TT>b</TT> have
+  not been changed between the two statements. The analysis can
+  conclude that <TT>r2</TT> has the same value as <TT>r1</TT>. Experiments
+  show that this option can improve the result slightly.
+
+<P>
+</DD>
+<DT><STRONG>-p jap.abc with-arrayref</STRONG></DT>
+<DD> 
+<BR>
+With this option enabled, array
+references can be considered as common subexpressions; however, we are
+more conservative when writing into an array, because array
+objects may be aliased. NOTE: We also assume that the application in a
+single-threaded program or in a synchronized block. That is, an
+array element may not be changed by other threads between two array
+references.
+
+<P>
+</DD>
+<DT><STRONG>-p jap.abc with-fieldref</STRONG></DT>
+<DD> 
+<BR>
+The analysis treats field references (static and instance) as common
+subexpressions. The restrictions from the `<TT>with-arrayref</TT>' option also
+apply. 
+
+<P>
+</DD>
+<DT><STRONG>-p jap.abc with-classfield</STRONG></DT>
+<DD> 
+<BR>
+This option makes the analysis work on the class level. The algorithm 
+analyzes `final' or `private' class fields first. It can recognize
+the fields that hold array objects with constant length.  In an application 
+using lots of array fields, this option can improve the analysis results 
+dramatically. 
+
+<P>
+</DD>
+<DT><STRONG>-p jap.abc with-all</STRONG></DT>
+<DD> 
+<BR>
+A macro.  Instead of typing a long string of phase options, this option 
+will turn on all options of the phase ``<EM>jap.abc</EM>''.
+
+<P>
+</DD>
+<DT><STRONG>-p jap.abc with-rectarray, -p wjap.ra with-wholeapp</STRONG></DT>
+<DD> 
+<BR>
+These
+two options are used together to make Soot run the whole-program
+analysis for rectangular array objects. This analysis is based on the
+call graph, and it usually takes a long time. If the application uses
+rectangular arrays, these options can improve the analysis
+result.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00022000000000000000">
+Examples</A>
+</H2>
+
+<P>
+Annotate the benchmark in class file mode with both analyses.
+<PRE>
+    java soot.Main -annot-nullpointer -annot-arraybounds spec.benchmarks._222_mpegaudio.Main
+</PRE>
+
+<P>
+The options for rectangular array should be used in application 
+mode. For example:
+<PRE>
+    java soot.Main --app -annot-arraybounds -annot-arraybounds -p wjap.ra with-wholeapp 
+      -p jap.abc with-all spec.benchmarks._222_mpegaudio.Main
+</PRE>
+
+<P>
+The following command only annotates the array reference bytecodes.
+<PRE>
+    java soot.Main -annot-arraybounds -annot-arraybounds -jap.npc only-array-ref 
+      spec.benchmarks._222_mpegaudio.Main
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Using attributes in the Virtual Machine</A>
+</H1>
+The array bounds check and null pointer check information is encoded 
+in a single attribute in a class file. The attribute is called 
+<TT>ArrayNullCheckAttribute</TT>. When a VM reads in the class file, 
+it can use the attribute to avoid generating comparison instructions for
+the safe bounds and nullness checks. 
+
+<P>
+All array reference bytecodes, such as <EM>?aload, ?store</EM> will be annotated 
+with bounds check information. Bytecodes that need null pointer check 
+are listed below:
+<PRE>
+        ?aload
+        ?astore
+        getfield
+        putfield
+        invokevirtual
+        invokespecial
+        invokeinterface
+        arraylength
+        monitorenter
+        monitorexit
+        athrow
+</PRE>
+
+<P>
+The attributes in the class file are organized as a table. If a method
+has been annotated, it will have an <TT>ArrayNullCheckAttribute</TT>
+attribute on its <TT>Code_attribute</TT>. The data structure is defined as:
+
+<P>
+<PRE>
+        array_null_check_attribute
+        {
+            u2 attribute_name_index;
+            u4 attribute_length;
+            u3 attribute[attribute_length/3];
+        }
+</PRE>
+
+<P>
+The attribute data consist of 3-byte entries. Each entry has the first two 
+bytes indicating the PC of the bytecode it belongs to; the third byte is 
+used to represent annotation information.
+
+<P>
+<PRE>
+        soot_attr_entry
+        {
+            u2 PC;
+            u1 value;
+        }
+</PRE>
+
+<P>
+Entries are sorted by PC in ascending order when written into the class
+file. The right-most two bits of the `<EM>value</EM>' byte represent
+upper and lower bounds information. The third bit from right is used
+for nullness annotation.  Other bits are not used and set to zero. The
+bit value `1' indicates the check is needed, and 0 represents a
+known-to-be-safe access. In general, only when both lower and upper
+bounds are safe can the check instructions be eliminated. However,
+sometimes this depends on the VM implementation.
+
+<P>
+<PRE>
+        0 0 0 0 0 N U L
+            N : nullness check
+            U : upper bounds check
+            L : lower bounds check
+</PRE>
+
+<P>
+For example, the attribute data should be interpreted as:
+<PRE>
+    0 0 0 0 0 1 x x    // need null check
+    0 0 0 0 0 0 x x    // no null check
+
+    // x x represent array bound check.
+
+    0 0 0 0 0 0 0 0    // do not need null check or array bounds check
+    0 0 0 0 0 1 0 0    // need null check, but not array bounds check
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Other information</A>
+</H1>
+The detailed annotation process is described in our technical report. 
+The array bounds check analysis algorithm will show up in another 
+technical report. There is a tutorial describing how to develop
+other annotation attributes using Soot.
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+Change log</A>
+</H1>
+
+<UL>
+<LI>October 2, 2000: Initial version.
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>Annotating Java Class Files with 
+<BR>
+Array Bounds Check and Null Pointer Check Information</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>useannotation -split 0 -nonavigation -dir ./</TT>
+<P>
+The translation was initiated by Eric BODDEN on 2008-06-03
+<BR><HR>
+<ADDRESS>
+Eric BODDEN
+2008-06-03
+</ADDRESS>
+</BODY>
+</HTML>

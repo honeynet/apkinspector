@@ -1,0 +1,562 @@
+package ppg.parse;
+
+import java.io.*;
+import java.util.*;
+import java_cup.runtime.Symbol; 
+import ppg.*;
+import ppg.atoms.*;
+import ppg.cmds.*;
+import ppg.code.*;
+import ppg.lex.*;
+import ppg.spec.*;
+
+parser Parser {: 
+    private Lexer lexer;           
+    private static String filename; 
+    
+    public static String getFilename() { return filename; } 
+
+    public Parser (String fname, Lexer lex) { 
+        this(); 
+        filename = fname; 
+        lexer = lex;
+    } 
+
+    public void syntax_error (Symbol cur_token)
+    {
+	Token tok = (Token) cur_token.value;
+	report_error (tok.getFilename () + ":" +
+		    tok.getLineno () + ": syntax error: \"" +
+                    tok.getValue () + "\" (" +
+		    tok.getID () + ")", null);
+	System.exit (1);
+    }
+
+    public void report_fatal_error (String message, Object info) { 
+        // stop parsing 
+        done_parsing(); 
+
+        // use the normal error message reporting to put out the message 
+        report_error(message, info); 
+        System.exit(1);
+    } 
+
+    private static Object program; 
+    public static Object getProgramNode() { return program; } 
+    public static void setProgramNode(Object n) { program = n; } 
+:}; 
+
+scan with {: 
+    return lexer.getToken().getSymbol(); 
+:}; 
+
+terminal 
+	/* PPG syntax */
+	INCLUDE, TO,
+	
+	/* PPG commands and syntax */
+	DROP, TRANSFER,
+	LBRACE, RBRACE,
+	
+	/* CUP extensions */
+	EXTENDS, IMPLEMENTS,
+
+	/* PPG & CUP common */
+	COMMA, SEMI, COLON, COLON_COLON_EQUALS, BAR,
+	TERMINAL, NONTERMINAL,
+	PERCENT_PREC, DOT,	
+	LBRACK, RBRACK,
+	
+	/* CUP-only */
+	PACKAGE, IMPORT, CODE, ACTION, PARSER, NON, INIT, SCAN, WITH, 
+	START, STAR, PRECEDENCE, LEFT, RIGHT, NONASSOC
+  
+  ; 
+
+terminal Token STRING_CONST, ID, CODE_STR, EXTEND, OVERRIDE;
+
+nonterminal
+  /* PPG nonterminals */
+  prod_modifier_opt, 
+  
+  /* Common */
+  prod_part, rhs, opt_semi,
+  
+  /* CUP nonterminals */
+  action_code_part, 
+  code_part, non_terminal,
+  parser_code_part,
+  init_code, scan_code,  
+  preced
+  ;
+
+nonterminal Spec spec, ppg_spec, cup_spec;
+
+/* PPG */
+nonterminal String id, include_spec, extendsimpls,
+	    code_str;
+nonterminal Vector command_list_opt, prod_part_list, rhs_list, transfer_list,
+					ppg_precedence_list,
+					ppg_start_spec, ppg_start_spec_elt, ppg_start_spec_list,
+					nt_id_list;
+nonterminal Command command;
+
+/* Common */
+nonterminal Production production;
+nonterminal Vector production_list;
+nonterminal String nt_id, symbol_id, label_id, opt_label, terminal_id,
+					term_id, robust_id;
+
+/* CUP */
+nonterminal String package_spec, import_id, import_spec,
+					multipart_id, start_spec, type_id, new_non_term_id, 
+					new_term_id;
+nonterminal Vector non_term_name_list, import_list, term_name_list,
+					symbol_list, symbol_list_opt, code_parts, 
+					terminal_list, precedence_l, precedence_list, 
+					declares_term, declares_non_term;
+nonterminal SymbolList symbol;
+					
+start with spec;
+
+/* add ability to override class imports, package declaration */
+
+spec ::=
+	ppg_spec:s {:
+		Parser.setProgramNode(s);
+	:}
+|	cup_spec:s {:
+		Parser.setProgramNode(s);
+	:}
+;
+
+/********************************************************************
+ * JLGEN                                                            *
+ ********************************************************************/
+
+ppg_spec ::=
+	include_spec:inc package_spec:pkg import_list:imp 
+	code_parts:code symbol_list_opt:sym_list ppg_precedence_list:prec_list
+	ppg_start_spec:start command_list_opt:cmd_list
+	{:
+		RESULT = new PPGSpec(inc, pkg, imp, code, sym_list,
+								prec_list, start, cmd_list);
+	:}
+	;
+ 
+include_spec ::=
+	INCLUDE STRING_CONST:a 
+	{:
+		RESULT = (String)a.getValue();
+	:}
+	;
+
+symbol_list_opt ::=
+	symbol_list:sym_list {: RESULT = sym_list; :}
+|	{: RESULT = null; :}
+;
+
+
+
+ppg_precedence_list ::=
+	precedence_list:p_l {: RESULT = p_l; :}
+|	PRECEDENCE SEMI // remove all precedence instructions from grammar
+	{: RESULT = null; :}
+;
+
+ppg_start_spec ::=
+	START WITH nt_id:start SEMI {: 
+		Vector v = new Vector();
+		v.addElement(start);
+		RESULT = v;
+	:}	
+|	ppg_start_spec_list:m {: RESULT = m; :}
+;
+
+ppg_start_spec_list ::=
+	ppg_start_spec_list:list ppg_start_spec_elt:elt {: 
+		list.addAll(elt);
+		RESULT = list;
+	:}
+|	ppg_start_spec_elt:elt {: RESULT = elt; :}
+;
+
+ppg_start_spec_elt ::=
+	START WITH id:start id:method SEMI {:
+		Vector m = new Vector();
+		m.addElement(start);
+		m.addElement(method);
+		RESULT = m;
+	:}
+;
+
+command_list_opt ::=
+	command_list_opt:b command:a
+	{:
+		/* b = Vector, a = command; */
+		b.addElement(a);
+		RESULT = b;
+	:}
+|	{: RESULT = new Vector(); :}
+;
+
+command ::=
+	prod_modifier_opt:mod production:p
+	{:
+		if (mod == null) {
+			/* no modifier, new command */
+			RESULT = new NewProdCmd(p);
+		} else if (mod.equals("extend")) {
+			RESULT = new ExtendCmd(p);
+		} else /* if (mod.equals("override")) */ {
+			RESULT = new OverrideCmd(p);
+		} 
+	:}
+|	DROP LBRACE production:p RBRACE {: RESULT = new DropCmd(p); :}
+|	DROP LBRACE nt_id_list:nt_list RBRACE {: 
+		RESULT = new DropCmd(nt_list);
+	:}
+|	TRANSFER nt_id:nt transfer_list:tlist {:
+		RESULT = new TransferCmd(nt, tlist);
+	:}
+;
+
+nt_id_list ::=
+	nt_id_list:list COMMA nt_id:id {:
+		list.addElement(id);
+		RESULT = list;
+	:}
+|	nt_id:id {:
+		Vector list = new Vector();
+		list.addElement(id);
+		RESULT = list;
+	:}
+;
+
+prod_modifier_opt ::=
+	EXTEND:a	{: RESULT = (String)a.getValue(); :}
+|	OVERRIDE:a	{: RESULT = (String)a.getValue(); :}
+|	/* empty */	{: RESULT = null; :}
+; 
+
+transfer_list ::=
+	transfer_list:tl TO nt_id:nt LBRACE rhs_list:rhs RBRACE {:
+		Production p = new Production(new Nonterminal(nt), rhs);
+		tl.addElement(p);
+		RESULT = tl;
+	:}
+|	TO nt_id:nt LBRACE rhs_list:rhs RBRACE {:
+		Vector v = new Vector();
+		Production p = new Production(new Nonterminal(nt), rhs);
+		v.addElement(p);
+		RESULT = v;
+	:}
+;
+
+/********************************************************************
+ * COMMON                                                           *
+ ********************************************************************/
+
+production_list ::=
+	production_list:p_list production:p {:
+		p_list.addElement(p);
+		RESULT = p_list;
+	:}
+|	production:p {:
+		Vector p_list = new Vector();
+		p_list.addElement(p);
+		RESULT = p_list;
+	:}
+;
+production ::=
+	nt_id:lhs_id COLON_COLON_EQUALS rhs_list:rhs SEMI
+	{: 
+		RESULT = new Production(new Nonterminal(lhs_id), rhs);
+	:}
+;
+
+nt_id ::=
+	id:id {: RESULT = id; :}
+;
+
+symbol_id ::=
+	id:id {: RESULT = id; :}
+;
+
+rhs_list ::=
+	rhs_list:r_list BAR rhs:r {:
+		r_list.addElement(r);
+		RESULT = r_list;
+	:}
+|	rhs:r {:
+		Vector r_list = new Vector();
+		r_list.addElement(r);
+		RESULT = r_list;
+	:}
+;
+
+rhs ::= 
+	prod_part_list:p PERCENT_PREC term_id:term_name 
+	    {: p.add(new PrecedenceModifier(term_name));
+	       RESULT = p; :}
+|	prod_part_list:p
+	    {: RESULT = p; :}
+;
+
+prod_part_list ::= 
+	prod_part_list:a prod_part:b
+	{: 
+		/* Vector a, (non)terminal/code b */
+		a.addElement(b); RESULT = a;
+	:}
+|	/* empty */ {: RESULT = new Vector(); :};
+
+prod_part ::=
+	symbol_id:symid opt_label:labid
+	{:
+		RESULT = new Nonterminal(symid, labid);
+	:}
+|	code_str:code_str {:
+		RESULT = new SemanticAction(code_str);
+	:}
+;
+
+opt_label ::=
+	COLON label_id:labid {: RESULT = labid; :}
+|	/* empty */ {: RESULT = null; :}
+;
+
+label_id ::= 
+	robust_id:the_id
+	{: RESULT = the_id; :}
+	;
+
+robust_id ::= /* all ids that aren't reserved words in Java */
+	id:id {: RESULT = id; :}
+;
+
+non_terminal ::= NON TERMINAL | NONTERMINAL;
+
+opt_semi ::= SEMI | /* empty */;
+
+/********************************************************************
+ * CUP                                                              *
+ ********************************************************************/
+
+cup_spec ::= 
+	package_spec:pkg import_list:imp code_parts:code
+	symbol_list:sym_list precedence_list:prec_list
+	start_spec:start production_list:prod_list {:
+		RESULT = new CUPSpec(pkg, imp, code, sym_list, prec_list, start, prod_list);
+	:}
+;
+
+package_spec ::= 
+	PACKAGE multipart_id:m_id SEMI {: RESULT = m_id; :}
+|	/* empty */ {: RESULT = null; :}
+;
+
+import_list ::=
+	import_list:i_list import_spec:i {:
+		i_list.addElement(i);
+		RESULT = i_list;
+	:}
+|	/* empty */ {: RESULT = new Vector(); :}
+;
+
+import_spec ::=
+	IMPORT import_id:i SEMI {: RESULT = i; :}
+	;
+
+// allow any order; all parts are optional. [CSA, 23-Jul-1999]
+// (we check in the part action to make sure we don't have 2 of any part)
+code_parts ::=
+	code_parts:c_parts code_part:c {:
+		c_parts.addElement(c);
+		RESULT = c_parts;
+	:}
+|	/* empty */ {: RESULT = new Vector(); :}
+;
+
+code_part ::=
+	action_code_part:a {: RESULT = a; :}
+|	parser_code_part:p {: RESULT = p; :}
+|	init_code:i {: RESULT = i; :}
+|	scan_code:s {: RESULT = s; :}
+;
+
+action_code_part ::= 
+	ACTION CODE code_str:user_code opt_semi
+	{: RESULT = new ActionCode(user_code); :}
+	;
+
+parser_code_part ::= 
+	PARSER CODE code_str:user_code opt_semi
+	{:
+	  RESULT = new ParserCode(null, "", user_code);
+	:}
+    |   PARSER id:classname extendsimpls:ei code_str:user_code opt_semi
+	{:
+	  RESULT = new ParserCode(classname, ei, user_code);
+	:}
+    ;
+
+extendsimpls ::=
+	/* nothing */
+	{: RESULT = ""; :}
+    |	extendsimpls:e EXTENDS multipart_id:qid
+        {: RESULT = e + " extends " + qid; :}
+    |	extendsimpls:e IMPLEMENTS multipart_id:qid
+        {: RESULT = e + " implements " + qid; :}
+    ;
+
+init_code ::= 
+	INIT WITH code_str:user_code opt_semi
+	{: RESULT = new InitCode(user_code); :}
+	;
+
+scan_code ::=
+	SCAN WITH code_str:user_code opt_semi
+	{: RESULT = new ScanCode(user_code); :}
+	;
+
+symbol_list ::=
+	symbol_list:s_list symbol:s {:
+		s_list.addElement(s);
+		RESULT = s_list;
+	:}
+|	symbol:s {: 
+		Vector s_list = new Vector();
+		s_list.addElement(s);
+		RESULT = s_list;
+	:}
+;
+
+symbol ::= 
+	TERMINAL type_id:type declares_term:term {:
+		RESULT = new SymbolList(SymbolList.TERMINAL, type, term);
+	:}
+|	TERMINAL declares_term:term {:
+		RESULT = new SymbolList(SymbolList.TERMINAL, null, term);
+	:}
+|	non_terminal type_id:type declares_non_term:non_term {:
+		RESULT = new SymbolList(SymbolList.NONTERMINAL, type, non_term);
+	:}
+|	non_terminal declares_non_term:non_term {:
+		RESULT = new SymbolList(SymbolList.NONTERMINAL, null, non_term);
+	:}
+;
+
+declares_term ::=
+	term_name_list:tn_list SEMI {: RESULT = tn_list; :};
+
+declares_non_term ::=
+	non_term_name_list:ntn_list SEMI {: RESULT = ntn_list; :};
+
+term_name_list ::=
+	term_name_list:tn_list COMMA new_term_id:n_id {:
+		tn_list.addElement(n_id);
+		RESULT = tn_list;
+	:}
+|	new_term_id:n_id {:
+		Vector tn_list = new Vector();
+		tn_list.addElement(n_id);
+		RESULT = tn_list;
+	:}
+;
+
+non_term_name_list ::=
+	non_term_name_list:ntn_list COMMA new_non_term_id:n_id {:
+		ntn_list.addElement(n_id);
+		RESULT = ntn_list;
+	:}
+|	new_non_term_id:n_id {: 
+		Vector nnt_list = new Vector();
+		nnt_list.addElement(n_id);
+		RESULT = nnt_list; 
+	:}
+;
+
+precedence_list ::=
+	precedence_l:p_l {: RESULT = p_l; :}
+|	/* empty */ {: RESULT = new Vector(); :}
+;
+
+precedence_l ::= 
+	precedence_l:p_l preced:p {:
+		p_l.addElement(p);
+		RESULT = p_l;
+	:}
+|	preced:p {: 
+		Vector p_l = new Vector();
+		p_l.addElement(p);
+		RESULT = p_l;
+	:}
+;
+
+preced ::= 
+	PRECEDENCE LEFT terminal_list:t_list SEMI {:
+		RESULT = new Precedence(Precedence.LEFT, t_list);
+	:}
+|	PRECEDENCE RIGHT terminal_list:t_list SEMI {:
+		RESULT = new Precedence(Precedence.RIGHT, t_list);
+	:}
+|	PRECEDENCE NONASSOC terminal_list:t_list SEMI {:
+		RESULT = new Precedence(Precedence.NONASSOC, t_list);
+	:}
+;
+
+terminal_list ::=
+	terminal_list:t_list COMMA terminal_id:t {:
+		t_list.addElement(t);
+		RESULT = t_list;
+	:}
+|	terminal_id:t {:
+		Vector t_list = new Vector();
+		t_list.addElement(t);
+		RESULT = t_list;
+	:}
+;
+
+terminal_id ::= term_id:sym {: RESULT = sym; :};
+
+term_id ::= symbol_id:sym {: RESULT = sym; :};
+
+start_spec ::= 
+	START WITH nt_id:start_name SEMI {: RESULT = start_name; :}
+|	/* empty */ {: RESULT = null; :}
+;
+
+multipart_id ::=
+	multipart_id:m_id DOT robust_id:r_id {:
+		RESULT = m_id + "." + r_id;
+	:}
+|	robust_id:r_id {: RESULT = r_id; :}
+;
+
+import_id ::= 
+	multipart_id:m_id DOT STAR {: RESULT = m_id + ".*"; :}
+|	multipart_id:m_id {: RESULT = m_id; :}
+;
+
+type_id ::=
+	multipart_id:m_id {: RESULT = m_id; :}
+|	type_id:t_id LBRACK RBRACK {: RESULT = t_id + "[]"; :}
+;
+
+new_term_id ::= 
+	id:id {: RESULT = id; :}
+;
+
+new_non_term_id ::=
+	id:id {: RESULT = id; :}
+;
+
+/* some productions to extract info from tokens */
+id ::=
+	ID:id {: RESULT = (String)id.getValue(); :}
+;
+
+code_str ::=
+	CODE_STR:c {: RESULT = (String) c.getValue(); :}
+;

@@ -1,0 +1,8 @@
+#
+# TODO : Set this to your garbage collector path...
+#
+GC_PATH=/home/ak333/src/gc6.4/include/
+CXXFLAGS=-Wall -I$(GC_PATH)
+
+
+

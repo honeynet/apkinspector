@@ -1,0 +1,68 @@
+<body>
+<p>
+Coffer, 
+an extension of Java that supports
+some of the resource management
+facilities of the Vault language. See [1].
+Coffer allows a linear capability, or <i>key</i>, to be
+associated with an object.  Methods of the object may be invoked only when the
+key is held.  A key is allocated when its object is created and deallocated by
+a <code>free</code> statement in a method of the object.  The Coffer type system regulates
+allocation and freeing of keys to guarantee statically that keys are always
+deallocated.
+Coffer does not support such Vault features as key states and keyed
+variants.
+</p>
+
+
+<p>
+Below is a small Coffer program declaring
+a <code>FileReader</code> class that guarantees the program cannot read from a closed
+reader.
+</p>
+<center>
+<table border=0 bgcolor="#a0d0a0">
+  <tr>
+    <td>
+      <pre>
+1   tracked(F) class FileReader {
+2       FileReader(File f) [] -> [F] throws IOException[] { ... }
+3       int read() [F] -> [F] throws IOException[F] { ... }
+4       void close() [F] -> [] { ... ; free this; }
+5   }</pre>
+    </td>
+  </tr>
+</table>
+</center>
+<p>
+The annotation <code>tracked(F)</code> on line 1 associates a key named <code>F</code> with
+instances of <code>FileReader</code>.  Pre- and post-conditions on method and constructor
+signatures, written in brackets, specify how the set of held keys changes
+through an invocation.  For example on line 2, the precondition <code>[]</code> indicates
+that no key need be held to invoke the constructor, and the postcondition <code>[F]</code>
+specifies that <code>F</code> is held when the constructor returns normally, and the
+declaration <code>throws IOException[]</code> ensures that <code>F</code> is not held if the
+constructor throws the exception.
+The <code>close</code> method (line 4) frees the key;
+no subsequent method that requires <code>F</code> can be invoked.
+</p>
+
+<p>
+To implement Coffer, the Polyglot base compiler is extended in the following ways:
+</p>
+<ol>
+  <li> PPG is used to extend the parser to support the new syntax.</li>
+  <li> New AST nodes for <code>free</code> statements and keys are added.</li>
+  <li> The existing AST nodes for class, method, and constructor
+  declarations are extended to support the additional type annotations.</li>
+  <li> New passes for computing held key sets at each program point and
+  for checking those key sets are added.</li>
+</ol>
+
+<p>
+[1] Robert DeLine and Manuel F&auml;hndrich,
+"Enforcing high-level protocols in low-level software",
+<i>PLDI '01</i>, pp. 59-69.
+</p>
+
+</body>

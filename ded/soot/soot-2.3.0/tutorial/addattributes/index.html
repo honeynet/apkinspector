@@ -1,0 +1,680 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Adding attributes to class files via Soot</TITLE>
+<META NAME="description" CONTENT="Adding attributes to class files via Soot">
+<META NAME="keywords" CONTENT="addattributes">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="addattributes.css">
+
+</HEAD>
+
+<BODY >
+
+<H1 ALIGN="CENTER">Adding attributes to class files via Soot</H1>
+<DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Feng Qian (<A NAME="tex2html1"
+  HREF="mailto:fqian@sable.mcgill.ca">fqian@sable.mcgill.ca</A>)</STRONG></P>
+<P ALIGN="CENTER"><I>
+Patrick Lam (<A NAME="tex2html2"
+  HREF="mailto:plam@sable.mcgill.ca">plam@sable.mcgill.ca</A>)</I></P>
+<P ALIGN="CENTER"><STRONG>June 3, 2008</STRONG></P>
+</DIV>
+
+<P>
+Soot can annotate class files: for instance, it can add information
+about which array bounds checks and null pointer checks are redundant.
+We anticipate that users of Soot may wish to add new attributes to
+class files.  This tutorial uses the array bounds check attribute to
+illustrate the internal structure of Soot annotation and describes how
+to add new attributes via Soot. Before reading this tutorial, readers
+should be familiar with the basic Soot classes, like SootClass,
+SootField, SootMethod, Body, and Unit. The other Soot
+<A NAME="tex2html3"
+  HREF="http://www.sable.mcgill.ca/soot/tutorial">tutorials</A>
+explain these classes.
+
+<P>
+
+<H1><A NAME="SECTION00010000000000000000">
+Structure of annotation</A>
+</H1>
+In release 1.2.0, we introduced a scheme for class file annotation in
+Soot.  The general description of our annotation framework can be
+found in our CASCON paper, ``<A NAME="tex2html4"
+  HREF="http://www.sable.mcgill.ca/publications/#report2000-2">A Framework for
+Optimizing Java Using
+Attributes</A>''.
+This tutorial explains practical issues related to implementing new
+attributes.
+
+<P>
+We first introduce the classes used for annotation.  These classes
+reside in the <TT>soot.tagkit</TT> package.
+
+<P>
+<DL>
+<DT><STRONG>Host</STRONG></DT>
+<DD>interface
+<BR>
+Any class which implements the <TT>Host</TT> interface promises that it
+ can hold tags. 
+    <PRE>
+public interface Host
+{
+    /** Get a list of tags associated with the current object. */
+    public List getTags();
+
+    /** Returns a tag with the given name. */
+    public Tag getTag(String aName);
+
+    /** Adds a tag. */
+    public void addTag(Tag t);
+
+    /** Removes a tag with the given name. */
+    public void removeTag(String name);
+
+    /** Returns true if this host has a tag with the given name. */
+    public boolean hasTag(String aName);
+}
+</PRE>
+
+<P>
+</DD>
+<DT><STRONG>AbstractHost</STRONG></DT>
+<DD>class
+<BR>
+Soot provides a default implementation of
+the <TT>Host</TT> interface in the form of <TT>AbstractHost</TT>. Unless you
+have a pressing desire to provide the functionality yourself, any
+classes which you would like to implement <TT>Host</TT> should subclass
+<TT>AbstractHost</TT>. In Soot, the classes <TT>SootClass</TT>, <TT>SootField</TT>, <TT>SootMethod</TT>, <TT>Body</TT>, and <TT>Unit</TT> inherit from
+<TT>AbstractHost</TT>. Instances of these classes know how to carry
+tags, in the form of the <TT>Tag</TT> interface.
+
+<P>
+</DD>
+<DT><STRONG>Tag</STRONG></DT>
+<DD>interface
+<BR>
+In Soot, we represent any annotation by an object
+whose type implements the <TT>Tag</TT> interface.  This interface defines
+one methods: <TT>getName()</TT> returns the unique name of the tag (note
+that tag names must not conflict with each other).
+    <PRE>
+public interface Tag
+{
+    /** Returns the tag's name. */
+    public String getName();
+}
+</PRE>
+
+<P>
+</DD>
+<DT><STRONG>Attribute</STRONG></DT>
+<DD>interface
+<BR>
+The <TT>Attribute</TT> interface extends <TT>Tag</TT>; it
+promises that the associated tag has attribute-like data which can be
+read and written as an array of bytes.
+
+<P>
+<PRE>
+public interface Attribute extends Tag
+{
+    /** Returns the tag's raw data. */
+    public byte[] getValue() 
+        throws AttributeValueException;
+
+    /** Sets the value of the attribute from a byte[]. */
+    public void setValue(byte[] v);
+}
+</PRE>
+
+<P>
+An <TT>Tag</TT> which is not an <TT>Attribute</TT> could be used
+to store arbitrary Soot information about a <TT>Host</TT>.  An <TT>Attribute</TT>
+is something that would go in a class file.
+
+<P>
+</DD>
+<DT><STRONG>TagAggregator</STRONG></DT>
+<DD>interface
+<BR>
+The array-bounds check analysis
+annotates individual instructions as it discovers whether or not their
+bounds checks are required.  More generally, analyses will attach
+attributes directly to the Units in question.  However, the Java
+class file structure does not make any provisions for directly attaching
+attributes to bytecodes, and attaching attributes directly to
+bytecodes would in any case be inefficient.  Hence, we designed our
+attributes so that they would attach to a method in a tabular
+format: only one actual attribute is required per method body and tag
+type; this meta-attribute contains information about a number of
+different instructions.
+
+<P>
+An implementation of <TT>TagAggregator</TT> promises that it can combine
+all tags of some type into one big aggregated attribute, which can be
+attached to a method's code attribute.  One implementation of a 
+<TT>TagAggregator</TT> is 
+<TT>soot.jimple.toolkits.annotation.tags.ArrayNullTagAggregator</TT>.
+
+<P>
+One of the things that an aggregator must do is decide which bytecode
+instructions a tag will be associated with, since each Jimple statement
+may turn into several bytecode instructions. Two subclasses of 
+<TT>TagAggregator</TT>, <TT>ImportantTagAggregator</TT> and <TT>FirstTagAggregator</TT>,
+attach the tags to important instructions containing field or array references
+or method invocations, and to the first bytecode instruction for the Jimple
+statement, respectively.
+
+<P>
+</DD>
+<DT><STRONG>Base64</STRONG></DT>
+<DD>tool class
+<BR>
+This utility class allows the encoding of raw bytes to base64-encoded 
+characters and the decoding of base64 characters back to raw bytes.
+
+<P>
+</DD>
+<DT><STRONG>JasminAttribute</STRONG></DT>
+<DD>abstract class
+<BR>
+Attributes are generated by analysis phases in the form
+of strings containing labels in the unit body and their values;
+for instance, we might have the attribute
+<code>"%label2%Aw==%label3%Ag==%label4%Ag=="</code> 
+associated with a method body.  In order to include this
+attribute in a class file, exact PC values are needed for the
+labels.  
+
+<P>
+The <TT>JasminAttribute</TT> class provides a <TT>decode</TT> method which
+takes a string of (label, value) pairs and a map from labels to PCs
+and emits raw data, ready for inclusion in a class file.  This method
+is called by Jasmin after the PC values are known.  Any attribute
+which uses (label, value) pairs can subclass <TT>JasminAttribute</TT> to get
+output to class files for free; other attributes hoping to be output to
+class files must subclass <TT>JasminAttribute</TT> and override the <TT>decode</TT> method.
+
+<P>
+The abstract <TT>getJasminValue()</TT> method must return a string that
+can be included when outputting a <TT>.jasmin</TT> file.  This string
+later gets decoded by <TT>decode()</TT>.
+
+<P>
+<PRE>
+public abstract class JasminAttribute implements Attribute
+{
+    public static byte[] decode(String attr, Hashtable labelToPc);
+    abstract public String getJasminValue(Map instToLabel);
+}
+</PRE>
+
+<P>
+</DD>
+<DT><STRONG>CodeAttribute</STRONG></DT>
+<DD>class
+<BR>
+This class provides an implementation of the abstract
+<TT>getJasminValue()</TT> method of <TT>JasminAttribute</TT>.
+The <TT>getJasminValue()</TT> method must return a string reflecting
+the contents of its <TT>CodeAttribute</TT>.  It may use the provided
+<TT>instToLabel</TT> map to convert <TT>Unit</TT>s into labels used in the
+returned <TT>String</TT>.
+
+<P>
+<PRE>
+public class CodeAttribute extends JasminAttribute
+{
+    public String getJasminValue(Map instToLabel);
+}
+</PRE>
+
+<P>
+This type of attribute is clearly intended to be used for attributes
+associated with code.
+
+<P>
+</DD>
+<DT><STRONG>GenericAttribute</STRONG></DT>
+<DD>class
+<BR>
+Java describes how three other types
+of attributes can be created: attributes may be associated with
+methods, fields and classes as well as code.  Soot supports these
+attributes via the <TT>GenericAttribute</TT> class.  Any such attribute
+can be created with an attribute name and a byte array value; it can
+then be attached to <TT>SootClass</TT>, <TT>SootField</TT>, or <TT>SootMethod</TT>.
+
+<P>
+<PRE>
+public class GenericAttribute implements Attribute
+{
+    public GenericAttribute(String name, byte[] value);
+    public String getName();
+    public byte[] getValue();
+}
+</PRE>
+</DD>
+</DL>
+
+<P>
+The above classes provide APIs useful for adding new attributes. Soot
+attributes are represented as <TT>Tag</TT>s, and are attached to <TT>Host</TT>s.  An exception is <TT>CodeAttribute</TT>. Because the tags for
+<TT>CodeAttribute</TT> are attached to units, a <TT>TagAggregator</TT> is used to
+combine them. <TT>TagAggregator</TT>s are instances of <TT>BodyTransformer</TT>s,
+and are generally included in the <TT>tag</TT> pack.
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Adding method attributes in Soot</A>
+</H1>
+Adding a code attribute is non-trivial, as it requires that an aggregator
+be provided.  We first give a trivial example of adding a method attribute
+via <TT>GenericAttribute</TT>. The code can be found in <TT>ashes.examples.addattributes</TT>.
+It can also be downloaded at:
+
+<P>
+<A NAME="tex2html5"
+  HREF="Main.java"><TT>http://www.sable.mcgill.ca/soot/tutorial/addattributes/Main.java</TT></A>
+<P>
+We proceed by adding a new phase to the <TT>jtp</TT> <TT>Pack</TT>, called
+<TT>annotexample</TT>.
+
+<P>
+<PRE>
+package ashes.examples.addattributes;
+
+import soot.*;
+import soot.tagkit.*;
+import java.util.*;
+
+public class AnnExample
+{
+    public static void main(String[] args)
+    {
+        /* adds the transformer. */
+        PackManager.v().getPack("jtp").add(new
+                        Transform("jtp.annotexample",
+                        AnnExampleWrapper.v()));
+
+        /* invokes Soot */
+        soot.Main.main(args);
+    }
+}
+</PRE>
+
+<P>
+The <TT>AnnExampleWrapper</TT> is a subclass of <TT>BodyTransformer</TT>,
+which implements the <TT>internalTransform</TT> method. It simply
+adds a string ``Hello world!'' as an attribute to every method.
+The attribute has the name `Example'.
+
+<P>
+<PRE>
+public class AnnExampleWrapper extends BodyTransformer
+{
+    private static AnnExampleWrapper instance =
+        new AnnExampleWrapper();
+
+    private AnnExampleWrapper() {};
+
+    public static AnnExampleWrapper v()
+    {
+        return instance;
+    }
+
+    public void internalTransform(Body body, String phaseName, Map options)
+    {
+        SootMethod method = body.getMethod();
+        String attr = new String("Hello world!");
+        
+        Tag example = new GenericAttribute("Example", attr.getBytes());
+        method.addTag(example);
+    }
+}
+</PRE>
+
+<P>
+We recompile <TT>foo</TT> and annotate it with new attributes.
+<BR><TT>java AnnExample foo</TT>
+<BR>
+The annotated class file has an ``Example'' attribute for each method.
+The string ``Hello world!'' is in binary form.
+
+<P>
+<PRE>
+public class foo extends java.lang.Object
+filename                foo
+compiled from           foo.jasmin
+compiler version        45.3
+access flags            33
+constant pool           14 entries
+ACC_SUPER flag          true
+
+Attribute(s):
+        SourceFile(foo.jasmin)
+
+2 methods:
+        public void &lt;init&gt;() &lt;(Unknown attribute Example: 
+                        48 65 6c 6c 6f 20 77 6f 72 6c 64 21)&gt;
+        void footest() &lt;(Unknown attribute Example: 
+                        48 65 6c 6c 6f 20 77 6f 72 6c 64 21)&gt;
+
+public void &lt;init&gt;() &lt;(Unknown attribute Example: 
+                        48 65 6c 6c 6f 20 77 6f 72 6c 64 21)&gt;
+Code(max_stack = 1, max_locals = 1, code_length = 5)
+0:    aload_0
+1:    invokespecial        java.lang.Object.&lt;init&gt; ()V (2)
+4:    return
+
+void footest() &lt;(Unknown attribute Example: 
+                        48 65 6c 6c 6f 20 77 6f 72 6c 64 21)&gt;
+Code(max_stack = 3, max_locals = 1, code_length = 7)
+0:    iconst_2
+1:    newarray                &lt;int&gt;
+3:    iconst_0
+4:    iconst_1
+5:    iastore
+6:    return
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+The Array Bounds Check Annotation Example</A>
+</H1>
+
+<P>
+In this section, we will use the array bounds check attribute to 
+illustrate the process of creating a new code attribute.
+
+<P>
+The classes in this example are located in the <TT>soot.jimple.toolkits.annotation.arraycheck</TT> and <TT>.nullcheck</TT> packages.
+
+<P>
+Clearly we must be able to represent whether or not an array reference
+is safe.  To do this, we first created the <TT>ArrayCheckTag</TT> class
+implementing (a subclass of) <TT>Tag</TT>.  It is not an <TT>Attribute</TT>
+because the information is not in a form suitable for adding to a 
+class file and setting the information directly is meaningless.  
+<TT>ArrayCheckTag</TT> has a constructor
+with boolean parameters representing upper and lower array bounds checks. If
+a parameter is <TT>true</TT>, the respective bound check is needed. The
+<TT>getValue()</TT> method converts the boolean values to a byte value
+where the lowest two bits represent the bounds checks.
+
+<P>
+<PRE>
+    /** 
+     * This tag represents the two bounds checks of an array reference.
+     * The value &lt;code&gt;true&lt;/code&gt; indicates that a check is needed.
+     */
+    public ArrayCheckTag(boolean lower, boolean upper)
+    {
+        lowerCheck = lower;
+        upperCheck = upper;
+    }
+
+    /** Returns the value of this tag as a one-byte array for inclusion in
+     * the class file. */
+    public byte[] getValue()
+    {
+        byte[] value = new byte[1];
+
+        value[0] = 0;
+        
+        if (lowerCheck)
+            value[0] |= 0x01;
+        
+        if (upperCheck)
+            value[0] |= 0x02;
+
+        return value;
+    }
+</PRE>
+
+<P>
+We designed an algorithm to analyze array bounds checks. The final
+phase of this algorithm attaches the analysis results to the various
+units as tags. This is accomplished with the following code:
+<PRE>
+    Tag checkTag = new ArrayCheckTag(lowercheck, uppercheck);
+    stmt.addTag(checkTag);
+</PRE>
+
+<P>
+As previously explained, code tags are attached to units, but units
+themselves do not have attributes. Thus, an aggregator
+is needed to group the attributes. Now, a null pointer check
+elimination algorithm has already executed, attaching <TT>NullCheckTag</TT>s to
+units. An <TT>ArrayNullTagAggregator</TT> will collect the <TT>NullCheckTag</TT>s
+and <TT>ArrayCheckTag</TT>s, combining these two tags into 
+a single <TT>ArrayNullCheckTag</TT> per method body.
+
+<P>
+<PRE>
+public class ArrayNullCheckTag implements OneByteCodeTag
+{
+    private final static String NAME = "ArrayNullCheckTag";
+    public String getName();
+    public byte[] getValue();
+    public byte accumulate(byte other);
+}
+</PRE>
+
+<P>
+The <TT>ArrayNullTagAggregator</TT> implements the <TT>TagAggregator</TT>
+interface.  It is called while Baf is generating its backend code.
+The <TT>wantTag()</TT> method returns true for tags that are to be considered
+by this aggregator.
+The <TT>considerTag</TT>
+method accumulates one (unit, tag) pair, typically encountered
+during Baf's traversal of the units.
+
+<P>
+<PRE>
+public class ArrayNullTagAggregator extends TagAggregator
+{    
+    public ArrayNullTagAggregator( Singletons.Global g ) {}
+    public static ArrayNullTagAggregator v() { return G.v().ArrayNullTagAggregator(); }
+
+    public boolean wantTag( Tag t ) {
+      return (t instanceof OneByteCodeTag);
+    }
+    public void considerTag(Tag t, Unit u)
+    {
+        Inst i = (Inst) u;
+        if(! ( i.containsInvokeExpr()
+            || i.containsFieldRef()
+            || i.containsArrayRef() ) ) return;
+
+        OneByteCodeTag obct = (OneByteCodeTag) t;
+
+        if( units.size() == 0 || units.getLast() != u ) {
+            units.add( u );
+            tags.add( new ArrayNullCheckTag() );
+        }
+        ArrayNullCheckTag anct = (ArrayNullCheckTag) tags.getLast();
+        anct.accumulate(obct.getValue()[0]);
+    }
+    
+    public String aggregatedName()
+    {
+        return "ArrayNullCheckAttribute"; 
+    }
+}
+</PRE>
+
+<P>
+We examine the annotation process on a simple example, <TT>foo.class</TT>.
+
+<P>
+<PRE>
+public class foo
+{    
+    void footest()
+    {        
+        int[] c = new int[2];
+        c[0] = 1;
+    }
+}
+</PRE>
+
+<P>
+After compilation with <TT>javac</TT>, we can use the <TT>JavaClass</TT>
+tool to inspect the contents of the class file.
+
+<P>
+<PRE>
+public class foo extends java.lang.Object
+filename                foo
+compiled from           foo.java
+compiler version        45.3
+access flags            33
+constant pool           14 entries
+ACC_SUPER flag          true
+
+Attribute(s):
+        SourceFile(foo.java)
+
+2 methods:
+        public void &lt;init&gt;()
+        void footest()
+
+public void &lt;init&gt;()
+Code(max_stack = 1, max_locals = 1, code_length = 5)
+0:    aload_0
+1:    invokespecial        java.lang.Object.&lt;init&gt; ()V (3)
+4:    return
+
+Attribute(s) = LineNumber(0, 1)
+
+void footest()
+Code(max_stack = 3, max_locals = 2, code_length = 9)
+0:    iconst_2
+1:    newarray                &lt;int&gt;
+3:    astore_1
+4:    aload_1
+5:    iconst_0
+6:    iconst_1
+7:    iastore
+8:    return
+
+Attribute(s) = LineNumber(0, 5), LineNumber(4, 7), LineNumber(8, 3)
+</PRE>
+
+<P>
+Great.  Next, we annotate the class by executing
+<PRE>
+[plam@kerala soot]$ java soot.Main -A both foo
+</PRE>
+and inspect the annotated class file.
+
+<P>
+<PRE>
+public class foo extends java.lang.Object
+filename                foo
+compiled from           foo.jasmin
+compiler version        45.3
+access flags            33
+constant pool           14 entries
+ACC_SUPER flag          true
+
+Attribute(s):
+        SourceFile(foo.jasmin)
+
+2 methods:
+        public void &lt;init&gt;()
+        void footest()
+
+public void &lt;init&gt;()
+Code(max_stack = 1, max_locals = 1, code_length = 5)
+0:    aload_0
+1:    invokespecial        java.lang.Object.&lt;init&gt; ()V (2)
+4:    return
+
+Attribute(s) = (Unknown attribute ArrayNullCheckAttribute: 00 01 00)
+
+void footest()
+Code(max_stack = 3, max_locals = 1, code_length = 7)
+0:    iconst_2
+1:    newarray                &lt;int&gt;
+3:    iconst_0
+4:    iconst_1
+5:    iastore
+6:    return
+
+Attribute(s) = (Unknown attribute ArrayNullCheckAttribute: 00 05 00)
+</PRE>
+
+<P>
+We can see that an <TT>ArrayNullCheckAttribute</TT> has been added to
+the class file, and we can read the attribute data in hexadecimal.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Known shortcomings</A>
+</H1>
+Soot cannot currently preserve existing attributes in a class file
+when transforming and annotating it.  In the <TT>foo</TT> example,
+any debug information from <TT>javac</TT> would be lost after annotation.
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+History</A>
+</H1>
+
+<UL>
+<LI>October 6, 2000 : Initial version.
+</LI>
+<LI>May 31, 2003 : Updated for Soot 2.0.
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>Adding attributes to class files via Soot</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>addattributes -split 0 -nonavigation -dir ./</TT>
+<P>
+The translation was initiated by Eric BODDEN on 2008-06-03
+<BR><HR>
+<ADDRESS>
+Eric BODDEN
+2008-06-03
+</ADDRESS>
+</BODY>
+</HTML>

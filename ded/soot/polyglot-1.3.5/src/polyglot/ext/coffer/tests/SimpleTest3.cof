@@ -1,0 +1,17 @@
+tracked(F) class File {
+    public File() [] -> [F] { }
+
+    public int read() [F] -> [F] { return 0; }
+
+    public void close() [F] -> [] { // expected error: F not freed
+    }
+}
+
+public class SimpleTest3 {
+    public static void main(String[] args) {
+        tracked(I) File is = new tracked(I) File();
+        is.read();
+        is.close();
+    }
+}
+

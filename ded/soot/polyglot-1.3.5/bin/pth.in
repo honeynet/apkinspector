@@ -1,0 +1,18 @@
+while true; do
+    case "$1" in
+        "") break;;
+        -classpath) shift; extra_cp=$1; shift;;
+        -cp) shift; extra_cp=$1; shift;;
+        *) args="$args '$1'"; shift;;
+    esac
+done
+
+if [ -n "$extra_cp" ]
+then
+    extra_cp="${PATH_SEP}${extra_cp}"
+fi
+
+classpath="${TOP}${FILE_SEP}classes${PATH_SEP}${TOP}${FILE_SEP}lib${FILE_SEP}polyglot.jar${PATH_SEP}${TOP}${FILE_SEP}lib${FILE_SEP}pth.jar${PATH_SEP}${TOP}${FILE_SEP}lib${FILE_SEP}java_cup.jar${ext_cp}${extra_cp}"
+command="\"$JAVA\"  -classpath \"$classpath\" polyglot.pth.Main $args"
+
+eval "$command"

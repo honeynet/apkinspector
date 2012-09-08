@@ -1,0 +1,11 @@
+include "multi.cup"
+
+package ppg.test.multi;
+
+terminal Token EXPR, PAREN_EXPR;
+
+
+start with expr parse_expr;
+start with paren_expr parse_paren_expr;
+
+drop {goal}

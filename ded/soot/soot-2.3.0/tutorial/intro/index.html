@@ -1,0 +1,459 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Soot overview/Disassembling classfiles</TITLE>
+<META NAME="description" CONTENT="Soot overview/Disassembling classfiles">
+<META NAME="keywords" CONTENT="intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="intro.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<H1 ALIGN="CENTER">Soot overview/Disassembling classfiles</H1>
+<DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Raja Vall&#233;e-Rai (<A NAME="tex2html1"
+  HREF="mailto:rvalleerai@sable.mcgill.ca">rvalleerai@sable.mcgill.ca)</A></STRONG></P>
+<P ALIGN="CENTER"><STRONG>March 15, 2000</STRONG></P>
+</DIV>
+
+<P>
+
+<H1><A NAME="SECTION00010000000000000000">
+Goals</A>
+</H1>
+
+<P>
+By the end of this lesson, the student should be able to:
+
+<UL>
+<LI>understand what Soot is, and its two main uses
+</LI>
+<LI>have Soot correctly installed
+</LI>
+<LI>have the CLASSPATH environment variable properly set up
+</LI>
+<LI>produce baf, grimp or jimple code for any classfile
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Testing your Installation</A>
+</H1>
+
+<P>
+This is an interactive tutorial.  So the first thing you must do is
+test your installation.  This can be done by typing <TT>java
+soot.Main</TT> at the shell prompt.  If your installation is incorrect you
+should get a class "soot.Main" not found exception.  Please refer to
+the installation instructions which came with the Soot software if
+this occurs.  If your installation is correct you should see something
+like:
+
+<P>
+<PRE>
+~ $ java soot.Main
+Soot version 2.0
+Copyright (C) 1997-2003 Raja Vallee-Rai and others.
+All rights reserved.
+
+Contributions are copyright (C) 1997-2003 by their respective contributors.
+See the file 'credits' for a list of contributors.
+See individual source files for details.
+
+Soot comes with ABSOLUTELY NO WARRANTY.  Soot is free software,
+and you are welcome to redistribute it under certain conditions.
+See the accompanying file 'COPYING-LESSER.txt' for details.
+
+Visit the Soot website:
+  http://www.sable.mcgill.ca/soot/
+
+For a list of command line options, enter:
+  java soot.Main --help
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+What is Soot?</A>
+</H1>
+
+<P>
+Soot has two fundamental uses; it can be used as a stand-alone command
+line tool or as a Java compiler framework.  As a command line tool,
+Soot can:
+
+<OL>
+<LI>dissassemble classfiles
+</LI>
+<LI>assemble classfiles
+</LI>
+<LI>optimize classfiles
+</LI>
+</OL>
+
+<P>
+As a Java compiler framework, Soot can be used as a testbed for
+developing new optimizations.  These new optimizations can then be
+added to the base set of optimizations invoked by the command line
+Soot tool.  The optimizations that can be added can either be applied
+to single classfiles or entire applications.
+
+<P>
+Soot accomplishes these myriad tasks by being able to process
+classfiles in a variety of different forms.  Currently Soot inputs two
+different intermediate representations (classfiles or Jimple code),
+and outputs any of its intermediate representations.  By invoking Soot with
+the <TT>-help</TT> option,
+you can see the output formats:
+
+<P>
+<PRE>
+&gt; java soot.Main --help
+&lt;...snip...&gt;
+Output Options:
+  -d DIR -output-dir DIR       Store output files in DIR 
+  -f FORMAT -output-format FORMAT
+                               Set output format for Soot 
+     J jimple                    Produce .jimple Files 
+     j jimp                      Produce .jimp (abbreviated Jimple) files 
+     S shimple                   Produce .shimple files 
+     s shimp                     Produce .shimp (abbreviated Shimple) files 
+     B baf                       Produce .baf files 
+     b                           Produce .b (abbreviated Baf) files 
+     G grimple                   Produce .grimple files 
+     g grimp                     Produce .grimp (abbreviated Grimp) files 
+     X xml                       Produce .xml Files 
+     n none                      Produce no output 
+     jasmin                      Produce .jasmin files 
+     c class (default)           Produce .class Files 
+     d dava                      Produce dava-decompiled .java files 
+  -xml-attributes              Save tags to XML attributes for Eclipse 
+&lt;...snip...&gt;
+</PRE>
+
+<P>
+There are six intermediate representations currently being used in Soot: baf,
+jimple, shimple, grimp, jasmin, and classfiles.  A brief explanation of each form
+follows:
+
+<P>
+<DL COMPACT>
+<DT>baf</DT>
+<DD>a streamlined representation of bytecode.  Used to inspect Java
+bytecode as stack code, but in a much nicer form.  Has two textual
+representations (one abbreviated (<TT>.b</TT> files), one full (<TT>.baf</TT> 
+files).)
+
+<P>
+</DD>
+<DT>jimple</DT>
+<DD>typed 3-address code.  A very convenient representation
+for performing optimizations and inspecting bytecode.  Has two textual
+representations (<TT>.jimp</TT> files, and <TT>.jimple</TT> files.)
+
+<P>
+</DD>
+<DT>shimple</DT>
+<DD>an SSA variation of jimple. Has two textual
+representations (<TT>.shimp</TT> files, and <TT>.shimple</TT> files.)
+
+<P>
+</DD>
+<DT>grimp</DT>
+<DD>aggregated (with respect to expression trees) jimple.  The best
+intermediate representation for inspecting dissassembled code. Has two textual
+representations (<TT>.grimp</TT> files, and <TT>.grimple</TT> files.)
+
+<P>
+</DD>
+<DT>jasmin</DT>
+<DD>a messy assembler format.  Used mainly for debugging 
+Soot.  Jasmin files end with "<TT>.jasmin</TT>".
+
+<P>
+</DD>
+<DT>classfiles</DT>
+<DD>the original Java bytecode format.  A binary (non-textual)
+representation.  The usual <TT>.class</TT> files.
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Setting up your <TT>CLASSPATH</TT> and generating a Jimple file</A>
+</H1>
+
+<P>
+Soot looks for classfiles by examining your <TT>CLASSPATH</TT> environment
+variable or by looking at the contents of the <TT>-soot-classpath</TT> command
+line option.  Included in this lesson is the <A NAME="tex2html2"
+  HREF="Hello.java"><TT>Hello.java</TT></A> program.
+Download this file, compile it (using javac or other compilers), and try the following
+command in the directory where <TT>Hello.class</TT> is located.
+
+<P>
+<PRE>
+&gt; java soot.Main -f jimple Hello
+</PRE>
+
+<P>
+This may or not work.  If you get the following:
+
+<P>
+<PRE>
+Exception in thread "main" java.lang.RuntimeException: couldn't find type: java.lang.Object (is your soot-class-path set properly?)
+</PRE>
+
+<P>
+This means that a classfile is not being located.  Either Soot can not
+find the <TT>Hello</TT> classfile, or it can not load the Java
+Development Kit libraries.  Soot resolves classfiles by examining the
+directories in your <TT>CLASSPATH</TT> environment variable or the
+<TT>-soot-classpath</TT> command line option.
+
+<P>
+Potential problem #1: Soot can not locate the Hello classfile. To make
+sure that it can find the classfile <TT>"Hello"</TT>, (1) add <TT>"."</TT> 
+to your <TT>CLASSPATH</TT> or (2) specify <TT>"."</TT> on the command line.
+
+<P>
+To carry out (1) on UNIX-style systems using bash,
+<PRE>
+&gt; export CLASSPATH=$CLASSPATH:.
+</PRE>
+and on Windows machines,
+<PRE>
+&gt; SET CLASSPATH=%CLASSPATH%;.
+</PRE>
+
+<P>
+and to do (2), 
+<PRE>
+&gt; java soot.Main --soot-classpath . -f jimple Hello
+</PRE>
+
+<P>
+Potential problem #2: Soot cannot locate the class libraries.  In this
+case, Soot will report that the type <TT>"java.lang.Object"</TT> could not
+be found.
+
+<P>
+Under JDK1.2, the class libraries do not need to be explicitly
+specified in the <TT>CLASSPATH</TT> for the Java Virtual Machine to
+operate.  Soot requires them to be specified either on the <TT>CLASSPATH</TT> or in the soot-classpath command line option.
+Theoretically, this means adding the path to a <TT>"rt.jar"</TT> file to the
+<TT>CLASSPATH</TT> or the soot-classpath.
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+Locating the <TT>rt.jar</TT> file</A>
+</H2>
+
+<P>
+It is usually in a directory of the form "$root/jdk1.2.2/jre/lib"
+where $root is "/usr/local" or some similarly named directory.  If you
+can not find it, you can attempt a find command such as:
+
+<P>
+<PRE>
+&gt; cd /usr ; find . -name "rt.jar" -print
+</PRE>
+
+<P>
+which may be able to locate it for you.  Otherwise your best bet is to contact
+your system administrator.
+
+<P>
+
+<H4><A NAME="SECTION00041010000000000000">
+Important note for Windows users</A>
+</H4> Note that as of release 1,
+Soot will treat drive letters correctly, but under Windows the path
+separator <EM>must</EM> be a backslash (<SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.png"
+ ALT="$\backslash$"></SPAN>), not a forward slash.
+
+<P>
+Summing up, you must issue a command of the form:
+
+<P>
+<PRE>
+&gt; export CLASSPATH=.:/usr/local/pkgs/jdk1.2.2/jre/lib/rt.jar
+</PRE>
+
+<P>
+or if you use the soot-classpath option which is more cumbersome:
+
+<P>
+<PRE>
+&gt; java soot.Main -f jimple --soot-classpath .:/usr/local/pkgs/jdk1.2.2/jre/lib/rt.jar Hello
+</PRE>
+
+<P>
+Once your <EM>CLASSPATH</EM> is set up properly, you should get:
+
+<P>
+<PRE>
+&gt; java soot.Main -f jimple Hello
+Transforming Hello...
+</PRE>
+
+<P>
+The file called Hello.jimple should contain:
+
+<P>
+<PRE>
+public class Hello extends java.lang.Object
+{
+    public void &lt;init&gt;()
+    {
+        Hello r0;
+
+        r0 := @this: Hello;
+        specialinvoke r0.&lt;java.lang.Object: void &lt;init&gt;()&gt;();
+        return;
+    }
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] r0;
+        java.io.PrintStream $r1;
+
+        r0 := @parameter0: java.lang.String[];
+        $r1 = &lt;java.lang.System: java.io.PrintStream out&gt;;
+        virtualinvoke $r1.&lt;java.io.PrintStream: void println(java.lang.String
+)&gt;("Hello world!");
+        return;
+    }
+}
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+Generating jimple, baf, grimp for java.lang.String</A>
+</H1>
+
+<P>
+By simple extrapolation, you should be able to now generate <TT>.b, .baf,
+.jimp, .jimple, .grimp,</TT> and <TT>.grimple</TT> files for any of your favorite
+classfiles.  A particularly good test is a classfile from the JDK
+library.  So a command like:
+
+<P>
+<PRE>
+&gt; java soot.Main -f baf java.lang.String
+</PRE>
+
+<P>
+should yield a file java.lang.String.baf containing text of the form:
+
+<P>
+<PRE>
+    public static java.lang.String valueOf(char[], int, int)
+    {
+        word r0, i0, i1;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        new java.lang.String;
+        dup1.r;
+        load.r r0;
+        load.i i0;
+        load.i i1;
+        specialinvoke &lt;java.lang.String: void &lt;init&gt;(char[],int,int)&gt;;
+        return.r;
+    }
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+History</A>
+</H1>
+
+<UL>
+<LI>February 8, 2000: Initial version.
+
+<P>
+</LI>
+<LI>February 16, 2000: Added changes for Soot version 021400 (Soot now prints
+the missing type) and emitted the title at the beginning. -PL
+
+<P>
+</LI>
+<LI>March 1, 2000: Added changes for Release 1 (phantom class error
+printed instead) and emphasized that rt.jar should not occur in CLASSPATH. -PL
+
+<P>
+</LI>
+<LI>March 11, 2000: Added note for Windows users in section about the
+classpath.
+
+<P>
+</LI>
+<LI>March 15, 2000: Final tweaks for Release 1.
+
+<P>
+</LI>
+<LI>January 29, 2001: Add the note of the release 1.2.1 .
+
+<P>
+</LI>
+<LI>February 3, 2001: Added a hyperlink to Hello.java.
+
+<P>
+</LI>
+<LI>June 6, 2003: Update for Soot 2.0.
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00070000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>Soot overview/Disassembling classfiles</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>intro -split 0 -nonavigation -dir ./</TT>
+<P>
+The translation was initiated by Eric BODDEN on 2008-06-03
+<BR><HR>
+<ADDRESS>
+Eric BODDEN
+2008-06-03
+</ADDRESS>
+</BODY>
+</HTML>

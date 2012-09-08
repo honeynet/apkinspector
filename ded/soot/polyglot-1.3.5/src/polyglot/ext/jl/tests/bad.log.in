@@ -1,0 +1,483 @@
+BadAbstract.jl:1: C0 should be declared abstract; it does not define m0(),
+    which is declared in C0
+class C0
+^
+
+1 error.
+BadAlloc.jl:5: Cannot instantiate an interface.
+    public static final I0 f0 = new I0 ();
+                                ^
+
+1 error.
+BadCtor.jl:2: Constructor name "B" does not match name of containing class
+    "C".
+  B() { }
+  ^
+
+BadCtor.jl:3: Could not disambiguate body of anonymous subclass of "C".
+  C m() { return new C() { C() { } }; }
+                 ^
+
+2 errors.
+BadExcept.jl:9: method1() in Except1sub cannot override method1() in Except1;
+    the throw set is not a subset of the overridden method's throw set
+  void method1() throws e1 {}
+       ^
+
+BadExcept.jl:11: method3() in Except1sub cannot override method3() in Except1;
+    the throw set is not a subset of the overridden method's throw set
+  void method3() throws e1 {}
+       ^
+
+2 errors.
+BadExcept2.jl:10: Could not find type "MisspelledException".
+    } catch (MisspelledException e) {}
+             ^
+
+1 error.
+BadExpCC.jl:8: Syntax error.
+    super();
+         ^
+
+jlc: Couldn't repair and continue parse
+jlc: Unable to recover from previous errors.
+jlc: Couldn't repair and continue parse
+4 errors.
+BadExtends.jl:3: Cannot extend final class "C0".
+  public class C1 extends C0
+         ^
+
+1 error.
+BadFinalInit1.jl:4: Local variable "i" may not have been initialized
+	int j = i + 1; // bad: no initialization of final variable
+	        ^
+
+1 error.
+BadFinalInit10.jl:4: field "i" might already have been assigned to
+	i = 2; // Bad
+	^
+
+1 error.
+BadFinalInit11.jl:5: field "i" might already have been assigned to
+	i = 2; // Bad
+	^
+
+1 error.
+BadFinalInit12.jl:5: Cannot assign a value to final field "x"
+	a.x = 0; // bad, even though a is a synonym for this, only acceptable target is this.
+	^
+
+1 error.
+BadFinalInit13.java:4: cannot assign a value to final variable x
+    static { BadFinalInit13.x = 4; }
+                           ^
+1 error
+BadFinalInit2.jl:5: variable "i" might already have been assigned to
+	i = 2; // bad: i might have already been assigned to.
+	^
+
+1 error.
+BadFinalInit3.jl:7: variable "i" might already have been assigned to
+	i = 2; // bad: i might have already been assigned to.
+	^
+
+1 error.
+BadFinalInit4.jl:4: variable "i" might already have been assigned to
+	    i = 1; // bad: i might have already been assigned to, as it is a formal
+	    ^
+
+1 error.
+BadFinalInit5.jl:3: field "i" might not have been initialized
+    BadFinalInit5() {
+    ^
+
+1 error.
+BadFinalInit6.jl:5: field "i" might already have been assigned to
+	i = 4; // bad: more than one assignment to i.
+	^
+
+1 error.
+BadFinalInit7.jl:8: Cannot assign a value to final field "i"
+	i = 4; // bad: assignment to final field outside of constructor
+	^
+
+1 error.
+BadFinalInit8.jl:4: field "i" might already have been assigned to
+	i = 4; // bad: more than one assignment to i.
+	^
+
+1 error.
+BadFinalInit9.jl:4: variable "i" might already have been assigned to
+	i = 4; // Bad
+	^
+
+1 error.
+BadForwardRef.java:2: illegal forward reference
+    static final int x = y;
+                         ^
+1 error
+BadIncrement1.jl:3: Operand of ++ operator must be a variable.
+    1++;
+    ^
+
+1 error.
+BadIncrement2.jl:3: Operand of -- operator must be a variable.
+    --1;
+      ^
+
+1 error.
+BadIncrement3.jl:3: Operand of -- operator must be a variable.
+    m()--;
+    ^
+
+1 error.
+BadIncrement4.jl:3: Operand of ++ operator must be a variable.
+    ++m();
+      ^
+
+1 error.
+BadInit.jl:4: Method no_such_fn not found.
+    int a = no_such_fn();
+            ^
+
+1 error.
+BadInner.jl:8: Could not find non-static member class "Inner".
+	  Object o = new Outer.Inner();
+	             ^
+
+1 error.
+BadInner2.jl:7: Cannot specify a containing instance for static classes.
+  Object o = this.new Foo();
+             ^
+
+BadInner2.jl:8: Cannot specify a containing instance for static classes.
+  Object p = this.new Bar();
+             ^
+
+2 errors.
+BadInner3.jl:6: The nested class "E.D" does not have an enclosing instance of
+    type "BadInner3".
+    BadInner3 m() { return BadInner3.this; }
+                           ^
+
+1 error.
+BadInner4.jl:7: The type of the qualifier "Super" does not match the
+    immediately enclosing class of the super class "Outer".
+  	ChildOfInner(){(new Super()).super();}
+  	                ^
+
+1 error.
+BadInner5.jl:3: Class "C0" not found in scope of C0
+  public static C0.C0 m0 ()
+                ^
+
+1 error.
+BadInner6.jl:12: The nested class "C2" does not have an enclosing instance of
+    type "C2.I0".
+    return I0.this;
+           ^
+
+1 error.
+BadInner7.jl:2: Cannot declare member class "BadInner7.BadInner7" inside class
+    with the same name.
+  class BadInner7 { }
+  ^
+
+1 error.
+BadInterface.jl:17: Interface methods must be public.
+    private abstract C1 m0 ();
+                        ^
+
+1 error.
+BadInterface2.jl:1: Could not find type "I0".
+class C0 implements I0
+                    ^
+
+1 error.
+BadMultipleVarDef.jl:7: Local variable "s" multiply defined. Previous
+    definition at BadMultipleVarDef.jl:6,17.
+		String s = "Hi, Mom";
+		^
+
+BadMultipleVarDef.jl:9: Local variable "s" multiply defined. Previous
+    definition at BadMultipleVarDef.jl:7,2.
+			String s = "Hi, Dad";
+			^
+
+2 errors.
+BadOverride.jl:9: method() in Sub cannot override method() in Override;
+    attempting to assign weaker access privileges
+  void method() {} 
+       ^
+
+1 error.
+BadOverride2.java:74: m() in PackageScope cannot implement m() in PublicScope; attempting to assign weaker access privileges; was public
+public abstract class BadOverride2 extends PackageScope implements PublicScope {
+                ^
+1 error
+BadPrim.jl:6: No valid method call found for m(int) in BadPrim.
+    m(1);
+    ^
+
+1 error.
+BadProt.jl:6: Interface methods must be public.
+  protected abstract I0 m0 ();
+                        ^
+
+1 error.
+BadStaticContext.java:37: cannot reference this before supertype constructor has been called
+        Y() { super(this.m()); }
+                    ^
+1 error
+BadSwitch1.jl:8: Case label must be an integral constant.
+      case x: System.out.println("x");
+      ^
+
+1 error.
+BadSwitch2.jl:8: Duplicate case label: x (0).
+      case x: System.out.println("x"); // duplicate label
+      ^
+
+1 error.
+CircularConstructor.jl:17: Recursive constructor invocation.
+	this("s");
+	^
+
+1 error.
+ConformanceCheck1.jl:3: m() in Foo cannot override m() in Bar; attempting to
+    assign weaker access privileges
+class Foobar extends Foo implements Bar {   } // reject since Foo.m() not public
+^
+
+1 error.
+ConformanceCheck2.jl:3: m() in Foo cannot override m() in Bar; the throw set
+    is not a subset of the overridden method's throw set
+class Foobar extends Foo implements Bar {   } // reject since Foo.m() throws too many exceptions
+^
+
+1 error.
+DoubleFlags.jl:2: Syntax error.
+  private private void foo() { }
+          ^
+
+jlc: Unable to recover from previous errors.
+jlc: Couldn't repair and continue parse
+3 errors.
+Errors.jl:5: No valid method call found for m(int) in Errors.
+    return m(4) + (((null - 1) - 1) - (null - 1));
+           ^
+
+1 error.
+Errors2.jl:2: Could not find type "foo".
+  void m(foo x) {
+         ^
+
+1 error.
+ForwardRef4.java:2: illegal forward reference
+    int i = j;
+            ^
+1 error
+LabeledBreak2.jl:6: Unreachable statement.
+        a: for (i=0; i<10; ++i) {
+                             ^
+
+1 error.
+LocalClass5.java:9: duplicate class: Local
+                class Local {
+                ^
+1 error
+NoInit1.jl:9: Local variable "i" may not have been initialized
+    foo(i); // BAD (m1)
+        ^
+
+1 error.
+NoInit10.jl:17: Local variable "x" may not have been initialized
+    x++; // BAD
+    ^
+
+1 error.
+NoInit11.jl:5: Local variable "x" may not have been initialized
+      x++;
+      ^
+
+1 error.
+NoInit12.jl:9: Local variable "x" may not have been initialized
+    return x; // BAD
+           ^
+
+1 error.
+NoInit2.jl:15: Local variable "i" may not have been initialized
+    foo(i);
+        ^
+
+1 error.
+NoInit3.jl:15: Unreachable statement.
+      i = 3; // BAD (m3) -- unreachable
+      ^
+
+1 error.
+NoInit4.jl:34: Local variable "j" may not have been initialized
+    foo(j); // BAD (m4)
+        ^
+
+1 error.
+NoInit5.jl:29: Local variable "i" may not have been initialized
+    foo(i); // BAD (m5)
+        ^
+
+1 error.
+NoInit6.jl:20: Local variable "i" may not have been initialized
+    i++; // BAD uninitialized (m11)
+    ^
+
+1 error.
+NoInit7.jl:9: Local variable "x" may not have been initialized
+    x++; // BAD
+    ^
+
+1 error.
+NoInit8.jl:4: Local variable "x" may not have been initialized
+    return x; // BAD
+           ^
+
+1 error.
+NoInit9.jl:7: Local variable "x" may not have been initialized
+    return x; // BAD
+           ^
+
+1 error.
+NoReturn1.jl:2: Missing return statement.
+  int m1() {
+      ^
+
+1 error.
+NoReturn2.jl:2: Missing return statement.
+  int m6() {
+      ^
+
+1 error.
+NoReturn3.jl:2: Missing return statement.
+  int m3() {
+      ^
+
+1 error.
+NoReturn4.jl:2: Missing return statement.
+  int m4() {
+      ^
+
+1 error.
+NoReturn5.jl:2: Missing return statement.
+  int m7() {
+      ^
+
+1 error.
+Protection.jl:5: Cannot declare method that is both abstract and static.
+  static abstract void sa();
+                       ^
+
+Protection.jl:6: Cannot declare method that is both abstract and final.
+  final abstract void fa();
+                      ^
+
+Protection.jl:8: Cannot declare method that is both abstract and native.
+  native abstract void na();
+                       ^
+
+3 errors.
+Protection2.jl:6: f() in p2 cannot override f() in Protection2; overridden
+    method is final
+  void f() {}
+       ^
+
+1 error.
+StaticContext2.jl:10: Inner classes cannot declare static methods.
+    static Object f() {
+                  ^
+
+1 error.
+Unreachable1.jl:6: Unreachable statement.
+    System.out.println("Never happens."); // BAD (m1)
+    ^
+
+1 error.
+Unreachable10.jl:10: Unreachable statement.
+    System.out.println("Bad."); // BAD (m10)
+    ^
+
+1 error.
+Unreachable11.jl:10: Unreachable statement.
+      System.out.println("Bad"); // BAD (m11)
+      ^
+
+1 error.
+Unreachable12.jl:7: Unreachable statement.
+    return;
+    ^
+
+1 error.
+Unreachable13.jl:7: Unreachable statement.
+    return;
+    ^
+
+1 error.
+Unreachable14.jl:7: Unreachable statement.
+    return;
+    ^
+
+1 error.
+Unreachable15.jl:8: Unreachable statement.
+    return 1;
+    ^
+
+1 error.
+Unreachable16.jl:7: Unreachable statement.
+    return 1;
+    ^
+
+1 error.
+Unreachable2.jl:6: Unreachable statement.
+    System.out.println("Not likely."); // BAD (m2)
+    ^
+
+1 error.
+Unreachable3.jl:17: Unreachable statement.
+	return; // BAD (m3)
+	^
+
+1 error.
+Unreachable4.jl:9: Unreachable statement.
+      return; // BAD (m4)
+      ^
+
+1 error.
+Unreachable5.jl:11: Unreachable statement.
+      System.out.println("No good"); // BAD. (m5)
+      ^
+
+1 error.
+Unreachable6.jl:9: Unreachable statement.
+      System.out.println("no good"); // BAD (m6)
+      ^
+
+1 error.
+Unreachable7.jl:12: Unreachable statement.
+    System.out.println("no good"); // BAD (m7)
+    ^
+
+1 error.
+Unreachable8.jl:11: Unreachable statement.
+    System.out.println("Won't happen."); // BAD (m8)
+    ^
+
+1 error.
+Unreachable9.jl:10: Unreachable statement.
+    System.out.println("Bad."); // BAD (m9)
+    ^
+
+1 error.
+package2/BadProtectedCtorAccess.jl:7: No valid constructor found for
+    package1.ProtectedCtor().
+    Object o = new ProtectedCtor();
+               ^
+
+1 error.

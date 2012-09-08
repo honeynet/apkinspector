@@ -1,0 +1,479 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>On the Soot menagerie - fundamental Soot objects</TITLE>
+<META NAME="description" CONTENT="On the Soot menagerie - fundamental Soot objects">
+<META NAME="keywords" CONTENT="menagerie">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="menagerie.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<H1 ALIGN="CENTER">On the Soot menagerie - fundamental Soot objects</H1>
+<DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Patrick Lam (<A NAME="tex2html1"
+  HREF="mailto:plam@sable.mcgill.ca">plam@sable.mcgill.ca</A>)</STRONG></P>
+<P ALIGN="CENTER"><STRONG>March 1, 2000</STRONG></P>
+</DIV>
+
+<P>
+Soot has a large and complicated class hierarchy.  This document will
+introduce the reader to some of the most important classes for developing
+extensions to Soot.
+
+<P>
+This document is meant to be read after the <TT>createclass</TT> document 
+is understood.  It builds on the knowledge gained from that example.
+We describe here the notions of <TT>Body</TT>, <TT>Unit</TT>, <TT>Local</TT>, <TT>Value</TT>,
+<TT>UnitBox</TT> and <TT>ValueBox</TT>.
+
+<P>
+
+<H1><A NAME="SECTION00010000000000000000">
+All about <TT>Body</TT>s</A>
+</H1>
+
+<P>
+In the <TT>createclass</TT> tutorial, the concept of a <TT>Body</TT> was introduced
+briefly.  This section will describe <TT>Body</TT> in more detail.
+
+<P>
+Recapping from the previous lesson, Soot uses a <TT>Body</TT> to store code
+for a method.  There are three kinds of <TT>Body</TT> in Soot - namely, 
+<TT>BafBody</TT>, <TT>JimpleBody</TT> and <TT>GrimpBody</TT> - one for each 
+intermediate representation.
+
+<P>
+Also, recall that a chain is a list-like data structure providing constant-time
+access to chain elements, including insertion and removal.
+
+<P>
+The three principal chains in a <TT>Body</TT> are the <TT>Units</TT> chain, the
+<TT>Locals</TT> chain and the <TT>Traps</TT> chain.  The following example will
+illustrate the role of each of these chains.
+
+<P>
+Consider the following Java method:
+
+<P>
+<PRE>
+    public static void main(String[] argv) throws Exception
+    {
+        int x = 2, y = 6;
+
+        System.out.println("Hi!");
+        System.out.println(x * y + y);
+        try
+        {
+            int z = y * x;
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+    }
+</PRE>
+
+<P>
+After Jimplification, we have the following abbreviated jimple code:
+
+<P>
+<PRE>
+public static void main(java.lang.String[]) throws java.lang.Exception
+    {
+        java.lang.String[] r0;
+        int i0, i1, i2, $i3, $i4;
+        java.io.PrintStream $r1, $r2;
+        java.lang.Exception $r3, r4;
+
+        r0 := @parameter0;
+        i0 = 2;
+        i1 = 6;
+        $r1 = java.lang.System.out;
+        $r1.println(``Hi!'');
+        $r2 = java.lang.System.out;
+        $i3 = i0 * i1;
+        $i4 = $i3 + i1;
+        $r2.println($i4);
+
+     label0:
+        i2 = i1 * i0;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        r4 = $r3;
+        throw r4;
+
+     label3:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00011000000000000000">
+Local variables</A>
+</H2>
+
+<P>
+The locals in this method are seen at the top of the method:
+<PRE>
+        java.lang.String[] r0;
+        int i0, i1, i2, $i3, $i4;
+        java.io.PrintStream $r1, $r2;
+        java.lang.Exception $r3, r4;
+</PRE>
+
+<P>
+The collection of <TT>Local</TT>s is stored in the <TT>localChain</TT> and
+accessible via <TT>body.getLocals()</TT>.  Each intermediate
+representation may define its own implementation of <TT>Local</TT>;
+however, it must always be possible, for every <TT>Local r0</TT>, to call
+<TT>r0.getName()</TT>, <TT>r0.getType()</TT>, <TT>r0.setName()</TT> and <TT>r0.setType</TT>.  Note that local variables must be typed.
+
+<P>
+
+<H2><A NAME="SECTION00012000000000000000">
+Traps</A>
+</H2>
+
+<P>
+To support Java exception handling, Soot <TT>Body</TT>'s define the notion
+of <EM>traps</EM>.  The idea is that in Java bytecode, exception handlers are
+represented by a tuple (exception, start, stop, handler); between the start
+and stop units (including start, but not including stop), if the exception is 
+thrown, execution continues at handler.
+
+<P>
+In the example, there is one trap:
+<PRE>
+        catch java.lang.Exception from label0 to label1 with label2;
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00013000000000000000">
+Units</A>
+</H2>
+
+<P>
+The most interesting part of a <TT>Body</TT> is its chain of <TT>Unit</TT>s.
+This is the actual code contained in the <TT>Body</TT>.  Jimple provides the
+<TT>Stmt</TT> implementation of <TT>Unit</TT>, while Grimp provides the <TT>Inst</TT>
+implementation.  This reflects the fact that each IR has its own notion of
+statement.
+
+<P>
+An example of a Jimple <TT>Stmt</TT> is the <TT>AssignStmt</TT>, which represents
+a Jimple assignment statement.  One <TT>AssignStmt</TT> would be:
+<PRE>
+    x = y + z;
+</PRE>
+
+<P>
+After we describe <TT>Box</TT>es, we will discuss the methods specified by
+<TT>Unit</TT>.
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Value</A>
+</H1>
+Code always acts on data.  To represent the data, Soot provides the
+<TT>Value</TT> interface.  Some different types of <TT>Value</TT>s are:
+
+<UL>
+<LI>Locals
+</LI>
+<LI>Constants
+</LI>
+<LI>Expressions (<TT>Expr</TT>)
+</LI>
+<LI>ParameterRefs, CaughtExceptionRefs and ThisRefs.
+</LI>
+</UL>
+
+<P>
+The <TT>Expr</TT> interface, in turn, has a panoply of implementations;
+among them are <TT>NewExpr</TT> and <TT>AddExpr</TT>.  In general, an <TT>Expr</TT>
+carries out some action on one or several <TT>Value</TT>s and returns another
+<TT>Value</TT>.
+
+<P>
+Here's a real live use of some <TT>Value</TT>s:
+<PRE>
+    x = y + 2;
+</PRE>
+
+<P>
+This is an <TT>AssignStmt</TT>.  Its <TT>leftOp</TT> is ``x'' and its rightOp
+is ``y+2'', an <TT>AddExpr</TT>.  The <TT>AddExpr</TT>, in turn, contains the
+<TT>Value</TT>s ``y'' and ``2'' as its operands; the former is a <TT>Local</TT>
+while the latter is a <TT>Constant</TT>.
+
+<P>
+In Jimple, we enforce the requirement that all <TT>Value</TT>s contain at most
+1 expression.  Grimp lifts this restriction, producing easier-to-read
+but harder-to-analyse code.
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Boxes</A>
+</H1>
+
+<P>
+Boxes are ubiquitous in Soot.  The main idea to keep in mind is that
+<EM>a Box is a pointer</EM>.  It provides indirect access to Soot objects.
+
+<P>
+A more descriptive name for <TT>Box</TT> would have been <TT>Ref</TT>.
+Unfortunately, <TT>Ref</TT> has a different meaning for Soot.
+
+<P>
+There are two kinds of <TT>Box</TT>es in Soot - the <TT>ValueBox</TT> 
+and the <TT>UnitBox</TT>.  Not surprisingly, a <TT>UnitBox</TT> contains
+<TT>Unit</TT>s while a <TT>ValueBox</TT> contains <TT>Value</TT>s.  In C++, these
+would be simply <TT>(Unit *)</TT> and <TT>(Value *)</TT> respectively.  
+
+<P>
+We now describe each type of <TT>Box</TT>.
+
+<P>
+
+<H2><A NAME="SECTION00031000000000000000">
+The UnitBox</A>
+</H2>
+
+<P>
+Some types of <TT>Units</TT> will need to contain references to other
+<TT>Unit</TT>s.  For instance, a <TT>GotoStmt</TT> needs to know what its
+target is.  Hence, Soot provides the <TT>UnitBox</TT>, a <TT>Box</TT> that
+contains a <TT>Unit</TT>.
+
+<P>
+Consider the following <TT>jimp</TT> code:
+<PRE>
+    x = 5;
+    goto l2;
+    y = 3;
+l2: z = 9;
+</PRE>
+
+<P>
+Each <TT>Unit</TT> must provide <TT>getUnitBoxes()</TT>.  For most <TT>UnitBoxes</TT>, this returns the empty list.  However, in the cast of a
+<TT>GotoStmt</TT>, then <TT>getUnitBoxes()</TT> returns a one-element list,
+containing a <TT>Box</TT> pointing to <TT>l2</TT>.
+
+<P>
+Note that a <TT>SwitchStmt</TT> will, in general, return a list with many
+boxes.
+
+<P>
+The notion of a Box comes in especially useful for modifying code.
+Say we have a statement <TT>s</TT>:
+<PRE>
+  s: goto l2;
+</PRE>
+and a stmt at <TT>l2</TT>:
+<PRE>
+l2:  goto l3;
+</PRE>
+
+<P>
+It is clear that <TT>s</TT> can point to <TT>l3</TT>
+instead of <TT>l2</TT>, regardless of the actual type of <TT>s</TT>;
+we can do this uniformly, for all kinds of <TT>Unit</TT>s:
+<PRE>
+    public void readjustJumps(Unit s, Unit oldU, Unit newU)
+    {
+        Iterator ubIt = s.getUnitBoxes.iterator();
+        while (ubIt.hasNext())
+        {
+            StmtBox tb = (StmtBox)ubIt.next();
+            Stmt targ = (Stmt)tb.getUnit();
+
+            if (targ == oldU)
+                tb.setUnit(newU);
+        }
+    }
+</PRE>
+
+<P>
+Some code similar to this is used in <TT>Unit</TT> itself, to enable the
+creation of <TT>PatchingChain</TT>, an implementation of <TT>Chain</TT>
+which adjusts pointers to <TT>Unit</TT>s which get removed from the <TT>Chain</TT>.
+
+<P>
+
+<H2><A NAME="SECTION00032000000000000000">
+The ValueBox</A>
+</H2>
+
+<P>
+Analogously to <TT>Unit</TT>s, we often need a notion of a ``pointer to a 
+<TT>Value</TT>''.  This is represented by the <TT>ValueBox</TT> class.
+For a <TT>Unit</TT>, we can always get a list of <TT>ValueBox</TT>es,
+containing values <EM>used</EM> and <EM>defined</EM> in that <TT>Unit</TT>.
+
+<P>
+We can use these boxes to carry out constant folding: if an <TT>AssignStmt</TT>
+evaluates an <TT>AddExpr</TT> adding two constant values, we can statically
+add them and put the result into the <TT>UseBox</TT>.
+
+<P>
+Here is an example of folding <TT>AddExpr</TT>s.
+
+<P>
+<PRE>
+    public void foldAdds(Unit u)
+    {
+        Iterator ubIt = u.getUseBoxes().iterator();
+        while (ubIt.hasNext())
+        {
+            ValueBox vb = (ValueBox) ubIt.next();
+            Value v = vb.getValue();
+            if (v instanceof AddExpr)
+            {
+                AddExpr ae = (AddExpr) v;
+                Value lo = ae.getOp1(), ro = ae.getOp2();
+                if (lo instanceof IntConstant &amp;&amp; ro instanceof IntConstant)
+                {
+                    IntConstant l = (IntConstant) lo,
+                          r = (IntConstant) ro;
+                    int sum = l.value + r.value;
+                    vb.setValue(IntConstant.v(sum));
+                }
+            }
+        }
+    }
+</PRE>
+
+<P>
+Note how this works for <EM>any</EM> <TT>Unit</TT>, regardless of type.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+<TT>Unit</TT> revisited</A>
+</H1>
+
+<P>
+We now discuss the different methods that any <TT>Unit</TT> must provide.
+
+<P>
+<PRE>
+    public List getUseBoxes();
+    public List getDefBoxes();
+    public List getUseAndDefBoxes();
+</PRE>
+
+<P>
+These methods return <TT>List</TT>s of <TT>ValueBox</TT>es for values used,
+defined, or both, in this <TT>Unit</TT>.  For the <TT>getUseBoxes()</TT> method,
+all values used are returned; this includes expressions as well as their
+constituent parts.
+
+<P>
+<PRE>
+    public List getUnitBoxes();
+</PRE>
+
+<P>
+This method returns a <TT>List</TT> of <TT>UnitBox</TT>es for units
+pointed to by this method.
+
+<P>
+<PRE>
+    public List getBoxesPointingToThis();
+</PRE>
+
+<P>
+This method returns a <TT>List</TT> of <TT>UnitBox</TT>es which contain
+this <TT>Unit</TT> as their target.
+
+<P>
+<PRE>
+    public boolean fallsThrough();
+    public boolean branches();
+</PRE>
+
+<P>
+These methods have to do with the flow of execution after this
+<TT>Unit</TT>. The former method returns true if execution can continue
+to the following <TT>Unit</TT>, while the latter returns true if
+execution might continue to some <TT>Unit</TT> which isn't immediately
+after this one.
+
+<P>
+<PRE>
+    public void redirectJumpsToThisTo(Unit newLocation);
+</PRE>
+
+<P>
+This method uses <TT>getBoxesPointingToThis</TT> to change all
+jumps to this <TT>Unit</TT>, pointing them instead at <TT>newLocation</TT>.
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+History</A>
+</H1>
+
+<UL>
+<LI>March 1, 2000: Initial version.
+</LI>
+<LI>September 1, 2000: Fixed typo.
+</LI>
+<LI>January 7, 2005: Made .jimp example match actual Soot output
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>On the Soot menagerie - fundamental Soot objects</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>menagerie -split 0 -nonavigation -dir ./</TT>
+<P>
+The translation was initiated by Eric BODDEN on 2008-06-03
+<BR><HR>
+<ADDRESS>
+Eric BODDEN
+2008-06-03
+</ADDRESS>
+</BODY>
+</HTML>

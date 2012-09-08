@@ -1,0 +1,241 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=latex 2007.12.29)  3 JUN 2008 17:15
+entering extended mode
+ %&-line parsing enabled.
+**addattributes
+(./addattributes.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, croatian, bulgarian, russian, ukrainian, czech, slovak, danish, dut
+ch, finnish, finnish, french, basque, french, german, ngerman, german, ngerman,
+ greek, monogreek, ancientgreek, ibycus, hungarian, hungarian, italian, italian
+, latin, latin, mongolian, mongolian, norsk, norsk, coptic, esperanto, estonian
+, icelandic, indonesian, interlingua, romanian, serbian, slovenian, turkish, up
+persorbian, welsh, polish, polish, portuguese, portuguese, spanish, catalan, ga
+lician, spanish, catalan, galician, swedish, swedish, loaded.
+(/usr/share/texmf-texlive/tex/latex/base/article.cls
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf-texlive/tex/latex/base/size10.clo
+File: size10.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf-texlive/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip43
+)
+(/usr/share/texmf/tex/latex/html/html.sty
+Package: html 1999/07/19 v1.38 hypertext commands for latex2html (nd, hws, rrm)
+
+\c@lpart=\count87
+\c@lchapter=\count88
+\c@chapter=\count89
+\c@lsection=\count90
+\c@lsubsection=\count91
+\c@lsubsubsection=\count92
+\c@lparagraph=\count93
+\c@lsubparagraph=\count94
+\c@lsubsubparagraph=\count95
+\ptrfile=\write3
+) (./addattributes.aux)
+\openout1 = `addattributes.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 14.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 14.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 14.
+ [1
+
+] [2]
+Overfull \hbox (13.262pt too wide) in paragraph at lines 203--209
+\OT1/cmr/m/n/10 tached to units, a \OT1/cmtt/m/n/10 TagAggregator \OT1/cmr/m/n/
+10 is used to com-bine them. \OT1/cmtt/m/n/10 TagAggregator\OT1/cmr/m/n/10 s ar
+e in-stances of \OT1/cmtt/m/n/10 BodyTransformer\OT1/cmr/m/n/10 s,
+ []
+
+
+Overfull \hbox (48.67873pt too wide) in paragraph at lines 211--215
+\OT1/cmr/m/n/10 am-ple of adding a method at-tribute via \OT1/cmtt/m/n/10 Gener
+icAttribute\OT1/cmr/m/n/10 . The code can be found in \OT1/cmtt/m/n/10 ashes.ex
+amples.addattributes\OT1/cmr/m/n/10 .
+ []
+
+[3]
+Overfull \hbox (38.74068pt too wide) in paragraph at lines 243--247
+[]\OT1/cmtt/m/n/10 The AnnExampleWrapper is a subclass of BodyTransformer, whic
+h implements the internalTransform
+ []
+
+
+Overfull \hbox (44.7405pt too wide) in paragraph at lines 243--247
+\OT1/cmtt/m/n/10 method. It simply adds a string ``Hello world!'' as an attribu
+te to every method. The attribute
+ []
+
+
+Overfull \hbox (2.74086pt too wide) in paragraph at lines 272--276
+\OT1/cmtt/m/n/10 The annotated class file has an ``Example'' attribute for each
+ method. The string ``Hello
+ []
+
+[4]
+Overfull \hbox (2.74086pt too wide) in paragraph at lines 315--317
+\OT1/cmtt/m/n/10 In this section, we will use the array bounds check attribute 
+to illustrate the process of
+ []
+
+
+Overfull \hbox (12.4909pt too wide) in paragraph at lines 318--320
+[]\OT1/cmtt/m/n/10 The classes in this example are located in the soot.jimple.t
+oolkits.annotation.arraycheck
+ []
+
+
+Overfull \hbox (28.24077pt too wide) in paragraph at lines 321--331
+[]\OT1/cmtt/m/n/10 Clearly we must be able to represent whether or not an array
+ reference is safe. To do this,
+ []
+
+
+Overfull \hbox (44.7405pt too wide) in paragraph at lines 321--331
+\OT1/cmtt/m/n/10 we first created the ArrayCheckTag class implementing (a subcl
+ass of) Tag. It is not an Attribute
+ []
+
+
+Overfull \hbox (13.24077pt too wide) in paragraph at lines 321--331
+\OT1/cmtt/m/n/10 because the information is not in a form suitable for adding t
+o a class file and setting the
+ []
+
+
+Overfull \hbox (18.49072pt too wide) in paragraph at lines 321--331
+\OT1/cmtt/m/n/10 information directly is meaningless. ArrayCheckTag has a const
+ructor with boolean parameters
+ []
+
+
+Overfull \hbox (28.99063pt too wide) in paragraph at lines 321--331
+\OT1/cmtt/m/n/10 representing upper and lower array bounds checks. If a paramet
+er is true, the respective bound
+ []
+
+
+Overfull \hbox (18.49072pt too wide) in paragraph at lines 321--331
+\OT1/cmtt/m/n/10 check is needed. The getValue() method converts the boolean va
+lues to a byte value where the
+ []
+
+[5]
+Overfull \hbox (22.99081pt too wide) in paragraph at lines 361--364
+[]\OT1/cmtt/m/n/10 We designed an algorithm to analyze array bounds checks. The
+ final phase of this algorithm
+ []
+
+
+Overfull \hbox (2.74086pt too wide) in paragraph at lines 361--364
+\OT1/cmtt/m/n/10 attaches the analysis results to the various units as tags. Th
+is is accomplished with the
+ []
+
+
+Overfull \hbox (17.74086pt too wide) in paragraph at lines 369--376
+[]\OT1/cmtt/m/n/10 As previously explained, code tags are attached to units, bu
+t units themselves do not have
+ []
+
+
+Overfull \hbox (23.74068pt too wide) in paragraph at lines 369--376
+\OT1/cmtt/m/n/10 attributes. Thus, an aggregator is needed to group the attribu
+tes. Now, a null pointer check
+ []
+
+
+Overfull \hbox (76.24022pt too wide) in paragraph at lines 369--376
+\OT1/cmtt/m/n/10 elimination algorithm has already executed, attaching NullChec
+kTags to units. An ArrayNullTagAggregator
+ []
+
+
+Overfull \hbox (91.99008pt too wide) in paragraph at lines 369--376
+\OT1/cmtt/m/n/10 will collect the NullCheckTags and ArrayCheckTags, combining t
+hese two tags into a single ArrayNullCheckTag
+ []
+
+
+Overfull \hbox (17.74086pt too wide) in paragraph at lines 387--394
+[]\OT1/cmtt/m/n/10 The ArrayNullTagAggregator implements the TagAggregator inte
+rface. It is called while Baf
+ []
+
+
+Overfull \hbox (2.74086pt too wide) in paragraph at lines 387--394
+\OT1/cmtt/m/n/10 is generating its backend code. The wantTag() method returns t
+rue for tags that are to be
+ []
+
+
+Overfull \hbox (44.7405pt too wide) in paragraph at lines 387--394
+\OT1/cmtt/m/n/10 considered by this aggregator. The considerTag method accumula
+tes one (unit, tag) pair, typically
+ []
+
+[6]
+Overfull \hbox (17.74086pt too wide) in paragraph at lines 441--443
+[]\OT1/cmtt/m/n/10 After compilation with javac, we can use the JavaClass tool 
+to inspect the contents of the
+ []
+
+[7] [8]
+Overfull \hbox (1.991pt too wide) in paragraph at lines 524--526
+[]\OT1/cmtt/m/n/10 We can see that an ArrayNullCheckAttribute has been added to
+ the class file, and we can
+ []
+
+
+Overfull \hbox (49.99045pt too wide) in paragraph at lines 528--531
+\OT1/cmtt/m/n/10 Soot cannot currently preserve existing attributes in a class 
+file when transforming and annotating
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 534
+.
+(/usr/share/texmf/tex/latex/R/omscmtt.fd
+File: omscmtt.fd 
+)
+LaTeX Font Info:    Font shape `OMS/cmtt/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 534.
+ [9] (./addattributes.aux) ) 
+Here is how much of TeX's memory you used:
+ 532 strings out of 93946
+ 6299 string characters out of 1162065
+ 54636 words of memory out of 1500000
+ 3872 multiletter control sequences out of 10000+50000
+ 7756 words of font info for 28 fonts, out of 1200000 for 2000
+ 743 hyphenation exceptions out of 8191
+ 23i,6n,19p,140b,239s stack positions out of 5000i,500n,6000p,200000b,5000s
+
+Output written on addattributes.dvi (9 pages, 20188 bytes).

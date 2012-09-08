@@ -1,0 +1,33 @@
+PPG TODO
+----------
+* fix documentation
+
+* error reporting
+  - filename/pos on ppg error
+  - add usage message on errors
+  - dropping nonexistent symbol
+
+* installation (.jar file)
+* option for "base include dir"? (eq. to -I)
+
+* removing "includes"?
+
+
+In progress
+-----------
+
+
+Complete
+--------
+* check multiple level of .ppg inheritance
+* dropping (non)terminals
+* bin/ppg script
+* find harmony with Unix-style path names
+* Makefiles
+* web/man page
+* dropping a list of (non)terminals
+* multiple start symbols (new start symbol always required)
+* use PPG in building PolyJ
+* take care of precedence directives:
+  - new precedence rules override all previous ones
+  - "precedence;" deletes all precedence rules

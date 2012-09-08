@@ -1,0 +1,639 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>A Brief Overview of Shimple</TITLE>
+<META NAME="description" CONTENT="A Brief Overview of Shimple">
+<META NAME="keywords" CONTENT="shimple">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="shimple.css">
+
+</HEAD>
+
+<BODY >
+<H1 ALIGN="CENTER">A Brief Overview of Shimple</H1>
+<DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Navindra Umanee
+(<A NAME="tex2html1"
+  HREF="mailto:navindra@cs.mcgill.ca">navindra@cs.mcgill.ca</A>)</STRONG></P>
+<P ALIGN="CENTER"><STRONG>June 6, 2003</STRONG></P>
+</DIV>
+
+<P>
+This document briefly describes Shimple, an SSA variant of Soot's
+Jimple internal representation.  It assumes general knowledge of Soot,
+Jimple and SSA form. You may wish to jump directly to the walk-through
+section for a demonstration of why you might be interested in using
+Shimple either by implementing analyses or by applying existing
+optimizations.
+
+<P>
+
+<H1><A NAME="SECTION00010000000000000000">
+Why Shimple?</A>
+</H1>
+
+<P>
+Static Single Assignment (SSA) form guarantees a single static
+definition point for every variable used in a program, thereby
+significantly simplifying as well as enabling certain analyses.
+
+<P>
+Shimple provides you with an IR in SSA form that is almost entirely
+identical to Jimple except for the introduction of Phi nodes.  The
+idea is that Shimple can be treated almost identically to Jimple with
+the added benefits of SSA.  
+
+<P>
+For example, the additional variable splitting due to SSA form may
+turn a previously flow-insensitive analysis into a flow-sensitive one
+with little or no additional work.
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Hacking Overview</A>
+</H1>
+
+<P>
+The public API of Shimple is fully described in the
+<A NAME="tex2html2"
+  HREF="http://www.sable.mcgill.ca/soot/doc/">Soot API
+documentation</A>.  In particular,
+in the <A NAME="tex2html3"
+  HREF="http://www.sable.mcgill.ca/soot/doc/soot/shimple/package-summary.html">soot.shimple
+package</A>,
+the
+<A NAME="tex2html4"
+  HREF="http://www.sable.mcgill.ca/soot/doc/soot/shimple/Shimple.html">Shimple</A>
+class provides the Shimple grammar constructors and various utility
+functions, the
+<A NAME="tex2html5"
+  HREF="http://www.sable.mcgill.ca/soot/doc/soot/shimple/ShimpleBody.html">ShimpleBody</A>
+class describes Shimple bodies and
+<A NAME="tex2html6"
+  HREF="http://www.sable.mcgill.ca/soot/doc/soot/shimple/PhiExpr.html">PhiExpr</A>
+provides the interface to Phi expressions.
+
+<P>
+Use/Definition and Definition/Use chains for Shimple bodies can be
+obtained with
+<A NAME="tex2html7"
+  HREF="http://www.sable.mcgill.ca/soot/doc/soot/shimple/toolkits/scalar/ShimpleLocalDefs.html">ShimpleLocalDefs</A>
+or
+<A NAME="tex2html8"
+  HREF="http://www.sable.mcgill.ca/soot/doc/soot/shimple/toolkits/scalar/ShimpleLocalUses.html">ShimpleLocalUses</A>
+available in package soot.shimple.toolkits.scalar.
+
+<P>
+Currently, the only Shimple optimization available is the powerful,
+control flow aware, SConstantPropagatorAndFolder.  The latter as well
+as some simple Shimple analyses are available in package
+<A NAME="tex2html9"
+  HREF="http://www.sable.mcgill.ca/soot/doc/soot/shimple/toolkits/scalar/package-summary.html">soot.shimple.toolkits.scalar</A>.
+Please consult the Soot source for details.
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Usage Options</A>
+</H1>
+
+<P>
+For a full description of the options and phases pertaining to
+Shimple, please consult the
+<A NAME="tex2html10"
+  HREF="http://www.sable.mcgill.ca/soot/#documentation">primary</A>
+Soot option and phase documentation.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Command Line Walk Through</A>
+</H1>
+
+<P>
+For fun, you may wish to run Shimple from the command-line and study
+its output.  Consider the following (compiled) Java code of the 
+<TT>ShimpleTest</TT> class:
+
+<P>
+<PRE>
+public int test()
+{
+    int x = 100;
+        
+    while(doIt){
+        if(x &lt; 200)
+            x = 100;
+        else
+            x = 200;
+    }
+
+    return x;
+}
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+Producing Jimple</A>
+</H2>
+
+<P>
+If you produce Jimple with `<TT>soot.Main -f jimple ShimpleTest</TT>' you
+obtain the following code for the <TT>test()</TT> method:
+
+<P>
+<PRE>
+        i0 = 100;
+        goto label2;
+
+     label0:
+        if i0 &gt;= 200 goto label1;
+
+        i0 = 100;
+        goto label2;
+
+     label1:
+        i0 = 200;
+
+     label2:
+        if $z0 != 0 goto label0;
+
+        return i0;
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000">
+Producing Shimple</A>
+</H2>
+
+<P>
+To produce Shimple instead, use `<TT>soot.Main -f shimple ShimpleTest</TT>':
+
+<P>
+<PRE>
+        i0 = 100;
+(0)     goto label2;
+
+     label0:
+        if i0_1 &gt;= 200 goto label1;
+
+        i0_2 = 100;
+(1)     goto label2;
+
+     label1:
+(2)     i0_3 = 200;
+
+     label2:
+        i0_1 = Phi(i0 #0, i0_3 #2, i0_2 #1);
+        if $z0 != 0 goto label0;
+
+        return i0_1;
+</PRE>
+
+<P>
+The difference between the Jimple and Shimple output is that the
+latter guarantees unique local definition points in the program (for
+scalars).  Notice here that the variable <TT>i0</TT> has been split into
+the four variables <TT>i0</TT>, <TT>i0_1</TT>, <TT>i0_2</TT> and <TT>i0_3</TT>,
+each with a unique definition point.
+
+<P>
+We have also introduced a Phi node.  You can read `<TT>i0_1 = Phi(i0
+#0, i0_3 #2, i0_2 #1)</TT>' as saying that <TT>i0_1</TT> will be assigned
+value <TT>i0</TT> if control flow comes from unit <TT>#0</TT> <EM>or</EM> it
+will be assigned <TT>i0_3</TT> if control flow comes from unit <TT>#2</TT> <EM>or</EM>... and so on.
+
+<P>
+If you have a prejudice against variable names with underscores, you
+may use `<TT>soot.Main -f shimple -p shimple standard-local-names
+ShimpleTest</TT>' instead so that Shimple applies the Local Name
+Standardizer each time new locals are introduced.
+
+<P>
+Feel free to skip the following digression and move on to the next
+subsection.
+
+<P>
+
+<H3><A NAME="SECTION00042100000000000000">
+A Digression on Shimple Pointers</A>
+</H3>
+
+<P>
+Because Soot represents the body of a method internally as a Unit
+chain, we need to store explicit pointers (such as <TT>#0</TT> and <TT>#1</TT> in the above example) to keep track of the control flow
+predecessors of the Phi statements.
+
+<P>
+Shimple's internal implementation of PatchingChain attempts to move
+and maintain these pointers in a manner that will be as transparent as
+possible to the user.  For example, in the simplest case, if a
+statement is appended to block:
+
+<P>
+<PRE>
+     label0:
+(1)     i0_1 = 1000;
+</PRE>
+
+<P>
+to obtain:
+
+<P>
+<PRE>
+     label0:
+        i0_1 = 1000;
+(1)     new_stmt;
+</PRE>
+
+<P>
+Shimple will automatically move the <TT>#1</TT> pointer down to the new
+statement since it is in the same basic block.
+
+<P>
+The intent is to provide maximum flexibility for code motion
+optimizations as well as other transformations.  In this case, <TT>i0_1 = 1000</TT> is free to move up or down the Unit chain as long as the
+new location dominates the original CFG block it was in.
+
+<P>
+
+<H2><A NAME="SECTION00043000000000000000">
+Producing Jimple, Again</A>
+</H2>
+
+<P>
+Since we eventually have to get rid of those pesky Phi nodes, you
+may wish to see what the code looks like after going from Jimple to
+Shimple and back again to Jimple.  Do this with `<TT>java soot.Main -f
+jimple -via-shimple ShimpleTest</TT>':
+
+<P>
+<PRE>
+        i0_1 = 100;
+        goto label2;
+
+     label0:
+        if i0_1 &gt;= 200 goto label1;
+
+        i0_1 = 100;
+        goto label2;
+
+     label1:
+        i0_1 = 200;
+
+     label2:
+        if $z0 != 0 goto label0;
+
+        return i0_1;
+</PRE>
+
+<P>
+Happily, in this case, the Jimple produced looks exactly like the
+original Jimple code.  As usual you may specify `<TT>-p shimple
+standard-local-names</TT>' if the underscores hurt your eyes; they are
+otherwise quite harmless.
+
+<P>
+To understand what's really going on when Shimple eliminates Phi
+nodes, you can tell it to eliminate them naively with `<TT>soot.Main
+-f jimple -via-shimple -p shimple phi-elim-opt:none ShimpleTest</TT>':
+
+<P>
+<PRE>
+        i0 = 100;
+        i0_1 = i0;
+        goto label2;
+
+     label0:
+        if i0_1 &gt;= 200 goto label1;
+
+        i0_2 = 100;
+        i0_1 = i0_2;
+        goto label2;
+
+     label1:
+        i0_3 = 200;
+        i0_1 = i0_3;
+
+     label2:
+        if $z0 != 0 goto label0;
+
+        return i0_1;
+</PRE>
+
+<P>
+Now you can see that all Shimple did was to replace the Phi node
+with equivalent copy statements.
+
+<P>
+
+<H2><A NAME="SECTION00044000000000000000">
+Applying Shimple Optimizations</A>
+</H2>
+
+<P>
+So, what good is Shimple?  
+
+<P>
+If you were paying attention, you may have noticed that despite the
+control flow and different assignments to <TT>x</TT>, <TT>x</TT> is in fact
+a constant 100 and is only ever used by a single return statement.  In
+other words, all the computations are quite useless and need to be
+optimized away.
+
+<P>
+Let's try to apply Jimple's Constant Propagator and Folder.  In fact,
+to be fair, let's try all the available  Jimple optimizations activated
+with `<TT>soot.Main -f jimple -O ShimpleTest</TT>':
+
+<P>
+<PRE>
+        i0 = 100;
+        goto label2;
+
+     label0:
+        if i0 &gt;= 200 goto label1;
+
+        i0 = 100;
+        goto label2;
+
+     label1:
+        i0 = 200;
+
+     label2:
+        if $z0 != 0 goto label0;
+
+        return i0;
+</PRE>
+
+<P>
+As you can see in this case, the Jimple optimizations failed to deduce
+that <TT>x</TT> is a constant.  Jimple may be forgiven for this since
+reasoning about control flow is not always an easy task to automate.
+Shimple, on the other hand, encodes control flow information
+explicitly in the Phi nodes thereby allowing optimizations to make use
+of the information.
+
+<P>
+Currently, the only optimization we have implemented specifically for
+Shimple is a version of the powerful constant propagation algorithm
+sketched by the Cytron et el.  The implementation can reason about
+control flow and can currently handle the conditional branching
+statements <TT>IfStmt</TT>, <TT>TableSwitchStmt</TT> and <TT>LookupSwitchStmt</TT>.
+
+<P>
+Let's apply it with `<TT>soot.Main -f jimple -via-shimple -O
+ShimpleTest</TT>':
+
+<P>
+<PRE>
+     label0:
+        if $z0 != 0 goto label0;
+
+        return 100;
+</PRE>
+
+<P>
+Et voila, Shimple optimized out the <TT>x</TT> variable completely. What
+happened is that the optimization propagated reachable definitions to
+the Phi node and then noticed that the Phi node was useless (because
+it made a selection from identical values) and therefore trimmed it
+out.  In the process, dead code was exposed which was ultimately
+eliminated.
+
+<P>
+To understand what is really going on, you can look at the output from
+`<TT>soot.Main -f shimple -p sop on</TT>', `<TT>soot.Main -f shimple -p sop
+on -p sop.cpf prune-cfg:false</TT>' and `<TT>soot.Main -f jimple
+-via-shimple -p shimple phi-elim-opt:none -p sop on -p sop.cpf
+prune-cfg:false</TT>' on this and other examples:
+
+<P>
+<PRE>
+public int test2()
+{
+    int i = 1000;
+    int j = 1000;
+
+    while(doIt){
+        if(i == j){
+            if(anotherIt)
+                i = j;
+            else
+                j = i;
+        }
+        else{
+            i = 5;
+            j = 6;
+        }
+    }
+
+    return i + j;
+}
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+Thanks and Credits</A>
+</H1>
+
+<P>
+Thanks and credits go alphabetically to Laurie Hendren, John
+Jorgensen, Patrick Lam and Ondrej Lhotak for helping with the design
+of Shimple and general implementation issues.  I am most grateful for
+their help and advice.
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+Future Work</A>
+</H1>
+
+<P>
+Much more work on Shimple is planned as the project is likely to morph
+into a Master's thesis.  Some thoughts currently include investigating
+the various scalar SSA variants as well as heap, array and possibly
+concurrent forms of SSA.  The Shimple architecture and implementation
+will therefore evolve quite a bit internally, but as far as possible
+we will try to maintain backwards-compatibility for the public
+interfaces.
+
+<P>
+Suggestions, improvements and bug reports/fixes welcome!  Please send
+these either to the Soot mailing list at
+<A NAME="tex2html11"
+  HREF="mailto:soot-list@sable.mcgill.ca">soot-list@sable.mcgill.ca</A>, or directly to myself
+at
+<A NAME="tex2html12"
+  HREF="mailto:navindra@cs.mcgill.ca">navindra@cs.mcgill.ca</A>.
+
+<P>
+
+<H2><A NAME="SECTION00061000000000000000">
+Partial To-Do List</A>
+</H2>
+
+<P>
+
+<UL>
+<LI>Implement more SSA-based analyses.
+</LI>
+<LI>Add timers and profiling code.
+</LI>
+<LI>Make internal analyses more useful and generic for external use.
+</LI>
+<LI>Adopt an Strategy-type pattern for SSA builder modules, etc.
+</LI>
+<LI>Implement a Shimple parser.
+</LI>
+<LI>Provide an interface for CFG manipulations that intelligently 
+updates Phi nodes.
+</LI>
+<LI>Implement a Control Dependence Graph?  Any interest in that?
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00062000000000000000">
+Known Issues</A>
+</H2>
+
+<P>
+A vague description of a couple of known issues follows.  You may
+ignore this section completely since regular usage of Shimple should
+not be affected in general.
+
+<P>
+
+<H3><A NAME="SECTION00062100000000000000">
+Issue 1</A>
+</H3>
+
+<P>
+One issue is related to Phi nodes inserted at the beginning of try
+blocks which are subsequently used by Phi nodes in the corresponding
+handler block.  Fortunately, although the code produced looks strange
+it is not incorrect.  Example:
+
+<P>
+<PRE>
+    label1:
+        i0_2 = Phi(i0 #0, i0_1 #1);
+(2)     i1 = 4 / 0;
+(3)     i0_3 = i0_2 / 0;
+        i2 = i0_3;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r0 := @caughtexception;
+        i0_4 = Phi(i0_1 #1, i0 #0, i0_2 #2, i0_3 #3);
+
+        catch java.lang.Exception from label1 to label2 with label3;
+</PRE>
+
+<P>
+The <TT>#2</TT> pointer of the second Phi node really should be pointing
+directly at the first Phi node instead of at the statement following
+it (since the latter may throw an exception and branch to the handler
+block).  Fortunately, in these cases the second Phi node will always
+be pointing directly at the predecessors of the first Phi node as well
+(<TT>#0</TT> and <TT>#1</TT> in this example), rendering the matter moot.
+This glitch will be eliminated in a future release.
+
+<P>
+
+<H3><A NAME="SECTION00062200000000000000">
+Issue 2</A>
+</H3>
+
+<P>
+Another issue is related to the Shimple patching algorithm.  In the
+rare case that control flow falls through from an if statement to a
+try block and the if statement has a pointer to it:
+
+<P>
+<PRE>
+       value = 1000;
+(1)    if (whatever) goto label100;
+
+label1:
+       first_trap_statement;
+       ...
+       goto label100;
+label2:
+       $r0 := @caughtexception;
+       i0 = Phi(value #1, ...);
+</PRE>
+
+<P>
+In the above, it may be desirable to move the #1 pointer down if a
+Unit happens to be inserted after the if statement.  Although Shimple
+is smart enough to do this in most known cases, it currently misses
+the one case where control flows from an if statement in a
+non-exceptional context to an exceptional context.
+
+<P>
+This is not a big problem for most people unless an exotic code motion
+algorithm (currently non-existent in Soot) attempts to move the
+definition of <TT>value</TT> below the if statement for some reason.
+
+<P>
+
+<H1><A NAME="SECTION00070000000000000000">
+History</A>
+</H1>
+
+<UL>
+<LI>June 6, 2003: Initial version.
+</LI>
+<LI>June 17, 2003: Updated for Soot 2.0.1.
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00080000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>A Brief Overview of Shimple</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>shimple -split 0 -nonavigation -dir ./</TT>
+<P>
+The translation was initiated by Eric BODDEN on 2008-06-03
+<BR><HR>
+<ADDRESS>
+Eric BODDEN
+2008-06-03
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,266 @@
+Polyglot Change Log
+===================
+
+This file documents changes between releases of Polyglot.
+
+Feb 21, 2008: Polyglot 1.3.5
+============================
+  What's new since Polyglot 1.3.4:
+  --------------------------------
+    Miscellaneous bug fixes.  Thanks to Shane Markstrum, Daniel Marino,
+    Matthew Esquivel, and Todd Millstein at UCLA for identifying some of
+    these bugs using a JavaCOP-based analyzer.
+
+
+Aug 4, 2006: Polyglot 1.3.4
+===========================
+  What's new since Polyglot 1.3.3:
+  --------------------------------
+    Fixed bug with post compiler not handling spaces in file names.
+    Patch from Igor Peshansky (igorp@us.ibm.com).
+
+    Don't check abstract classes to see if they implement all inherited
+    abstract methods.
+
+    Fixed init checker bug.
+
+    Fixed version number.
+
+May 1, 2006: Polyglot 1.3.3
+===========================
+  What's new since Polyglot 1.3.2:
+  --------------------------------
+    New CodeWriter implementation.
+
+    Factory methods for class files (patch from Jennifer Lhotak).
+
+Jul 5, 2005: Polyglot 1.3.2
+===========================
+  What's new since Polyglot 1.3.1:
+  --------------------------------
+    Miscellaneous bug fixes with method lookup.
+
+    Changed implementation of polyglot.util.Base64 to allow relicensing.
+
+    Certain files in the distribution are now licensed under the Eclipse Public 
+    License as well as LGPL.  See the README for more details.
+
+
+Mar 24, 2005: Polyglot 1.3.1
+============================
+  What's new since Polyglot 1.3.0:
+  --------------------------------
+    Miscellaneous bug fixes with operator precedence, lexing,
+    pass scheduling, data flow, class loading.
+
+    Added -j to jlc script to allow options to be passed to the VM.
+    For example, 'jlc -j -Xmx512m -ext pao' will pass -Xmx512m to the VM.
+  
+    Added method Position.compilerGenerated(), which creates a Position
+    object for the line number in the compiler that called
+    Position.compilerGenerated().  
+ 
+    TypeSystem.packageForName can now throw a SemanticException.
+    TypeSystem.createPackage implements the old behavior.
+
+
+Jul 30, 2004: Polyglot 1.3.0
+============================
+  What's new since Polyglot 1.2.0:
+  --------------------------------
+    Miscellaneous bug fixes in data flow, class loading, constant folding,
+    and other areas.
+
+    Faster data flow analysis.
+
+    Improved error recovery in the Java parser and in ErrorHandlingVisitor.
+
+    Added some simple statistics reporting enabled from the command-line
+    with "jlc -report time=1".
+
+    Improvements to the Polyglot Test Harness (PTH): results are saved
+    after each file, permitting a test run to be aborted and resumed
+    later more easily.
+
+    Language extensions can now compile files with different file
+    extensions, e.g., ".jl" and ".java".
+
+    Rewrote the Java lexer to avoid licensing problems.
+
+
+Apr 9, 2004: Polyglot 1.2.0
+============================
+  What's new since Polyglot 1.1.1:
+  --------------------------------
+    Miscellaneous bug fixes. 
+
+    The class polyglot.util.Position can now record end column and
+    line numbers. The CUP or PPG grammar file is responsible for
+    setting the position for AST nodes correctly (for an example, see
+    the file src/polyglot/ext/jl/parse/java12.cup). Support is however
+    required from the lexer. If your extension uses a PPG file that
+    extends the file java12.cup, you should be able to take advantage
+    of the end positions by modifying your JFlex file to record end
+    positions, as done in src/polyglot/ext/jl/parse/java.flex. The
+    changes are backwards compatible: if your JFlex file does not
+    record end positions, the functionality of Positions will be the
+    same as in the previous release. Thanks to Ondrej Lhotak and
+    Jennifer Lhotak for suggesting this change, and providing the code
+    for it.
+
+    pth (Polyglot Test Harness) is a small tool to assist in automated
+    regression testing of Polyglot extensions. See the file
+    tools/pth/README for more information.
+
+    Illegal forward references now detected.
+
+    Control flow graph for binary and unary operators is now more
+    precise, permitting more precise dataflow analyses.
+
+    The signature for the methods findMethod, findConstructor, and
+    findMemberClass, in polyglot.types.TypeSystem have changed; old
+    versions of these methods are still present but deprecated.
+
+
+Dec 18, 2003: Polyglot 1.1.1
+============================
+  What's new since Polyglot 1.1.0:
+  --------------------------------
+    Bug fixes in initialization checking.
+    
+    Refactored data flow slightly to allow subclasses to have more control of
+    the confluence operation.  Legacy behavior is maintained, so no
+    subclass will be invalidated by this change.
+
+    Made Term_c.acceptCFG() abstract to force new Terms to implement
+    it rather than using the default implementation.
+
+    Added some accessors for private/protected fields.  Made some
+    package-scoped fields protected.
+
+
+
+Nov 19, 2003: Polyglot 1.1.0
+============================
+  What's new since Polyglot 1.0.1:
+  --------------------------------
+    Numerous changes have been made to improve the performance of
+    Polyglot.  It is now more efficient, especially when compiling
+    large code bases.
+
+    The scheduling of passes run on source files has been modified to
+    take advantage of more precise dependencies between source files.
+    This allows for more efficient scheduling.  See
+    polyglot.frontend.AbstractExtensionInfo for more details.
+
+    A global barrier pass has been added to facilitate whole program
+    analyses.  See polyglot.frontend.GlobalBarrierPass for more
+    information.
+
+    The dataflow framework (polyglot.visit.DataFlow) has been modified
+    to allow dataflow upon either entering or leaving a code
+    declaration.  This allows the results of dataflow analyses to be
+    available when visiting the AST nodes inside a code
+    declaration.  The default (and legacy) behavior is to perform
+    dataflow upon leaving a code declaration.
+
+    The serialized type information that Polyglot produces in output
+    files is now encoded in base 64, which reduces the size and improves
+    the readability of the Java output files.  Class files compiled with
+    previous versions of Polyglot are not readable with Polyglot 1.1.
+
+    Serialized type information for member classes is now stored as a
+    field in the member class itself, instead of as part of the
+    serialized type information of the top level class that contains
+    the nested class.  This resolves a circular dependency bug in
+    class loading.
+
+    Terms record whether or not they are reachable, as this
+    information is useful in later passes.  The ReachChecker visitor
+    sets this information.
+
+    The reachability pass is now performed before the exception
+    checking pass, making exception checking more precise.
+
+    A utility class PolyglotAntTask (in $POLYGLOT/tools) facilitates
+    the compilation of language extensions in the ANT framework.
+
+    PPG now passes through precedence modifiers to JavaCUP.
+
+    Numerous bug fixes, including:
+      - numeric conversions of short, int, etc.
+      - constant folding
+      - nested classes
+      - imported class lookup
+      - code generation
+
+
+  Converting existing extensions:
+  -------------------------------
+    Terms must now have methods to access and record reachability
+    information.  If you have defined AST nodes that do not extend
+    polyglot.ext.jl.ast.Term_c, you may need to modify them.  See
+    polyglot.ast.Term and polyglot.ext.jl.ast.Term_c for
+    information/examples.
+ 
+    ParsedClassTypes now record from which source they were parsed
+    from, if they were parsed during the current compilation.  If you
+    have defined ParsedClassTypes that do not extend
+    polyglot.ext.jl.types.ParsedClassType_c, you may need to modify
+    them.
+
+    The signature for the class polyglot.types.TypeSystem has changed.
+      * void initialize(LoadedClassResolver loadedResolver)
+        has changed to
+        void initialize(LoadedClassResolver loadedResolver,
+                        ExtensionInfo extInfo)
+
+      * ParsedClassType createClassType(LazyClassInitializer init)
+        has changed to
+        ParsedClassType createClassType(LazyClassInitializer init,
+                        Source fromSource)
+
+      If you have overridden these methods in a subclass of
+      polyglot.ext.jl.types.TypeSystem_c, you should change your
+      method signatures.
+
+
+
+Aug 18, 2003: Polyglot 1.0.1
+============================
+  What's new since Polyglot 1.0.0:
+  --------------------------------
+    Bug fixes:
+      - "import" declarations now import member classes.
+      - Detect uses of "this" in a static context.
+      - Detect multiply-defined local variables.
+      - Detect circular constructor invocations.
+      - Fixed bugs with Node.childExpectedType for arithmetic expressions.
+      - Fixed bugs with data-flow analysis through local and anonymous
+        classes.
+      - Renamed some protected methods in Context_c to avoid some
+        confusion.
+
+
+
+Jul 8, 2003: Polyglot 1.0.0
+===========================
+  What's new since Polyglot 0.9.5:
+  --------------------------------
+    We have changed the license from GPL to LGPL.  This should allow
+    more flexibility in licensing extensions to Java.
+
+    Many bugs in the base compiler have been fixed.
+
+    Node factories have been redesigned to be more extensible.
+    Existing subclasses of the base compiler node and extension
+    factories may need to be modified.
+
+    The quasiquoting interface has been changed to be easier to use.
+
+    New AST node types for local, field, and array assignment were
+    added.  Distinguishing the type of the left-hand-side permits
+    easier implementation of data-flow analyses.
+
+    The data-flow analysis framework was reworked to permit more
+    precise analyses.

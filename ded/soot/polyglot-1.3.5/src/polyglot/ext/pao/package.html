@@ -1,0 +1,35 @@
+<body>
+<p>
+"Primitives as Objects" (PAO) extension.  Primitive types (e.g.,
+<code>int</code>, <code>float</code>, etc.) may be used as subtypes 
+of <code>Object</code>.
+
+<p>
+To implement this functionality, this extension has the following key 
+components:
+<ul>
+<li> The package {@link polyglot.ext.pao.parse polyglot.ext.pao.parse} 
+     modifies the grammar to  allow primitive types to occur in 
+     <code>instanceof</code> expressions.
+<li> The package {@link polyglot.ext.pao.ast polyglot.ext.pao.ast} provides 
+     factories to create appropriate extension and delegate objects for the 
+     AST nodes.
+<li> The package {@link polyglot.ext.pao.extension polyglot.ext.pao.extension}
+     provides appropriate extension and delegate objects for the AST nodes.
+<li> The package {@link polyglot.ext.pao.types polyglot.ext.pao.types} 
+     modifies the type system to allow primitives to be used as subtypes 
+     of <code>Object</code>.
+<li> The package {@link polyglot.ext.pao.visit polyglot.ext.pao.visit} 
+     adds a new pass 
+     {@link polyglot.ext.pao.visit.PaoBoxer polyglot.ext.pao.visit.PaoBoxer} 
+     to add boxing and unboxing code to allow primitive values to be 
+     treated as objects at runtime.
+<li> The package {@link polyglot.ext.pao.runtime polyglot.ext.pao.runtime} 
+     provides the runtime support classes needed by PAO. These classes are 
+     used at runtime to box primitive values. These classes must be on the 
+     classpath when running programs compiled  with the PAO compiler.
+<li> Finally, the class {@link polyglot.ext.pao.ExtensionInfo ExtensionInfo} 
+     provides information about this extension to the Polyglot compiler.
+</ul>
+</body>
+ 

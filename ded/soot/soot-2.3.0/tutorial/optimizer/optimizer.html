@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Using Soot as a Program Optimizer</TITLE>
+<META NAME="description" CONTENT="Using Soot as a Program Optimizer">
+<META NAME="keywords" CONTENT="optimizer">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="optimizer.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<H1 ALIGN="CENTER">Using Soot as a Program Optimizer</H1>
+<DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Patrick Lam (<A NAME="tex2html1"
+  HREF="mailto:plam@sable.mcgill.ca">plam@sable.mcgill.ca)</A></STRONG></P>
+<P ALIGN="CENTER"><STRONG>March 23, 2000</STRONG></P>
+</DIV>
+
+<P>
+
+<H1><A NAME="SECTION00010000000000000000">
+Goals</A>
+</H1>
+
+<P>
+This tutorial describes the use of Soot as an optimization tool.  
+After completing this tutorial, the user will be able to use Soot
+to optimize classfiles and whole applications.
+
+<P>
+
+<H4><A NAME="SECTION00010010000000000000">
+Prerequisites</A>
+</H4> The user should have a working installation
+of Soot; successful completion of the 
+<A NAME="tex2html2"
+  HREF="../intro">introduction</A>
+is one way to exercise one's installation of Soot.
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Classfile Optimization</A>
+</H1>
+
+<P>
+Soot is able to optimize individual classfiles.  Some of the transformations
+which can be carried out on individual classfiles include:
+common subexpression elimination, partial redundency elimination, 
+copy propagation, constant propagation and folding, conditional
+branch folding, dead assignment elimination, unreachable code elimination,
+unconditional branch folding, and unused local
+elimination.
+
+<P>
+In order to optimize the <TT>Hello</TT> example from the previous tutorial,
+we issue the command:
+
+<P>
+<PRE>
+&gt; java soot.Main -O Hello
+Transforming Hello...
+</PRE>
+
+<P>
+Soot will then leave a new, improved <TT>Hello.class</TT> file in the
+<TT>sootOutput</TT> directory.  For this class, the improvement after
+Sootification is not so obvious.  Soot does, however, eliminate unused
+locals.  Try adding an unused local to <TT>Hello</TT> and giving this command:
+
+<P>
+<PRE>
+&gt; java soot.Main -O -f jimple Hello
+Transforming Hello...
+</PRE>
+
+<P>
+You should see that the unused local is no longer present.
+
+<P>
+Any number of classfiles can be specified to Soot in this mode, as
+long as they are in the <TT>CLASSPATH</TT>.
+
+<P>
+
+<H4><A NAME="SECTION00020010000000000000">
+Hidden Trap</A>
+</H4> Note that your classfile may belong to some
+package; it may be called, for instance, <TT>soot.Scene</TT>.  This
+indicates that the <TT>Scene</TT> class belongs to the <TT>soot</TT> package.
+It will be in a <TT>soot/</TT> subdirectory.  In order to Sootify this
+file, you must be in the parent directory (not <TT>soot/</TT>), and you
+must specify <TT>java soot.Main -O soot.Scene</TT>.
+
+<P>
+Unfortunately, our current optimizations with <TT>-O</TT> tend to have
+little effect on the program execution time.
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Program Optimization</A>
+</H1>
+
+<P>
+Soot provides the <TT>-app</TT> switch to make it work on all the class
+files in an applicaion. When this switch is present, the user specifies
+the main classfile, and Soot will load all needed classes.
+
+<P>
+Soot has a whole-program mode in which allows it to carry out
+whole-program transformations; for instance, method inlining requires
+the whole program to correctly resolve virtual method calls.
+
+<P>
+To specify that Soot should do whole-program optimizations (<TT>-W</TT>),
+as well as single-class optimizations, use the command:
+
+<P>
+<PRE>
+&gt; java soot.Main --app -W Hello
+Transforming Hello...
+</PRE>
+
+<P>
+Soot will write out all classes except those in the <TT>java.*</TT>,
+<TT>javax.*</TT> and <TT>sun.*</TT> packages.
+
+<P>
+The default behaviour of <TT>-W</TT> is to statically inline methods.
+Soot is also capable of static method binding; use 
+
+<P>
+<PRE>
+&gt; java soot.Main --app -p wjop.smb on -p wjop.si off -W -O
+       Hello
+</PRE>
+
+<P>
+This type of optimization has produced significant speedups on
+some benchmarks.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Summary</A>
+</H1>
+This lesson has described how Soot can be used to optimize classfiles
+and whole applications.
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+History</A>
+</H1>
+
+<UL>
+<LI>March 14, 2000: Initial version.
+
+<P>
+</LI>
+<LI>March 23, 2000: Changed documentation to reflect fact that -W
+includes -O.
+
+<P>
+</LI>
+<LI>May 31, 2003: Updated for Soot 2.0.
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>Using Soot as a Program Optimizer</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>optimizer -split 0 -nonavigation -dir ./</TT>
+<P>
+The translation was initiated by Eric BODDEN on 2008-06-03
+<BR><HR>
+<ADDRESS>
+Eric BODDEN
+2008-06-03
+</ADDRESS>
+</BODY>
+</HTML>

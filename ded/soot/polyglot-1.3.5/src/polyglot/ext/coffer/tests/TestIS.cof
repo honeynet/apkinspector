@@ -1,0 +1,60 @@
+import java.io.IOException;
+
+tracked(F) class InputStream {
+    public InputStream() [] -> [F] { }
+
+    public int read() [F] -> [F] throws IOException[F], RuntimeException[F] { return 0; }
+
+    public int read(byte[] b) [F] -> [F] throws IOException[F], RuntimeException[F] {
+        return read(b, 0, b.length);
+    }
+
+    public int read(byte[] b, int off, int len) [F] -> [F]
+        throws IOException[F], RuntimeException[F]
+    {
+        if (b == null)
+            throw new NullPointerException();
+
+        if (off < 0 || off+len > b.length)
+            throw new IndexOutOfBoundsException();
+
+        int n = 0;
+
+        try {
+            while (n < len) {
+                b[off+n] = (byte) read();
+                n++;
+            }
+        }
+        catch (IOException e) {
+            // F held here since IOException path through read() ensures F
+        }
+
+        return n;
+    }
+
+    public void close() [F] -> [] throws IOException[F] {
+        free this;
+    }
+
+    public void kill() [F] -> [] {
+        free this;
+    }
+}
+
+public class TestIS {
+    public static void main(String[] args) {
+        tracked(I) InputStream is;
+
+        is = new tracked(I) InputStream();
+
+        try {
+            is.read();
+            is.close();
+        }
+        catch (Exception e) {
+            is.kill();
+        }
+    }
+}
+

@@ -1,0 +1,261 @@
+                    Polyglot Extensible Compiler Toolkit
+                    ------------------------------------
+
+Since you are reading this file, you have already downloaded and
+unpacked the Polyglot distribution.  Your installation directory
+contains the following sub-directories:
+
+  - src: the complete source code of Polyglot
+  - src/polyglot: the Polyglot base compiler and some simple extensions 
+  - src/ppg: the Polyglot parser generator, an extension of Java CUP
+  - src/java_cup: tweaked version of the Java CUP parser generator 0.10k.
+  - doc: documentation about writing Polyglot extensions
+  - doc/api: Javadoc descriptions of Polyglot classes
+
+Disclaimer
+----------
+
+Polglot is research software.  Over time, some of the interfaces in the
+framework may change.  This may require some extensions to be changed to
+conform to the new interfaces.  Also, Polyglot is not well-documented; in
+particular, some of the javadoc is missing or out-of-date.  We are working on
+writing better documentation.  Watch the web page:
+
+    http://www.cs.cornell.edu/Projects/polyglot
+
+for further updates.  If you use Polyglot, we'd appreciate your letting
+us know.  Send your comments and bug reports to Nate Nystrom at
+nystrom@cs.cornell.edu.
+
+Requirements
+------------
+
+Polyglot builds on Unix and on Windows using the Cygwin environment.  We
+recommend that you use JDK 1.3 or later.  We have experienced problems
+with versions of the JDK older than 1.3.  You must ensure that java and
+javac are in your path.  Polyglot is compiled with the Ant build tool
+(http://jakarta.apache.org/ant).  GNU make is used for compiling and
+running test cases.  We are phasing out the use of make in favor of Ant.
+
+Polyglot uses the JFlex scanner generator.  The JFlex jar file is
+included in the Polyglot distribution.  Polyglot is distributed
+under LGPL, but JFlex is distributed under GPL.  See the JFlex web
+site at:
+
+        http://www.jflex.de
+
+for updates and the source code of JFlex.  The output of JFlex
+inherits the copyright of the specification--licensed under LGPL
+in Polyglot's case.  You may be able to substitute JLex
+(http://www.cs.princeton.edu/~appel/modern/java/JLex/), but this
+is untested.
+
+Creating an extension
+---------------------
+
+To create your own extensions, see the file doc/Overview.txt.
+
+Running Polyglot
+----------------
+
+Polyglot is compiled with the Ant build tool (http://jakarta.apache.org/ant).
+
+1. Go to the root directory of the Polyglot installation (the directory this
+README is in).  We'll call this directory $POLYGLOT from now on.
+
+    $ cd $POLYGLOT
+
+2. Run ant to build the shell script bin/jlc.
+
+    $ ant bin
+
+This need only be performed once.
+
+3. Optionally: add $POLYGLOT/bin to your PATH environment variable. 
+
+4. You are now ready to try out Polyglot.
+To compile a language extension source file, do:
+
+    $ jlc -ext <extname> <source-file>
+
+For example:
+
+    $ jlc -ext pao src/polyglot/ext/pao/tests/Test.pao
+
+or equivalently:
+
+    $ jlc -extclass polyglot.ext.pao.ExtensionInfo \
+          src/polyglot/ext/pao/tests/Test.pao
+
+The latter usage is convenient if the extension is not implemented as
+a subpackage in the polyglot source tree.
+
+To compile using the base compiler, just leave out the -ext option:
+
+    $ jlc File.jl
+
+This should produce a file called File.java that is almost identical to
+File.jl.
+
+Building Polyglot
+-----------------
+
+Follow these steps to build the base compiler and the installed extensions:
+
+1. First ensure javac is in your path and that you are using JDK 1.3
+or later.  Also ensure JFlex.jar is in your classpath or is in the lib
+directory.
+
+2. Change to the $POLYGLOT directory.
+
+    $ cd $POLYGLOT
+
+3. Run ant to build the base compiler.
+
+    $ ant
+
+Optionally, create some extensions:
+
+    $ ant coffer pao
+  
+Class files will be placed in the $POLYGLOT/classes directory.
+You may optionally, do:
+
+    $ ant jar
+    $ ant coffer-jar pao-jar
+
+to create jar files in the lib directory for Polyglot and for each extension.
+
+4. Update PATH and CLASSPATH.
+
+Add $POLYGLOT/bin to your PATH environment variable.  Add
+$POLYGLOT/classes (or $POLYGLOT/lib/polyglot.jar) and
+$POLYGLOT/lib/java_cup.jar to your CLASSPATH.
+
+5. You are now ready create your own extensions to Java.  See
+doc/Overview.txt for instructions on building an extension.  See the
+instructions earlier in this file for how to use the compiler.
+
+Credits and Acknowledgments
+---------------------------
+
+The current Polyglot developers are:
+
+        Nathaniel Nystrom
+
+The Polyglot project group is supervised by Prof. Andrew Myers at the
+Cornell University Computer Science Department.
+
+Several other people have contributed to the development:
+
+        Michael Brukman         Stephen Chong
+        Michael Clarkson        Matt Harren            
+        Aleksey Kliger          Jed Liu
+        Naveen Sastry           Dan Spoonhower 
+        Xin Qi                  Steve Zdancewic         
+        Lantian Zheng
+
+The Polyglot class file parsing code (src/polyglot/types/reflect)
+is derived from the BLOAT bytecode optimizer written by Nathaniel
+Nystrom, David Whitlock, and Antony Hosking at Purdue University.  See
+http://www.cs.purdue.edu/s3/projects/bloat/.
+
+The Base64 code (polyglot.util.Base64) is derived from public domain
+code by Robert Harder <rob@iharder.net>.  See http://iharder.net/base64.
+
+The following people have provided patches:
+
+        Keunwoo Lee <klee@cs.washington.edu>
+        Patrick Lam <plam@mit.edu>
+        Ondrej Lhotak <olhotak@sable.mcgill.ca>
+        Oege de Moor <Oege.de.Moor@comlab.ox.ac.uk>
+        Pavel Avgustinov <pavel.avgustinov@magdalen.oxford.ac.uk>
+        Alessandro Warth <alexwarth@gmail.com>
+
+The development of the Polyglot project has been supported by a
+number of funding sources, including DARPA Contract F30602-99-1-0533,
+monitored by USAF Rome Laboratory, ONR Grant N00014-01-1-0968, NSF
+Grants CNS-0208642, CNS-0430161, and CCF-0133302, an Alfred P. Sloan
+Research Fellowship, and an Intel Research Ph.D. Fellowship.
+
+Restrictions on distribution
+----------------------------
+
+This release of the Polyglot distribution is governed by the LGPL
+license as described by the following copyright notice.
+
+Polyglot extensible compiler framework
+Copyright (C) 2000-2005 Polyglot project group, Cornell University
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+A copy of the GNU Lesser General Public License can be found in the file
+LICENSE.LGPL, included in this distribution.
+
+
+Excluding the exceptions listed below, all files in this release are also
+released under the Eclipse Public License.  A copy of the license can be
+found in the file LICENSE.Eclipse, included in this distribution.
+
+The following files are covered by the LGPL, but are NOT released under
+the Eclipse Public License:
+
+        src/polyglot/ext/jl/parse/java12.cup
+        lib/polyglot.jar
+        lib/coffer.jar
+        lib/pao.jar
+
+        src/java_cup (and all files in subdirectories)
+        lib/java_cup.jar  
+
+Additionally, any build targets derived from the above files are not
+released under the Eclipse Public License.
+
+
+CUP Parser Generator Copyright Notice, License, and Disclaimer
+---------------------------------------------------------------
+Copyright 1996-1999 by Scott Hudson, Frank Flannery, C. Scott Ananian
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted, provided that
+the above copyright notice appear in all copies and that both the copyright
+notice and this permission notice and warranty disclaimer appear in supporting
+documentation, and that the names of the authors or their employers not be
+used in advertising or publicity pertaining to distribution of the software
+without specific, written prior permission.
+
+The authors and their employers disclaim all warranties with regard to this
+software, including all implied warranties of merchantability and fitness.
+In no event shall the authors or their employers be liable for any special,
+indirect or consequential damages or any damages whatsoever resulting from
+loss of use, data or profits, whether in an action of contract, negligence or
+other tortious action, arising out of or in connection with the use or
+performance of this software.
+
+
+BLOAT Copyright Notice, License, and Disclaimer
+-----------------------------------------------
+All files in the distribution of BLOAT (Bytecode Level Optimization
+and Analysis tool for Java(tm)) are Copyright 1997-2001 by the Purdue
+Research Foundation of Purdue University.
+
+BLOAT was written by Nathaniel Nystrom, David Whitlock, and Antony Hosking
+at Purdue University.  BLOAT is licensed under the LGPL and has the same
+restrictions on distributed as Polyglot.  See the file LICENSE.LGPL for
+a copy.
+
+
+BASE64 Copyright Notice, License, and Disclaimer
+------------------------------------------------
+The Base64 code (polyglot.util.Base64) is derived from public domain
+code by Robert Harder <rob@iharder.net>.  See http://iharder.net/base64.
+
+
+Java is a trademark of Sun Microsystems, Inc.

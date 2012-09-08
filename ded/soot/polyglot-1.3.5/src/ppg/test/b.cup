@@ -1,0 +1,19 @@
+package pakg;
+
+parser code {:
+	original parser code
+:}
+
+nonterminal B, C;
+terminal a, c, d;
+
+start with B;
+
+B ::=
+	d {: asdfsadf :} r o {: asdf :} p {: asdf :}
+|	c c a
+|	b a b a {: blah :}
+|	a l i ;
+
+
+C ::= d e f {: sem act :};

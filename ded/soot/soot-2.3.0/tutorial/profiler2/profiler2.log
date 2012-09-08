@@ -1,0 +1,134 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=latex 2007.12.29)  3 JUN 2008 17:15
+entering extended mode
+ %&-line parsing enabled.
+**profiler2
+(./profiler2.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, croatian, bulgarian, russian, ukrainian, czech, slovak, danish, dut
+ch, finnish, finnish, french, basque, french, german, ngerman, german, ngerman,
+ greek, monogreek, ancientgreek, ibycus, hungarian, hungarian, italian, italian
+, latin, latin, mongolian, mongolian, norsk, norsk, coptic, esperanto, estonian
+, icelandic, indonesian, interlingua, romanian, serbian, slovenian, turkish, up
+persorbian, welsh, polish, polish, portuguese, portuguese, spanish, catalan, ga
+lician, spanish, catalan, galician, swedish, swedish, loaded.
+(/usr/share/texmf-texlive/tex/latex/base/article.cls
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf-texlive/tex/latex/base/size12.clo
+File: size12.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf-texlive/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip43
+) (./profiler2.aux)
+\openout1 = `profiler2.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <14.4> on input line 7.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 7.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 24.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 24.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 24.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 24.
+
+Overfull \hbox (26.31183pt too wide) in paragraph at lines 22--27
+[]\OT1/cmr/m/n/12 In this tu-to-rial, I am mak-ing an ex-am-ple slightly dif-fe
+r-ent from the ex-am-ple \OT1/cmtt/m/n/12 GotoInstrumenter
+ []
+
+[1
+
+] [2]
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 119--119
+[]    \OT1/cmtt/m/n/12 12        System.err.println("Usage: java MainDriver [op
+tions] classname");[] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 258--258
+[]     \OT1/cmtt/m/n/12 7   *   Insert counter instruction before static invoca
+tion instruction.[] 
+ []
+
+[3]
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 258--258
+[]    \OT1/cmtt/m/n/12 22  /* InvokeStaticInstrumenter extends the abstract cla
+ss BodyTransformer,[] 
+ []
+
+
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 258--258
+[]    \OT1/cmtt/m/n/12 45    protected void internalTransform(Body body, String
+ phase, Map options) {[] 
+ []
+
+
+Overfull \hbox (36.59523pt too wide) in paragraph at lines 258--258
+[]    \OT1/cmtt/m/n/12 50      System.out.println("instrumenting method : " + m
+ethod.getSignature());[] 
+ []
+
+[4]
+Overfull \hbox (92.17026pt too wide) in paragraph at lines 258--258
+[]    \OT1/cmtt/m/n/12 86        InvokeExpr incExpr= Jimple.v().newStaticInvoke
+Expr(increaseCounter.makeRef(),[] 
+ []
+
+[5]
+Overfull \hbox (18.07022pt too wide) in paragraph at lines 258--258
+[]   \OT1/cmtt/m/n/12 102      boolean isMain = signature.equals("void main(jav
+a.lang.String[])");[] 
+ []
+
+
+Overfull \hbox (129.22028pt too wide) in paragraph at lines 258--258
+[]   \OT1/cmtt/m/n/12 115            InvokeExpr reportExpr= Jimple.v().newStati
+cInvokeExpr(reportCounter.makeRef());[] 
+ []
+
+
+Overfull \hbox (5.72021pt too wide) in paragraph at lines 280--280
+[]\OT1/cmtt/m/n/12 Transforming TestInvoke... instrumenting method : <TestInvok
+e: void <init>()>[] 
+ []
+
+[6] [7] [8] (./profiler2.aux) ) 
+Here is how much of TeX's memory you used:
+ 257 strings out of 93946
+ 2908 string characters out of 1162065
+ 51725 words of memory out of 1500000
+ 3605 multiletter control sequences out of 10000+50000
+ 8710 words of font info for 31 fonts, out of 1200000 for 2000
+ 743 hyphenation exceptions out of 8191
+ 24i,8n,19p,142b,245s stack positions out of 5000i,500n,6000p,200000b,5000s
+
+Output written on profiler2.dvi (8 pages, 14320 bytes).

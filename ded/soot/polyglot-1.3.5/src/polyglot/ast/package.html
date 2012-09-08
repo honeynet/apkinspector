@@ -1,0 +1,16 @@
+<body>
+Contains the AST node interfaces.
+<p>
+The nodes all extend the interface
+{@link polyglot.ast.Node Node}.
+Each node has accessor methods and methods to implement passes over
+the node.  The <i>setter</i> methods are non-destructive: they create a copy
+of the node and return the copy.
+The traversal interface is defined
+in {@link polyglot.visit.NodeVisitor NodeVisitor}.
+Nodes are constructed using a {@link polyglot.ast.NodeFactory NodeFactory}.
+@see polyglot.ast.Node
+@see polyglot.visit.NodeVisitor
+@see polyglot.ast.NodeFactory
+</body>
+ 
