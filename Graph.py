@@ -83,6 +83,50 @@ class GraphicsView(QGraphicsView):
         self.root.translate(0, 0)
 
 
+    def showcall(self, nodeList, linkList):    
+        self.scene.clear()
+        self.scene.setSceneRect(0, 0, self.pageSize[0]*2, self.pageSize[1]*2)
+        del self.nodeList[:]
+        import copy
+        self.nodeList = copy.copy(nodeList)
+        
+        #for node in nodeList:
+        #    self.scene.addItem(node)
+        #for link in linkList:
+        #    self.scene.addItem(link)
+        #self.root = QGraphicsItemGroup(None, self.scene)
+        
+        # I just want to crate a root QGraphicsItem object, which is None. So it creates a Link object for convenience.
+        # Qt has a bug in translate function. I crate a root item to implement translate function.
+        self.rootcall = Link()
+            
+        for node in nodeList:
+            text = []
+            myText = node.myText
+            text = node.myText.split("\n")
+            lineNumber = len(node.myText.split("\n")) - 1
+
+            for i in range (1, lineNumber+1):
+                nodeNew = Node (0,0,0,0)
+                nodeNew.left = node.left
+                nodeNew.top = node.top + ((node.height)/lineNumber)*(i-1)  
+                nodeNew.width = node.width
+                nodeNew.height = (node.height)/lineNumber
+                nodeNew.myText = text[i-1]
+
+                nodeNew.setParentItem(self.rootcall)
+
+
+ #       for node in nodeList:
+ #           node.setParentItem(self.root)
+        for link in linkList:
+            link.setParentItem(self.rootcall)
+            
+        self.scene.addItem(self.rootcall)
+        
+        self.rootcall.translate(0, 0)
+
+
 class Link(QGraphicsLineItem):
     painterPath = None
     color = None
@@ -189,10 +233,7 @@ class Node(QGraphicsItem):
     def setText_call(self, text):
         self.prepareGeometryChange()
         self.myText = str(text)
-        self.fullText = self.myText
-        self.myText = self.myText.replace("java","")
-        self.myText = self.myText.replace("android","")
-        self.myText = self.myText("const","st")
+
         #simplfiy 
         self.update()        
          

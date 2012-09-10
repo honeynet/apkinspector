@@ -82,6 +82,12 @@ class XDot:
         i = 0
         j = 100
         for I in allmethod:
+            i += 1
+            Im = I.get_class_name() + " " + I.get_descriptor() +"," + I.get_name()
+            label = Im
+ 
+            self.buff += "\"%s\" [color=\"lightgray\", label=\"%s\"]\n" % (i, label)
+        for I in allmethod:
               Im = I.get_class_name() + " " + I.get_descriptor() +"," + I.get_name()
               if Im not in Dir.keys():
                    continue
@@ -89,13 +95,8 @@ class XDot:
               lenth = len(callList)
               for l in range (0, lenth ):
                    col = "blue"
-                   self.buff += "\"%s\" -> \"%s\" [color=\"%s\"];\n " % (Im, callList[l],col )     
-        for I in allmethod:
-            i += 1
-            Im = I.get_class_name() + " " + I.get_descriptor() +"," + I.get_name()
-  #          label = Im
-            label = "labelalbel"
-            self.buff += "\"%s\" [color=\"lightgray\", label=\"%s\"]\n" % (i, label)
+                   self.buff += "\"%s\" -> \"%s\" [color=\"%s\"];\n " % (Im, callList[l],col ) 
+
              
         """
         for I in callInList:
@@ -124,9 +125,9 @@ class XDot:
         d = pydot.graph_from_dot_data(self.buff)
         if d:
             self.xdot = d.create_xdot()
-            print "xdot\n\n"
-            print self.xdot
-            print "call2xdot\n"
+#            print "xdot\n\n"
+#            print self.xdot
+#            print "call2xdot\n"
   #          print self.buff
             file = open('call2dot.txt','a')
             file.write("%s\n" % self.xdot)
@@ -164,6 +165,9 @@ class XDot:
         parseStr = parseStr.replace("\\l", "\n")
         
         parselist = parseStr.split("];")
+        file = open("parselistmethod.txt",'w')
+        file.write("%s" % parselist)
+        file.close()
         for i in parselist:
             if i.find("->") == -1 and i != '':
                 start = i.index("label=") + 7
@@ -225,6 +229,94 @@ class XDot:
         return [pagesize, nodeList, linkList]
 
 
+    def parsecall(self):
+        pagesize = [0, 0]
+        nodeList = []
+        linkList = []
 
+        
+        start = self.xdot.index("graph [bb=\"0,0,")+15
+        end = self.xdot[start:].index("\"") + start
+        [pagesize[0], pagesize[1]] = self.xdot[start:end].split(",")
+        if pagesize == ['0', '0']:
+            return  [[0, 0], nodeList, linkList]
+            
+        # turn the String type to the Float type
+        [pagesize[0], pagesize[1]] = [string.atof(pagesize[0]), string.atof(pagesize[1])]
+
+        # In parseStr, we can get all information about each node and link
+        parseStr = self.xdot[self.xdot[end:].index("];")+ end + 2 : len(self.xdot)-2]
+        
+        
+        parseStr = parseStr.replace("\t", "")
+        parseStr = parseStr.replace("\n", "")
+        parseStr = parseStr.replace("\\l", "\n")
+        
+        parselist = parseStr.split("];")
+        file = open("parselistcall.txt",'w')
+        file.write("%s" % parselist)
+        file.close()
+        for i in parselist:
+            if i.find("->") == -1 and i != '':
+                start = i.find("label=") + 7
+                end = i[start:].index("\"") + start
+                # label is the content of the node
+                label = i[start : end]
+                label = label.replace("\\", "")
+                
+                start = i[end:].index("P 4 ") + end + 4
+                end = i[start:].index("\"") + start
+                
+                points = i[start:end]
+                points.strip()
+                points = points.split(" ")
+                width = string.atof(points[0]) - string.atof(points[2])
+                height = string.atof(points[3]) - string.atof(points[5])
+                point_x = string.atof(points[2])
+                point_y = self.transform(string.atof(points[3]), pagesize[1])
+                # this point is the left-top point
+                point = [point_x, point_y]
+                
+                node = Node(point[0], point[1], width, height)
+                node.setText_call(label)
+                node.setHint(label)
+                nodeList.append(node)
+
+            elif i != '':
+                i = i.replace("\\", "")
+                
+                color = i[i.index("color=")+6:i.index(", pos")]
+
+
+
+                path = i[i.index("pos=\"e,")+7:i.index("\", _draw_=")]
+                path = path.replace(",", " ")
+                path = path.split(" ")
+                path = path[2:]
+                
+                
+                for j in range(0, len(path)):
+                    if j % 2 == 1:
+                        path[j] = self.transform(string.atof(path[j]), pagesize[1])
+                    else:
+                        path[j] = string.atof(path[j])
+                    
+                arrow = i[i.rindex("P 3 ")+4: i.rindex(" \"")]
+                arrow = arrow.split(" ")
+                
+                for j in range(0, len(arrow)):
+                    if j % 2 ==1:
+                        arrow[j] = self.transform(string.atof(arrow[j]), pagesize[1])
+                    else:
+                        arrow[j] = string.atof(arrow[j])
+                
+
+                link = Link()
+                link.setColor(color)
+                link.drawLine(path)
+                link.drawArrow(arrow)
+                linkList.append(link)
+      
+        return [pagesize, nodeList, linkList]
 
     

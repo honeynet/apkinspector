@@ -186,9 +186,10 @@ class startQT(QMainWindow, Ui_mainWindow):
         dlg = QFileDialog(self)
         filename = dlg.getOpenFileName(self, self.tr("Open APK File"), QString(),  self.tr("APK Files Odex Files(*.*)"))
         filetype = filename.split('.', 1)[1]
-        QMessageBox.warning(self ,'file', filetype)
+#        QMessageBox.warning(self ,'file', filetype)
         if filetype == 'apk':
              Global.CONFIG = {"CFG":1, "Dalvik":1, "Java":0, "Bytecode":1, "Smali":1, "CallIn":1, "CallOut":1, "Permission":1, "Manifest":1}
+#add support for odex
         if filetype == 'odex':
              Global.CONFIG = {"CFG":1, "Dalvik":1, "Java":0, "Bytecode":1, "Smali":1, "CallIn":1, "CallOut":1, "Permission":1, "Manifest":0}
         
@@ -930,18 +931,20 @@ class startQT(QMainWindow, Ui_mainWindow):
         xdotc = XDot(method, Global.VM, Global.VMX)
 #        xdotc.method2xdot()
 
-#        xdotc.call2xdot(methodInvokeList, allmethod)
-#        [pagesize, nodeList, linkList] = xdotc.parse()
-#        wnd = QtSvg.QsvgWidget(self)
+        xdotc.call2xdot(methodInvokeList, allmethod)
+        [pagesize, nodeList, linkList] = xdotc.parsecall()
+
+#        wnd = QtSvg.QSvgRenderer(self)
 #        wnd.load("3.svg")
 #        wnd.show
         print "why do not show show?"
+ 
         print nodeList
         print linkList
         #time.sleep(10)
         #print "sleep the callin"
         self.Graph_call.setPageSize(pagesize)
-        self.Graph_call.show(nodeList, linkList)
+        self.Graph_call.showcall(nodeList, linkList)
       
 
         callInContent = "************************Call In*************************\n"
@@ -1056,7 +1059,7 @@ class startQT(QMainWindow, Ui_mainWindow):
         Slot: show the infomation about this software when the user clicks the About option.
         """
         self.msgbox = newMessageBox()
-        self.msgbox.setText("APKinspector\n\nAuthor:  CongZheng(CN)\nMentor: Ryan W Smith(US), Anthony Desnos(FR)\nSupported by the Honeynet Project and Gsoc2011")
+        self.msgbox.setText("APKinspector\n\nAuthor:  CongZheng(CN) YuanTian(CN)\nMentor: Ryan W Smith(US), Anthony Desnos(FR)\nSupported by the Honeynet Project and Gsoc2011")
         self.msgbox.setWindowTitle("About")
         pixmap = QPixmap("./src/images/logo.png")
         pixmap = pixmap.scaled(100, 100, Qt.KeepAspectRatio)
