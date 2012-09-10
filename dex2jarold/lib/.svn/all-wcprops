@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar/lib
+END
+asm-debug-all-3.2.jar
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar/lib/asm-debug-all-3.2.jar
+END
+commons-io-2.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar/lib/commons-io-2.0.jar
+END
+slf4j-api-1.5.6.jar
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar/lib/slf4j-api-1.5.6.jar
+END
+slf4j-simple-1.5.6.jar
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar/lib/slf4j-simple-1.5.6.jar
+END
+dex2jar-0.0.7.8-SNAPSHOT.jar
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/ndrc10/!svn/ver/17/trunk/appanalyzer/static/dex2jar/lib/dex2jar-0.0.7.8-SNAPSHOT.jar
+END

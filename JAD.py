@@ -19,7 +19,8 @@ def dex2jar(filename):
     if os.system(cmd1) !=0:
         return 0
     
-    newfilename = os.path.split(filename)[-1] + ".dex2jar.jar"
+    newfilename = os.path.split(filename)[-1]
+    newfilename = os.path.splitext(newfilename)[0] + "_dex2jar.jar"
     cmd2 = "mv " + os.path.dirname(filename) + "/" + newfilename + " " + SYSPATH + "/temp/"
     if os.system(cmd2) !=0:
         return 0

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">虚拟来电</string>
+    <string name="txtPhoneNum">来电号码</string>
+    <string name="txtPhonerName">联 系 人</string>
+    <string name="btnPhonerList">选择</string>
+    <string name="btnRingList">选择铃声</string>
+    <string name="btnContentSet">来电设置</string>
+    <string name="btnPreView">预览</string>
+    <string name="btnCallStart">启动</string>
+    <string name="btnCallStop">退出</string>
+    <string name="ContactsTitle">选择联系人</string>
+</resources>

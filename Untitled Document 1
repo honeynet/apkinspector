@@ -1,0 +1,21 @@
+##################################################
+#yuan Navigation_Back:
+##################################################
+""" 
+   @pyqtSignature("")
+    def On_pushbutton_Back_clicked(self,checked):
+        print "yyyyyyyyybackbackback"
+    @pyqtSignature("")
+    def On_actionBack_trigered(self):
+        print "actionbackactionback"
+
+        if history == 0:
+            print "please choose a method first"
+        return
+        else:
+        #read method from history
+            locateMethod(self, name, index)
+    
+    
+"""
+

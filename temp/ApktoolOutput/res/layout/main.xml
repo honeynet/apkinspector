@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout android:id="@id/widget30" android:background="#ffccffff" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textColor="@drawable/black" android:id="@id/txtPhoneNum" android:layout_width="64.0px" android:layout_height="21.0px" android:text="@string/txtPhoneNum" android:layout_x="13.0px" android:layout_y="15.0px" />
+    <TextView android:textColor="@drawable/black" android:id="@id/txtPhonerName" android:layout_width="61.0px" android:layout_height="21.0px" android:text="@string/txtPhonerName" android:layout_x="13.0px" android:layout_y="69.0px" />
+    <EditText android:textSize="18.0sp" android:id="@id/editPhoneNum" android:layout_width="223.0px" android:layout_height="45.0px" android:text="" android:phoneNumber="true" android:layout_x="86.0px" android:layout_y="2.0px" />
+    <EditText android:textSize="18.0sp" android:id="@id/editPhonerName" android:layout_width="145.0px" android:layout_height="45.0px" android:text="" android:layout_x="86.0px" android:layout_y="56.0px" />
+    <Button android:id="@id/btnPhonerList" android:layout_width="72.0px" android:layout_height="45.0px" android:text="@string/btnPhonerList" android:layout_x="240.0px" android:layout_y="56.0px" />
+    <Button android:id="@id/btnRingList" android:layout_width="120.0px" android:layout_height="45.0px" android:text="@string/btnRingList" android:layout_x="20.0px" android:layout_y="123.0px" />
+    <Button android:id="@id/btnContentSet" android:layout_width="120.0px" android:layout_height="45.0px" android:text="@string/btnContentSet" android:layout_x="177.0px" android:layout_y="122.0px" />
+    <TimePicker android:id="@id/timePhoneCall" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_x="47.0px" android:layout_y="184.0px" />
+    <Button android:id="@id/btnPreView" android:layout_width="90.0px" android:layout_height="50.0px" android:text="@string/btnPreView" android:layout_x="10.0px" android:layout_y="362.0px" />
+    <Button android:id="@id/btnCallStart" android:layout_width="90.0px" android:layout_height="50.0px" android:text="@string/btnCallStart" android:layout_x="117.0px" android:layout_y="361.0px" />
+    <Button android:id="@id/btnCallStop" android:layout_width="90.0px" android:layout_height="50.0px" android:text="@string/btnCallStop" android:layout_x="223.0px" android:layout_y="360.0px" />
+</AbsoluteLayout>

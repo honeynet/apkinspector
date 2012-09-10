@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/widget46" android:background="@drawable/incoming" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/imgContactPhoto" android:layout_width="96.0px" android:layout_height="96.0px" android:layout_marginLeft="112.0px" android:layout_marginTop="80.0px" android:src="@drawable/pic" android:layout_alignParentTop="true" android:layout_centerHorizontal="true" />
+    <ImageButton android:id="@id/ibtnAnswerDial" android:layout_width="96.0px" android:layout_height="96.0px" android:layout_marginLeft="10.0px" android:layout_marginBottom="15.0px" android:src="@drawable/answer_dial" android:layout_alignParentLeft="true" android:layout_alignParentBottom="true" />
+    <ImageButton android:id="@id/ibtnHangupDial" android:layout_width="96.0px" android:layout_height="96.0px" android:layout_marginLeft="214.0px" android:layout_marginBottom="15.0px" android:src="@drawable/hangup_dial" android:layout_alignParentLeft="true" android:layout_alignParentBottom="true" />
+    <TextView android:textSize="24.0sp" android:textStyle="bold" android:gravity="center" android:id="@id/txtCallinName" android:layout_width="110.0px" android:layout_height="wrap_content" android:layout_marginTop="15.0px" android:text="李云宏" android:layout_below="@id/imgContactPhoto" android:layout_alignRight="@id/imgContactPhoto" />
+    <TextView android:textSize="16.0sp" android:gravity="center" android:id="@id/txtCallinNum" android:layout_width="110.0px" android:layout_height="wrap_content" android:layout_marginTop="10.0px" android:text="13272910117" android:layout_below="@id/txtCallinName" android:layout_alignRight="@id/txtCallinName" />
+</RelativeLayout>

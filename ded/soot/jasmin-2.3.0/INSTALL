@@ -1,0 +1,67 @@
+December 3, 2004 - Jennifer Lhotak
+To Compile Jasmin: 
+
+We've made a new build.xml file so Jasmin can be built using ant. 
+
+The first time you run it it will ask you to copy ant.settings.template to ant.settings and to set the variables in that file. (In particular the jav_cup.jar variable)
+
+At this time the only dependency is some version of Java Cup. Note we no longer distribute Cup with Jasmin. A maintained and up-to-date version of Cup is distributed with Polyglot which is also a dependency of Soot (just like this version of Jasmin). Therefore we recommend that you use that version of Cup. You may set the java_cup.jar variable to be a path to the entire Polyglot jar distributed with Soot and everything will work fine.
+
+To run ant to compile Jasmin use:
+
+$ ant
+
+To build a Jasmin jar, that will be put in the lib directory use:
+
+$ ant jasmin-jar
+
+Additionally, you may compile the individual parts of jasmin, jas and scm by using:
+
+$ ant jas
+
+or
+
+$ ant scm
+
+
+January 25, 2001 -PL
+updated May 3, 2001 - PL
+
+How to compile jasmin:
+
+The UNIX shell-script bin/compile_all.sh ('sh ./bin/compile_all.sh') 
+should be able to recompile all classes under any JDK.  A user can 
+compile each constituent package manually by following below instructions.
+
+- compile jas (following instructions are from lib/jas/src/compile.sh)
+  * from lib/jas/src directory,
+  *  create empty classes subdirectory
+  *  javac -d classes jas/*.java (ignoring warnings)
+  *  cd scm
+  *  export CLASSPATH=$(JASMIN_ROOT)/lib/jas/src/classes
+  *  javac -d . autogen/autogen.java
+  *  java -cp .:$CLASSPATH autogen
+  *  cd ..
+  *  javac -d classes scm/*.java
+- copy jas class files to the classes directory
+  * cp -a $(JASMIN_ROOT)/lib/jas/src/classes/* $(JASMIN_ROOT)/classes
+
+- compile java_cup and java_cup runtime ( lib/cup/compile.sh )
+  * cd $(JASMIN_ROOT)/lib/cup
+  * create empty classes subdirectory
+  * javac -d ./classes src/java_cup/*.java src/java_cup/runtime/*.java
+  * cp ./classes/* ${JASMIN_ROOT}/classes
+  
+- (optional) compile jasmin's javacup parser
+  * first, add java_cup package to the class path
+  *  export CLASSPATH=${JASMIN_ROOT}/classes:${CLASSPATH}
+  *  cd ${JASMIN_ROOT}/src
+  *  (mkdir classes; cd classes)
+  *  java java_cup.Main < ../jasmin/parser.cup
+  *  mv sym.java parser.java ../jasmin
+
+- compile jasmin ( src/compile.sh )
+  * export CLASSPATH=$(JASMIN_ROOT)/classes
+  * cd $(JASMIN_ROOT)/src
+  * javac -d classes jasmin/*.java
+  * mv classes/* ${JASMIN_ROOT}/classes

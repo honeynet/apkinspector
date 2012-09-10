@@ -3,6 +3,9 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 import sys
+import time
+import os
+import tkMessageBox
 sys.path.append("./src/images")
 sys.path.append("./UI")
 
@@ -30,7 +33,9 @@ from ConfigurationDialog import *
 from MyThread import *
 from ProgressDialog import *
 from APKtool import *
-
+from Graphcall import *
+from PyQt4 import QtGui, QtSvg
+import sys
 
 class startQT(QMainWindow, Ui_mainWindow):
     """
@@ -38,7 +43,9 @@ class startQT(QMainWindow, Ui_mainWindow):
     """
     path2method = {}            # the dictionary from path to method object
     CL = None                   # the instance of CLASS class
-    Graph = None                # the instance of GraphicsView class
+    Graph = None 
+    Graph_call = None
+               # the instance of GraphicsView class
     findHistroyList = None      # the histroy list for findDialog
     callInOut = None            # the instance of class CallInOut
     apktool = None              # the instance of class APKtool
@@ -106,13 +113,19 @@ class startQT(QMainWindow, Ui_mainWindow):
         self.textEdit_permission.setLineWrapMode(QTextEdit.NoWrap)
         
         # initialize the Call in/out Tab
+        self.Graph_call = GraphicsView()
+        self.Graph_call.initShow(self.tab_callinout, self.gridLayout_16, self.tabWidget, self.plainTextEdit_dalvik)
         sizePolicy.setHeightForWidth(self.textEdit_call.sizePolicy().hasHeightForWidth())
         self.textEdit_call.setSizePolicy(sizePolicy)
         self.textEdit_call.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.textEdit_call.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.textEdit_call.setLineWrapMode(QTextEdit.NoWrap)        
-        
-        # initialize the CFG Tab's Graph scene
+        self.textEdit_call.setLineWrapMode(QTextEdit.NoWrap) 
+     
+        print "##Intitialize CALLINOUT"      
+
+   
+  
+        # Yuan initialize the CFG Tab's Graph scene
         self.Graph = GraphicsView()
         self.Graph.initShow(self.tab_cfg, self.gridLayout_11, self.tabWidget, self.plainTextEdit_dalvik)
         
@@ -122,32 +135,64 @@ class startQT(QMainWindow, Ui_mainWindow):
         self.plainTextEdit_bytecode.setReadOnly(1)
         
         # connect the signal and slot
+        #yuan: connect back
+        #self.connect(self.back, SIGNAL("clicked()"), self.backon)
+        #self.connect(self.forward, SIGNAL("clicked()"), self.forwardon)
         self.connect(self.pushButton, SIGNAL("clicked()"), self.searchAndFilter)
         self.connect(self.lineEdit, SIGNAL("editingFinished()"), self.refreshTreeWidget)
         self.connect(self.lineEdit, SIGNAL("textChanged()"), self.refreshTreeWidget)
-        
+        #self.connect(self.make, SIGNAL("clicked()"), self.makesmali)
+
+
         # define the global variable
         import Global
         Global.GRAPH = self.Graph
+        #yuan count the number of method called NAV_NO and NAV_P is the current pointed method
+        Global.NAV_NO = 0
+        Global.NAV_P = 0
         Global.MAINWINDOW = self
-        Global.CONFIG = {"CFG":1, "Dalvik":1, "Java":1, "Bytecode":1, "Smali":1, "CallIn":1, "CallOut":1, "Permission":1, "Manifest":1}
+        Global.currentclass = ""
+        # yuan config the flag
+        Global.CONFIG = {"CFG":1, "Dalvik":1, "Java":0, "Bytecode":1, "Smali":1, "CallIn":1, "CallOut":1, "Permission":1, "Manifest":1}
         
         
         # initialize the class attribute
         self.findHistroyList = QStringList()
+ 
+    
+    @pyqtSignature("")
+    def on_actBuild_triggered(self): 
+        self.makesmali()
+    
+    @pyqtSignature("")
+    def on_actForward_triggered(self):  
+        self.forwardon()
+    
+    @pyqtSignature("")
+    def on_actBack_triggered(self): 
+        self.backon()
+    
     
     @pyqtSignature("")
     def on_actNew_triggered(self):
         """
         Slot: When the user click the New button, this slot will receive the New signal. 
         """
-        
+        import Global
         # initialize the class attribute
         self.path2method = {}
 
         # create a file dialog to open an apk file
         dlg = QFileDialog(self)
-        filename = dlg.getOpenFileName(self, self.tr("Open APK File"), QString(),  self.tr("APK Files(*.apk)"))
+        filename = dlg.getOpenFileName(self, self.tr("Open APK File"), QString(),  self.tr("APK Files Odex Files(*.*)"))
+        filetype = filename.split('.', 1)[1]
+        QMessageBox.warning(self ,'file', filetype)
+        if filetype == 'apk':
+             Global.CONFIG = {"CFG":1, "Dalvik":1, "Java":0, "Bytecode":1, "Smali":1, "CallIn":1, "CallOut":1, "Permission":1, "Manifest":1}
+        if filetype == 'odex':
+             Global.CONFIG = {"CFG":1, "Dalvik":1, "Java":0, "Bytecode":1, "Smali":1, "CallIn":1, "CallOut":1, "Permission":1, "Manifest":0}
+        
+
         if not zipfile.is_zipfile(filename):
             msgbox = QMessageBox()
             msgbox.setText("Please select the APK file correctly!")
@@ -161,7 +206,7 @@ class startQT(QMainWindow, Ui_mainWindow):
             thread.start()            
             progress.run()
 
-            import Global
+
             # judge this APK whether it is valid or invalid
             if not Global.APK.isVaildAPK():
                 msgbox = QMessageBox()
@@ -173,7 +218,8 @@ class startQT(QMainWindow, Ui_mainWindow):
             # clear all the last apk's info
             self.listWidget_strings.clear()
             self.listWidget_classes.clear()
-            self.Graph.scene.clear()
+ #           self.Graph.scene.clear()
+ #           self.Graph_call.scene.clear()
             self.plainTextEdit_dalvik.setPlainText("")
             self.plainTextEdit_java.setPlainText("")
             self.plainTextEdit_bytecode.setPlainText("")
@@ -182,24 +228,27 @@ class startQT(QMainWindow, Ui_mainWindow):
             self.textEdit_call.setText("")
             self.textBrowser.setText("")
             self.plainTextEdit_dalvik.reset()
-
+      
             # start to show some infomation of the apk
             self.Tab_APKInfo(Global.APK)
             self.Tab_Methods(Global.APK, Global.VM, Global.VMX)
             self.Tab_Strings()
             self.Tab_Classes()
-            
+            print "Before show information"
             if Global.CONFIG["Java"] == 1:
                 self.Tab_Files(str(filename))
             else:
                 self.treeWidget_files.clear()
             
-            if Global.CONFIG["Smali"] ==1 or Global.CONFIG["Manifest"] ==1:
+            if Global.CONFIG["Smali"] ==1 or Global.CONFIG["Manifest"] ==1:            
+                print "config to show apktool"
                 self.apktool = APKtool()
-        
+        #yuan build callinout tree
             if Global.CONFIG["CallIn"] == 1 or Global.CONFIG["CallOut"] == 1:
                 methodInvokeList = self.CL.get_methodInvoke()
                 self.callInOut = CallInOut(methodInvokeList)
+  #              mcalltree = self.callInOut.callTree()
+                
             else:
                 self.textEdit_call.setText("")
              
@@ -216,13 +265,117 @@ class startQT(QMainWindow, Ui_mainWindow):
             self.tabWidget_2.setCurrentIndex(4)
             self.tabWidget.setCurrentIndex(7)
 
+##################################################
 
+
+
+  
+##################################################
+#yuan Navigation_Back:
+    @pyqtSignature("")
+    def backon(self):
+        import linecache
+        import Global
+        print "actionbackactionback" 
+        if Global.NAV_P == 0 or Global.NAV_P == 1:
+            print "no history!"
+            QMessageBox.warning(self ,'warning', 'no history!')
+        else:
+            linecache.clearcache()
+            Global.NAV_P -= 1
+            i = 2*Global.NAV_P
+            print "NAV_P="
+            print Global.NAV_P
+            print "NAV_NO="
+            print Global.NAV_NO
+#            method = self.path2method[1]
+            pathindex = linecache.getline('1.txt',i-1)
+            pathindex = pathindex.strip()
+            classname = linecache.getline('1.txt',i)
+            classname = classname[:-1]
+            Global.current
+            print "get from 1.txt"
+            print pathindex
+            print classname
+            method = self.path2method[pathindex]
+            Global.currentmethod = method
+            QMessageBox.information(self ,'Current Method', method)
+            print "the type of method is %s, the type of classname is %s" %(type(method),type(classname))
+            self.displayMethod(method,classname)
+            Global.currentclass = classname
+            QMessageBox.information(self ,'Current Class', classname)
+            Global.currentmethod = method
+            QMessageBox.information(self ,'Current method', method)
+            print method
+            print classname
+
+#define compilesmali
+    def makesmali(self): 
+        import Global
+        text = self.plainTextEdit_smali.toPlainText()
+        #print text
+        file = open("smali.smali",'w')
+        file.write("%s" % text)
+        file.close()
+        classname = Global.currentclass
+        classname = classname[1:-1] + ".smali"
+        print classname
+      
+        classPath = SYSPATH + "/temp/ApktoolOutput/smali/" + str(classname)
+#        classPath = SYSPATH + "/temp/ApktoolOutput/smali/sms_thread.smali"
+        print classPath
+        
+        file = open(classPath,'w')
+        #print file.read()
+        file.write("%s" % text)
+        file.close()
+        cmd = "java -jar smali-1.2.5.jar " +  classPath + " -o class.dex"
+        if os.system(cmd) !=0:
+            QMessageBox.warning(self ,'Compile Smali', 'Fail!')
+            return  0
+        else:
+            QMessageBox.information(self ,'Compile Smali', 'Success!')
+            return  1
+
+    def forwardon(self):
+        import linecache
+        import Global
+        print "actionforward"
+        if Global.NAV_P == Global.NAV_NO:
+            print "no method forward!"
+        else:
+            linecache.clearcache()
+
+            Global.NAV_P += 1
+            i = 2*Global.NAV_P
+            classname = linecache.getline('1.txt',i)
+            pathindex = linecache.getline('1.txt',i-1)
+            pathindex = pathindex.strip()
+            classname = linecache.getline('1.txt',i)
+            classname = classname[:-1]
+    
+            print "get from 1.txt"
+            print pathindex
+            print classname
+            method = self.path2method[pathindex]
+            print "the type of method is %s, the type of classname is %s" %(type(method),type(classname))
+            self.displayMethod(method,classname)
+            Global.currentclass = classname
+            QMessageBox.information(self ,'Current Class', classname)
+            Global.currentmethod = method
+            QMessageBox.information(self ,'Current method', method)
+            print method
+            print classname
+
+
+        
 
 ##################################################
 #Tab_APKInfo:
 #    build the APKInfo Tab  
 ##################################################
-    def Tab_APKInfo(self, apk):        
+    def Tab_APKInfo(self, apk):
+        print "enter APKinfo"       
         self.textEdit_receivers = QTextEdit()
         self.textEdit_receivers.setText(apk.getReceivers()[0])
         self.textEdit_services = QTextEdit()
@@ -252,14 +405,46 @@ class startQT(QMainWindow, Ui_mainWindow):
         # resize the tableWidget for adjusting to the content
         self.tableWidget_apkinfo.resizeColumnsToContents()
         self.tableWidget_apkinfo.resizeRowsToContents()
- 
- 
+
+        permissions = apk.getPermissions()[0]
+        pernum =  apk.getPermissions()[1]
+        print "permission\n\n"
+        print permissions
+        if permissions.find('SET_DEBUG_APP') != -1 :
+            QMessageBox.warning(self ,'Sensitive Permission', 'SET_DEBUG_APP')
+        if permissions.find('SEND_SMS')!= -1 :
+            QMessageBox.warning(self ,'Sensitive Permission', 'SEND_SMS')
+        if permissions.find('WRITE_SMS')!= -1 :
+            QMessageBox.warning(self ,'Sensitive Permission', 'WRITE_SMS')
+        if permissions.find('PHONE_STATE')!= -1 and permissions.find('RECORD_AUDIO')!= -1 and permissions.find('INTERNET')!= -1 :
+            QMessageBox.warning(self ,'Sensitive Permission', 'PHONE_STATE&RECORD_AUDIO&INTERNET')
+        if permissions.find('ACCESS_FINE_LOCATION')!= -1 and permissions.find('RECEIVE_BOOT_COMPLETE')!= -1 and permissions.find('INTERNET')!= -1 :
+            QMessageBox.warning(self ,'Sensitive Permission', 'ACCESS_FINE_LOCATION&RECEIVE_BOOT_COMPLETE&INTERNET')
+        if permissions.find('ACCESS_COARSE_LOCATION')!= -1 and permissions.find('RECEIVE_BOOT_COMPLETE')!= -1 and permissions.find('INTERNET')!= -1 :
+            QMessageBox.warning(self ,'Sensitive Permission', 'ACCESS_COARSE_LOCATION&RECEIVE_BOOT_COMPLETE&INTERNET')
+        if permissions.find('INSTALL_SHORTCUT')!= -1 and permissions.find('UNINSTALL_SHORTCUT')!= -1 :
+            QMessageBox.warning(self ,'Sensitive Permission', 'INSTALL_SHORTCUT&UNINSTALL_SHORTCUT')
+
+        permissions = permissions.split("\n")
+        for i in range(pernum):
+            print "per\n"
+            print permissions[i]
+            
+            if permissions[i] == "android.permission.SET_DEBUG_APP":
+                  QMessageBox.warning(self ,'Sensitive API', 'SET_DEBUG_APP')
+            if permissions[i]  == "android.permission.SEND_SMS\n":
+                 QMessageBox.warning(self ,'Sensitive API', 'SEND_SMS')
+            if permissions[i]  == "android.permission.WRITE_SMS":
+                    QMessageBox.warning(self ,'Sensitive API', 'WRITE_SMS')
+ #       self.sensitiveper(Global.APK)
+
 
     def Tab_Methods(self, a, vm, vmx):
         """
             Build the Method Tab
             @params: the apk, its vm and vmx from Global varibales
         """
+
         self.CL = CLASS(a, vm, vmx)
         classes = self.CL.get_class()
         maxdepth = self.CL.get_maxdepth()
@@ -339,7 +524,48 @@ class startQT(QMainWindow, Ui_mainWindow):
         self.treeWidget_methods.setSelectionBehavior(QAbstractItemView.SelectItems)
 
 
-    def locateMethod(self, item, index):  
+          # after locating the method, get the content for Tab_Dalvik, Tab_CFG, Tab_Bytecode,Tab_CallInOut and Tab_Smali
+    def displayMethod(self,method,classname):
+          import Global
+          print "new new"
+          print classname
+          Global.currentclass = classname
+          if Global.CONFIG["Dalvik"] ==1:
+              self.Tab_Dalvik(method)
+          else:
+              self.plainTextEdit_dalvik.setPlainText("")
+        
+          if Global.CONFIG["CFG"] == 1:
+              self.Tab_CFG(method)
+              self.tabWidget.setCurrentIndex(0)
+          else:
+              print "1"
+ #             self.Graph.scene.clear()
+
+         
+          #yuan display the call graph
+     
+              
+          if Global.CONFIG["CallIn"] == 1 or Global.CONFIG["CallOut"] == 1:
+           
+
+              self.Tab_CallInOut(method)
+          else:
+              self.textEdit_call.setText("")
+            
+          if Global.CONFIG["Smali"] == 1:
+            print "enter show smali"
+            if self.apktool.successFlag == 1:
+                self.Tab_Smali(classname)
+          else:
+              self.plainTextEdit_smali.setPlainText("")
+
+          if Global.CONFIG["Bytecode"] == 1:
+              self.Tab_Bytecode(method)
+          else:
+              self.plainTextEdit_bytecode.setPlainText("")
+
+    def locateMethod(self, item, index):
       """
         Locate the method, which has been clicked.
         @param item : the QtreeWidgetItem object
@@ -352,7 +578,7 @@ class startQT(QMainWindow, Ui_mainWindow):
           parentlist = []
           classname = ""
           parent = item.parent()
- 
+
           while parent :
             parentlist.append(parent.text(index))
             parent = parent.parent()
@@ -362,40 +588,35 @@ class startQT(QMainWindow, Ui_mainWindow):
                   classname += i
               else:
                   classname += i + "/"
-          
+
           path = classname + methodname
           index = item.parent().indexOfChild(item)
           method = self.path2method[str(path) + str(index)]
-          
-          # after locating the method, get the content for Tab_Dalvik, Tab_CFG, Tab_Bytecode,Tab_CallInOut and Tab_Smali
+          print "orignial original"
           import Global
-          if Global.CONFIG["Dalvik"] ==1:
-              self.Tab_Dalvik(method)
-          else:
-              self.plainTextEdit_dalvik.setPlainText("")
-        
-          if Global.CONFIG["CFG"] == 1:
-              self.Tab_CFG(method)
-              self.tabWidget.setCurrentIndex(0)
-          else:
-              self.Graph.scene.clear()
-              
-          if Global.CONFIG["Bytecode"] == 1:
-              self.Tab_Bytecode(method)
-          else:
-              self.plainTextEdit_bytecode.setPlainText("")
-              
-          if Global.CONFIG["CallIn"] == 1 or Global.CONFIG["CallOut"] == 1:
-              self.Tab_CallInOut(method)
-          else:
-              self.textEdit_call.setText("")
-            
-          if Global.CONFIG["Smali"] == 1:
-            if self.apktool.successFlag == 1:
-                self.Tab_Smali(classname)
-          else:
-              self.plainTextEdit_smali.setPlainText("")
-              
+          if Global.NAV_NO == 0:
+              file = open('1.txt','w')
+              file.close
+          Global.NAV_NO += 1
+          Global.NAV_P += 1
+          file = open('1.txt','a')
+ #             file.write("%s\n" % method)
+          pathindex = str(path) + str(index)
+          file.write("%s\n" % pathindex)
+          file.write("%s\n" % classname)
+          file.close
+          print "the type of method is %s, the type of classname is %s" %(type(method),type(classname))
+          print "the path is "
+          print "%s\n" %(str(path) + str(index))
+          print "the classname is "
+          print classname
+
+
+          self.displayMethod(method,classname)
+
+          #yuan record item and index
+
+
 
     def Tab_Dalvik(self, method):
         """
@@ -520,6 +741,8 @@ class startQT(QMainWindow, Ui_mainWindow):
             build the CFG Tab
             @param method: the method which is onclicked
         """
+        print "Tavbcfg"
+     
         if method.get_code() == None:
             self.Graph.scene.clear()
             return
@@ -527,15 +750,25 @@ class startQT(QMainWindow, Ui_mainWindow):
         xdot = XDot(method, Global.VM, Global.VMX)
         xdot.method2xdot()
         [pagesize, nodeList, linkList] = xdot.parse()
+        print "the cfg*****"
+        print nodeList
+        print linkList
+        
         self.Graph.setPageSize(pagesize)
-        self.Graph.show(nodeList, linkList)
+        self.Graph.show(nodeList, linkList)       
+     
         
-        
+    # yuan build the call graph tab
+
+  
+
+    
     def Tab_Files(self, filename):
         """
             build the Files Tab
             @param filename: the opened apk's filename
         """
+        print "enter tabfiles"
         self.treeWidget_files.clear()
         self.treeWidget_files.setColumnCount(2)
         
@@ -549,8 +782,23 @@ class startQT(QMainWindow, Ui_mainWindow):
         self.treeWidget_files.setStyleSheet("QTreeView::item:hover{background-color:rgb(0,255,0,50)}"
                                              "QTreeView::item:selected{background-color:rgb(255,0,0,100)}")
         import Global
-        if Global.FLAG_JAD != 1:
-            return
+        for i in range(100):
+            time.sleep(100)
+            print "########still ded"
+            print i
+            if Global.FLAG_JAD == 1:
+              print "ded finish"
+              break
+#        while True:
+#           time.sleep(100)
+#           i=i+1
+#           print "########still ded"
+#           if Global.FLAG_JAD == 1:
+#             break
+         
+
+#        if Global.FLAG_JAD != 1:
+#            return
 
         rootpath = SYSPATH +  "/temp/java"
         parent = self.treeWidget_files
@@ -635,27 +883,12 @@ class startQT(QMainWindow, Ui_mainWindow):
         """
         # judge the flag for the last class. 
         # if the flag is 1(the last class has a annotation), then save the last annotation.
-        if self.plainTextEdit_smali.currentClass != None:
-            if self.plainTextEdit_smali.classOpened2AnnotationFlag[self.plainTextEdit_smali.currentClass] == 1:
-                self.plainTextEdit_smali.saveAnnotationSmali()
 
         [flag, data] = self.apktool.getSmaliCode(classname)
         if flag == 0:
             pass
         elif flag == 1:
             self.plainTextEdit_smali.setPlainText(data)
-            
-        # add the current opened class to the classOpened2AnnotationFlag dict
-        self.plainTextEdit_smali.addOpenedClass(classname)
-        
-        # if flag is 1, it means that it has created a annotation editor.
-        # it will set the annotation editor to be hidden
-        if self.plainTextEdit_smali.flag ==1:
-            self.plainTextEdit_smali.annotationDockWidget.setVisible(0)
-         
-        # reset the firstOpenFlag when openning a new class
-        self.plainTextEdit_smali.firstOpenFlag = 0
-  
 
     def Tab_Permission(self):
         """
@@ -686,6 +919,31 @@ class startQT(QMainWindow, Ui_mainWindow):
             Build the CallInOut Tab
             @param method: the method whose call in/out methods you'd like to view.
         """
+        
+        import Global
+        if method.get_code() == None:
+            self.Graph_call.scene.clear()
+            return
+            print "why do not show?"
+        methodInvokeList = self.CL.get_methodInvoke()
+        allmethod = self.CL.vm.get_methods()
+        xdotc = XDot(method, Global.VM, Global.VMX)
+#        xdotc.method2xdot()
+
+#        xdotc.call2xdot(methodInvokeList, allmethod)
+#        [pagesize, nodeList, linkList] = xdotc.parse()
+#        wnd = QtSvg.QsvgWidget(self)
+#        wnd.load("3.svg")
+#        wnd.show
+        print "why do not show show?"
+        print nodeList
+        print linkList
+        #time.sleep(10)
+        #print "sleep the callin"
+        self.Graph_call.setPageSize(pagesize)
+        self.Graph_call.show(nodeList, linkList)
+      
+
         callInContent = "************************Call In*************************\n"
         callOutContent = "***********************Call Out************************\n"
         className = method.get_class_name()
@@ -701,6 +959,7 @@ class startQT(QMainWindow, Ui_mainWindow):
             callInList= self.callInOut.searchCallIn(callMethod)
         if Global.CONFIG["CallOut"] == 1:
             callOutList = self.callInOut.searchCallOut(callMethod)
+#        mcalltree = self.callInOut.callTree(callMethod)
         
         for i in callInList:
             temp = i.split("^")
@@ -712,7 +971,13 @@ class startQT(QMainWindow, Ui_mainWindow):
             
         self.textEdit_call.setText(callInContent + "\n\n\n" + callOutContent)
 
- 
+
+           
+
+           
+
+
+
     def searchAndFilter(self):
         """
             search or filter the method/class/string in the line Edit.
@@ -823,7 +1088,25 @@ class startQT(QMainWindow, Ui_mainWindow):
     def on_actCall_in_out_triggered(self):
         """
         Slot: show the call in/out methods
-        """ 
+        """
+        """
+        import Global
+        if method.get_code() == None:
+#            self.Graph_call.scene.clear()
+#            return
+             print "why do not show? actuall"
+  
+        xdot = XDot(method, Global.VM, Global.VMX)
+        xdot.method2xdot()
+        [pagesize, nodeList, linkList] = xdot.parse()
+        print nodeList
+        print linkList
+        print "why do not show actul show?"
+        self.Graph_call.setPageSize(pagesize)
+        self.Graph_call.show(nodeList, linkList, self.gridLayout_16)
+        """
+
+
         callInOutDialog = CallInOutDialog()
         callInOutDialog.exec_()
         
@@ -834,8 +1117,10 @@ class startQT(QMainWindow, Ui_mainWindow):
         callMethod = callInOutDialog.callMethod
 
         if callInOutDialog.callInFlag == 1:
+            print "enter callin"
             callInList= self.callInOut.searchCallIn(callMethod)
         if callInOutDialog.callOutFlag == 1:
+            print "enter callout"
             callOutList = self.callInOut.searchCallOut(callMethod)
         
         for i in callInList:

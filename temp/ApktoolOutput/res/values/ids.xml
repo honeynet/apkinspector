@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="widget46">false</item>
+    <item type="id" name="imgContactPhoto">false</item>
+    <item type="id" name="txtCallinName">false</item>
+    <item type="id" name="txtCallinNum">false</item>
+    <item type="id" name="ibtnAnswerDial">false</item>
+    <item type="id" name="ibtnHangupDial">false</item>
+    <item type="id" name="widget0">false</item>
+    <item type="id" name="widget28">false</item>
+    <item type="id" name="editRingTime">false</item>
+    <item type="id" name="chkVibrate">false</item>
+    <item type="id" name="widget33">false</item>
+    <item type="id" name="sprCallVoice">false</item>
+    <item type="id" name="chkPlayLoop">false</item>
+    <item type="id" name="editPlayTime">false</item>
+    <item type="id" name="widget37">false</item>
+    <item type="id" name="btnRecord">false</item>
+    <item type="id" name="btnOk">false</item>
+    <item type="id" name="btnCancel">false</item>
+    <item type="id" name="contactEntryText">false</item>
+    <item type="id" name="username_view">false</item>
+    <item type="id" name="editVoiceName">false</item>
+    <item type="id" name="widget30">false</item>
+    <item type="id" name="txtPhoneNum">false</item>
+    <item type="id" name="txtPhonerName">false</item>
+    <item type="id" name="editPhoneNum">false</item>
+    <item type="id" name="editPhonerName">false</item>
+    <item type="id" name="btnPhonerList">false</item>
+    <item type="id" name="btnRingList">false</item>
+    <item type="id" name="btnContentSet">false</item>
+    <item type="id" name="timePhoneCall">false</item>
+    <item type="id" name="btnPreView">false</item>
+    <item type="id" name="btnCallStart">false</item>
+    <item type="id" name="btnCallStop">false</item>
+</resources>

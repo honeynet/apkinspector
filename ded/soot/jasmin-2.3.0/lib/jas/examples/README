@@ -1,0 +1,52 @@
+This contains three examples of using the assembler
+from java and from the script
+
+Look up http://www.blackdown.org/~kbs/jas.html for more
+documentation. This only tells you how to run the examples.  The
+documentation is very Unix centric, I apologize.... I have not had
+time to set this up on the PC's yet.
+
+
+simple.java:
+simple.jas:
+
+  Unexciting program that generates a do nothing class.
+
+  Go up a directory and compile simple.java. Run the program,
+  which generates the bytecode. Disassemble the bytecode
+
+  % (cd ..; javac -d . examples/simple.java; java simple; javap -p -c out)
+
+  Same thing, but using the script instead of java directly.
+
+  % (cd ..;  java scm.driver examples/simple.jas; javap -p -c out)
+
+
+hworld.java:
+hworld.jas:
+
+  Print a string in a loop.
+
+  % (cd ..; javac -d . examples/hworld.java; java hworld; java out)
+
+  As before, but use script instead.
+
+  % (cd ..; java scm.driver examples/hworld.jas; java out)
+
+exprcomp.java:
+
+  Primitive runtime expression compiler. It translates arithmetic
+  expressions into bytecode and loads it on the fly as a class, which
+  is run to get the answer. test.inp is an example of the sort of
+  arithmetic expressions it translates.
+
+  % (cd ..; javac -d . examples/exprcomp.java; java exprcomp examples/test.inp)
+
+exprcomp.jas:
+
+   Primitive compiler for jas arithmetic expressions (in jas).
+   jas is fairly expressive, thats about the only point of this
+   exercise ;-) Unlike the java version, this gets written out
+   into a file which you'll have to run to get the results.
+
+  % (cd ..; java scm.driver examples/exprcomp.jas; java results)

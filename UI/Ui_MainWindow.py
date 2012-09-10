@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/administrator/gsoc-AndroidGui/UI/MainWindow.ui'
+# Form implementation generated from reading ui file '/home/administrator/apkinspector/UI/MainWindow.ui'
 #
-# Created: Mon Aug 22 00:40:55 2011
+# Created: Sun Sep  9 18:20:10 2012
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -302,6 +302,22 @@ class Ui_mainWindow(object):
         self.actCall_in_out.setObjectName(_fromUtf8("actCall_in_out"))
         self.actConfiguration = QtGui.QAction(mainWindow)
         self.actConfiguration.setObjectName(_fromUtf8("actConfiguration"))
+        self.actBack = QtGui.QAction(mainWindow)
+        self.actBack.setCheckable(False)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(_fromUtf8(":/src/images/back.png")), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        self.actBack.setIcon(icon4)
+        self.actBack.setObjectName(_fromUtf8("actBack"))
+        self.actForward = QtGui.QAction(mainWindow)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(_fromUtf8(":/src/images/forward.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actForward.setIcon(icon5)
+        self.actForward.setObjectName(_fromUtf8("actForward"))
+        self.actBuild = QtGui.QAction(mainWindow)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(_fromUtf8(":/src/images/build.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actBuild.setIcon(icon6)
+        self.actBuild.setObjectName(_fromUtf8("actBuild"))
         self.menuFile.addAction(self.actNew)
         self.menuFile.addAction(self.actOpen)
         self.menuFile.addAction(self.actClose)
@@ -327,9 +343,14 @@ class Ui_mainWindow(object):
         self.toolBar.addAction(self.actNew)
         self.toolBar.addAction(self.actOpen)
         self.toolBar.addAction(self.actSave)
+        self.toolBar.addSeparator()
+        self.toolBar.addAction(self.actBack)
+        self.toolBar.addAction(self.actForward)
+        self.toolBar.addSeparator()
+        self.toolBar.addAction(self.actBuild)
 
         self.retranslateUi(mainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
@@ -385,6 +406,15 @@ class Ui_mainWindow(object):
         self.About.setText(QtGui.QApplication.translate("mainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
         self.actCall_in_out.setText(QtGui.QApplication.translate("mainWindow", "Call in/out", None, QtGui.QApplication.UnicodeUTF8))
         self.actConfiguration.setText(QtGui.QApplication.translate("mainWindow", "Configuration", None, QtGui.QApplication.UnicodeUTF8))
+        self.actBack.setText(QtGui.QApplication.translate("mainWindow", "Back", None, QtGui.QApplication.UnicodeUTF8))
+        self.actBack.setToolTip(QtGui.QApplication.translate("mainWindow", "Backward", None, QtGui.QApplication.UnicodeUTF8))
+        self.actBack.setShortcut(QtGui.QApplication.translate("mainWindow", "Ctrl+B", None, QtGui.QApplication.UnicodeUTF8))
+        self.actForward.setText(QtGui.QApplication.translate("mainWindow", "Forward", None, QtGui.QApplication.UnicodeUTF8))
+        self.actForward.setToolTip(QtGui.QApplication.translate("mainWindow", "Forward", None, QtGui.QApplication.UnicodeUTF8))
+        self.actForward.setShortcut(QtGui.QApplication.translate("mainWindow", "Ctrl+F", None, QtGui.QApplication.UnicodeUTF8))
+        self.actBuild.setText(QtGui.QApplication.translate("mainWindow", "Build", None, QtGui.QApplication.UnicodeUTF8))
+        self.actBuild.setToolTip(QtGui.QApplication.translate("mainWindow", "BuildAPK", None, QtGui.QApplication.UnicodeUTF8))
+        self.actBuild.setShortcut(QtGui.QApplication.translate("mainWindow", "Ctrl+B", None, QtGui.QApplication.UnicodeUTF8))
 
 import mainwindow_rc
 

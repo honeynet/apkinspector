@@ -1,0 +1,8 @@
+a = 10;
+println a;
+
+b = a + 5;
+
+println (b);
+println(a*b +2);
+

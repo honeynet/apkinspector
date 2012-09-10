@@ -1,0 +1,116 @@
+;;; Simple arithmetic expression compiler for jas in jas.
+;;;
+;;; The compiler is defined in the function
+;;; compile-expression
+;;;
+;;; use as (for instance)
+;;; (compile-expression (quote (+ (* 2 (+ 1 3)) 1)))
+;;;
+;;; This will generate a standalone program called results.class
+;;; Run the bytecode interpreter on it as:
+;;;
+;;; % java results
+;;;
+;;; which will print the result of the expression
+
+(define compile-expression
+  (lambda (expr)
+    (real-compile-expression expr)
+    (dump-code)))
+
+;; The fun part...
+
+(define real-compile-expression
+  (lambda (expr)
+    (cond
+
+     ((num? expr)
+      (compile-number expr))
+
+     (1 (progn
+         (real-compile-expression (get-op1 expr))
+         (real-compile-expression (get-op2 expr))
+         (compile-op (get-op expr))
+         (set! cur-stack-height (- cur-stack-height 1)))))))
+
+;; Ah well. Back to boring bookkeeping.
+
+
+(define compile-number
+  (lambda (num)
+    (append-insn (bipush num))
+    (set! cur-stack-height (+ 1 cur-stack-height))
+    (cond
+     ((< max-stack-height cur-stack-height)
+      (set! max-stack-height cur-stack-height)))))
+
+(define compile-op
+  (lambda (op)
+    (cond
+     ((eq? op (quote +)) (append-insn (iadd)))
+     ((eq? op (quote -)) (append-insn (isub)))
+     ((eq? op (quote *)) (append-insn (imul)))
+     ((eq? op (quote /)) (append-insn (idiv))))))
+
+(define get-op1
+  (lambda (expr) (car (cdr expr))))
+(define get-op2
+  (lambda (expr) (car (cdr (cdr expr)))))
+(define get-op
+  (lambda (expr) (car expr)))
+
+(define append-insn
+  (lambda (insn)
+    (jas-code-addinsn my-code insn)))
+
+(define cur-stack-height 1)
+(define max-stack-height 1)
+
+(define my-code (make-code))
+(define my-init-code (make-code))
+
+                                        ; define the main() portion,
+                                        ; and the call to print out the
+                                        ; results.
+(define append-sequence
+  (lambda (code-part insn-list)
+    (mapcar (lambda (insn) (jas-code-addinsn code-part insn))
+            insn-list)))
+
+(append-sequence
+ my-init-code
+ (quote
+  ((aload_0)
+   (invokenonvirtual (make-method-cpe "java/lang/Object" "<init>" "()V"))
+   (return))))
+
+(define dump-code
+  (lambda ()
+    (define my-env (make-class-env))
+    (jas-class-setclass my-env (make-class-cpe "results"))
+    (jas-class-setsuperclass my-env (make-class-cpe "java/lang/Object"))
+    (jas-class-addmethod my-env acc-public "<init>" "()V" my-init-code ())
+    (append-sequence
+     my-code
+     (quote
+      ((getstatic
+        (make-field-cpe "java/lang/System" "out" "Ljava/io/PrintStream;"))
+       (swap)
+       (invokevirtual (make-method-cpe
+                       "java/io/PrintStream" "println" "(I)V"))
+       (return))))
+    (jas-code-stack-size my-code max-stack-height)
+    (jas-class-addmethod my-env
+                         (| acc-public acc-static)
+                         "main" "([Ljava/lang/String;)V" my-code ())
+    (jas-class-write my-env
+                     (make-outputstream "results.class"))))
+
+;;;
+;;; example usage of compiler.
+;;;
+;;; run the compiled class with
+;;; % java results
+;;; to get the answer.
+
+(compile-expression (quote (+ (* 2 (+ 1 3)) 1)))

@@ -67,7 +67,7 @@
         <item row="0" column="0">
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <property name="documentMode">
            <bool>false</bool>
@@ -494,6 +494,11 @@
    <addaction name="actNew"/>
    <addaction name="actOpen"/>
    <addaction name="actSave"/>
+   <addaction name="separator"/>
+   <addaction name="actBack"/>
+   <addaction name="actForward"/>
+   <addaction name="separator"/>
+   <addaction name="actBuild"/>
   </widget>
   <action name="actNew">
    <property name="icon">
@@ -598,6 +603,55 @@
   <action name="actConfiguration">
    <property name="text">
     <string>Configuration</string>
+   </property>
+  </action>
+  <action name="actBack">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normalon>:/src/images/back.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Back</string>
+   </property>
+   <property name="toolTip">
+    <string>Backward</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actForward">
+   <property name="icon">
+    <iconset resource="../src/images/mainwindow.qrc">
+     <normaloff>:/src/images/forward.png</normaloff>:/src/images/forward.png</iconset>
+   </property>
+   <property name="text">
+    <string>Forward</string>
+   </property>
+   <property name="toolTip">
+    <string>Forward</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actBuild">
+   <property name="icon">
+    <iconset resource="../src/images/mainwindow.qrc">
+     <normaloff>:/src/images/build.png</normaloff>:/src/images/build.png</iconset>
+   </property>
+   <property name="text">
+    <string>Build</string>
+   </property>
+   <property name="toolTip">
+    <string>BuildAPK</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
    </property>
   </action>
  </widget>

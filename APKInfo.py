@@ -1,4 +1,20 @@
+# -*- coding: utf-8 -*-
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+
 import sys
+import time
+import os
+import tkMessageBox
+sys.path.append("./src/images")
+sys.path.append("./UI")
+
+if sys.path[0] =="":
+    SYSPATH = sys.path[1]
+else:
+    SYSPATH = sys.path[0]
+    
+from Ui_MainWindow import Ui_mainWindow
 
 if sys.path[0] == "":
 	sys.path.append(sys.path[1]+"/androguard/")
@@ -59,17 +75,23 @@ class APK:
         for i in services:
             retStr += i +"\n"
         if retStr != "":
-            retStr = retStr[:-1]
+            retStr = retStr[:-1]     
         return (retStr, len(services))        
 
-    def getPermissions(self):
-        retStr = ""
+# check permissions
+    def getPermissions(self):       
+        retStr = ""        
         permissions = self.apk.get_permissions()
+
+ #       QMessageBox.warning(QMainWindow ,'Sensitive API', 'SEND_SMS')
         for i in permissions:
             retStr += i +"\n"
+
         if retStr != "":
             retStr = retStr[:-1]
         return (retStr, len(permissions))
+
+   
         
     def getDex(self):
         return self.apk.get_dex()

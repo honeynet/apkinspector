@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout android:id="@id/widget0" android:background="#ffccffff" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="16.0sp" android:textColor="#ff0000ff" android:id="@id/widget28" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="响铃时间" android:layout_x="5.0px" android:layout_y="20.0px" />
+    <EditText android:textSize="18.0sp" android:gravity="center" android:id="@id/editRingTime" android:layout_width="80.0px" android:layout_height="wrap_content" android:text="30" android:numeric="integer" android:layout_x="77.0px" android:layout_y="8.0px" />
+    <CheckBox android:textSize="16.0sp" android:textColor="#ff0000ff" android:id="@id/chkVibrate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="来电震动" android:layout_x="189.0px" android:layout_y="10.0px" />
+    <TextView android:textSize="16.0sp" android:textColor="#ff0000ff" android:id="@id/widget33" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="通话声音" android:layout_x="5.0px" android:layout_y="87.0px" />
+    <Spinner android:id="@id/sprCallVoice" android:layout_width="220.0px" android:layout_height="wrap_content" android:layout_x="77.0px" android:layout_y="75.0px" />
+    <CheckBox android:textSize="16.0sp" android:textColor="#ff0000ff" android:id="@id/chkPlayLoop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="循环播放" android:layout_x="8.0px" android:layout_y="145.0px" />
+    <EditText android:textSize="18.0sp" android:gravity="center" android:id="@id/editPlayTime" android:layout_width="80.0px" android:layout_height="wrap_content" android:text="60" android:numeric="integer" android:layout_x="208.0px" android:layout_y="145.0px" />
+    <TextView android:textSize="16.0sp" android:textColor="#ff0000ff" android:id="@id/widget37" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="播放时间" android:layout_x="135.0px" android:layout_y="158.0px" />
+    <Button android:textSize="18.0sp" android:textStyle="bold" android:id="@id/btnRecord" android:layout_width="128.0px" android:layout_height="wrap_content" android:text="开始录音" android:layout_x="97.0px" android:layout_y="232.0px" />
+    <Button android:textSize="18.0sp" android:textStyle="bold" android:id="@id/btnOk" android:layout_width="90.0px" android:layout_height="wrap_content" android:text="确  定" android:layout_x="25.0px" android:layout_y="349.0px" />
+    <Button android:textSize="18.0sp" android:textStyle="bold" android:id="@id/btnCancel" android:layout_width="90.0px" android:layout_height="wrap_content" android:text="取  消" android:layout_x="177.0px" android:layout_y="349.0px" />
+</AbsoluteLayout>

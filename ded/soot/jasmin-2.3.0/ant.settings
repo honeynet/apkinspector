@@ -1,0 +1,9 @@
+## Location of Java Cup classes jar file to link Jasmin against
+# either classes dir or jar - note polyglot comes with cup-classes
+java_cup.jar=/home/user/ebodde/soot-release/autobuild/releases/polyglotclasses-1.3.5.jar
+
+# Location in which to generate Jasmin release tarballs
+release.loc=lib
+
+# Version of Jasmin for tagging tarballs
+jasmin.version=2.3.0

@@ -194,7 +194,18 @@ class CodeEditor(QPlainTextEdit):
     def setPlainText(self, plainText):
         QPlainTextEdit.setPlainText(self, plainText)
         self.allLineNumber = len(plainText.split("\n")) - 1
-    
+  
+    # Yuan get the text from UI
+    def toPlainText(self):
+         allText = ""
+         document = QPlainTextEdit.document(self)
+         textBlock = document.begin()
+         while textBlock != document.end():
+             allText += textBlock.text() + "\n"
+             textBlock = textBlock.next()
+         
+         return allText
+
     # reset all
     def reset(self):
         if self.flag == 1:

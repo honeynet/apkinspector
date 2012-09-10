@@ -1,0 +1,87 @@
+;; create a container
+
+(define my-class (make-class-env))
+
+
+;; specify class hierarchy
+
+(jas-class-setaccess my-class acc-public)
+(jas-class-setclass my-class (make-class-cpe "out"))
+(jas-class-setsuperclass my-class (make-class-cpe "java/lang/Object"))
+
+
+;; write a convenience function to append insns as a list.
+(define append-code
+  (lambda (code-part insn-list)
+    (mapcar (lambda (insn) (jas-code-addinsn code-part insn))
+            insn-list)))
+
+;; Define code for initializer
+;;
+(define init-it (make-code))
+(append-code
+ init-it
+ (quote
+  ((aload_0)
+   (invokenonvirtual (make-method-cpe "java/lang/Object" "<init>" "()V"))
+   (return))))
+
+;; this is the code that comprises
+;; the actual task, ie the code for
+;; main(String argv[]).
+;; print a string 5 times
+
+(define doit (make-code))
+(append-code
+ doit
+ (quote
+  (
+
+                                        ; store references in local
+                                        ; variables to avoid field/cp
+                                        ; lookup
+   (getstatic
+    (make-field-cpe "java/lang/System" "out" "Ljava/io/PrintStream;"))
+   (astore_1)
+   (ldc (make-string-cpe "Hello World"))
+   (astore_2)
+   (bipush 5)
+   (istore_3)                           ; store loop index in var reg 3
+
+                                        ; loop 5 times, printing out
+                                        ; the string.
+
+   (make-label "loop")
+                                        ; push arguments to function
+                                        ; on stack and call it
+
+   (aload_1) (aload_2)
+   (invokevirtual
+    (make-method-cpe "java/io/PrintStream" "println" "(Ljava/lang/String;)V"))
+
+                                        ; decrement loop index
+
+   (iinc 3 -1)
+   (iload_3)
+   (ifne (make-label "loop"))
+   (return))))
+
+;; set stack/var size
+
+(jas-code-stack-size doit 3)
+(jas-code-var-size doit 4)
+
+;; fill up the class with the methods
+
+;; first the initializer.
+(jas-class-addmethod my-class acc-public "<init>" "()V" init-it ())
+
+;; define the printing code as a static main(String argv[]) method
+
+(jas-class-addmethod my-class
+                     (| acc-static acc-public)
+                     "main" "([Ljava/lang/String;)V" doit ())
+
+;; write it out.
+
+(jas-class-write my-class (make-outputstream "out.class"))

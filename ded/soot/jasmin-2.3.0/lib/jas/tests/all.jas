@@ -1,0 +1,72 @@
+(define my-env (make-class-env))
+
+(jas-class-addcpe my-env (make-ascii-cpe "fubar"))
+(jas-class-addcpe my-env (make-class-cpe "java/lang/Number"))
+(jas-class-addcpe my-env (make-double-cpe 2.0))
+(jas-class-addcpe my-env
+ (make-field-cpe "java/lang/System" "out" "Ljava/io/PrintStream;"))
+(jas-class-addcpe my-env (make-float-cpe 2.0))
+(jas-class-addcpe my-env (make-integer-cpe 2))
+(jas-class-addcpe my-env
+ (make-interface-cpe "java/lang/Runnable" "run" "()V"))
+(jas-class-addcpe my-env (make-long-cpe 2))
+(jas-class-addcpe my-env
+ (make-method-cpe "java/lang/Thread" "run" "()V"))
+(jas-class-addcpe my-env
+ (make-name-type-cpe "sdfsdf" "Ljava/lang/Object;"))
+(jas-class-addcpe my-env (make-string-cpe "sdf"))
+(jas-class-addfield my-env
+ (make-field
+  acc-public (make-ascii-cpe "someIntVar") (make-ascii-cpe "I") ()))
+(jas-class-addfield my-env
+ (make-field
+  (| acc-public acc-static) (make-ascii-cpe "finalInt")
+  (make-ascii-cpe "I") (make-const (make-integer-cpe 10.2))))
+(jas-class-addinterface my-env (make-class-cpe "java/lang/Runnable"))
+(jas-class-setclass my-env (make-class-cpe "scmregress"))
+(jas-class-setsuperclass my-env (make-class-cpe "java/lang/Object"))
+(jas-class-setaccess my-env acc-public)
+
+        
+(define my-code (make-code))
+(jas-code-addinsn my-code (return))
+(jas-code-addinsn my-code (astore 5))
+(jas-code-addinsn my-code (make-label "First label"))
+(jas-code-addinsn my-code (jsr (make-label "First label")))
+(define saved-label (make-label "second_label"))
+(jas-code-addinsn my-code saved-label)
+(jas-code-addinsn my-code (ldc_w (make-string-cpe "sdfsdf")))
+(jas-code-addinsn my-code (iinc 2 -2))
+(jas-code-addinsn my-code
+                  (invokeinterface
+                   (make-class-cpe "java/lang/Number") 1))
+
+(jas-code-addinsn my-code (multianewarray (make-class-cpe "java/lang/Double")
+                                         3))
+(define ctb (make-catchtable))
+(jas-add-catch-entry ctb (make-catch-entry
+                          (make-label "First label")
+                          saved-label
+                          saved-label
+                          (make-class-cpe "java/lang/Exception")))
+(jas-add-catch-entry ctb (make-catch-entry
+                          (make-label "First label")
+                          saved-label
+                          saved-label
+                          (make-class-cpe "java/lang/Error")))
+(jas-set-catchtable my-code ctb)
+(jas-code-stack-size my-code 100)
+(jas-code-var-size my-code 100)
+(define my-except (make-exception))
+(jas-exception-add my-except (make-class-cpe "java/io/IOException"))
+(jas-exception-add my-except (make-class-cpe "java/lang/Error"))
+
+(jas-class-addmethod my-env
+                     acc-public
+                     "somemethod"
+                     "(I)V"
+                     my-code
+                     my-except)
+(jas-class-write my-env (make-outputstream "scmregress.class"))
+
+                     

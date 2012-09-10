@@ -1,0 +1,30 @@
+;; script to create a class that does nothing.
+
+
+                                        ; make-class-env creates
+                                        ; a ClassEnv object which is
+                                        ; used to store information about
+                                        ; an object.
+(define my-class (make-class-env))
+
+                                        ; make-code creates a code object
+                                        ; which contains the body of a
+                                        ; method.
+
+(define init-code (make-code))
+(jas-code-addinsn init-code
+                  (aload_0))
+(jas-code-addinsn init-code
+                  (invokenonvirtual
+                   (make-method-cpe "java/lang/Object" "<init>" "()V")))
+(jas-code-addinsn init-code
+                  (return))
+
+                                        ; fill up the class with goodies
+(jas-class-setsuperclass my-class (make-class-cpe "java/lang/Object"))
+(jas-class-setclass my-class (make-class-cpe "out"))
+(jas-class-setaccess my-class acc-public)
+(jas-class-addmethod my-class acc-public "<init>" "()V" init-code ())
+
+                                        ; and write it all out
+(jas-class-write my-class (make-outputstream "out.class"))

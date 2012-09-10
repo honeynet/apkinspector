@@ -1,0 +1,16 @@
+This is a start of a basic set of tests intended to exercise the API
+functions available in the jas and scm packages. It is not complete by
+any means.
+
+all.java tries to touch as much of the jas API as it can, generating a
+non functional class called regress.class. all.jas does
+something similar, but for the scm package.
+
+  Once the jas and scm packages are compiled, do this:
+
+  % (cd ..; javac -d . tests/all.java; java all; cmp regress.class tests/regress.class)
+  % (cd ..; java scm.driver tests/all.jas; cmp scmregress.class tests/scmregress.class)
+
+
+If both these complete silently, you are in good shape. Otherwise,
+mail me a bug report and enough details for me to replicate it :)

@@ -1,0 +1,1 @@
+<PyQt4.QtCore.QStringList object at 0xa24f304>

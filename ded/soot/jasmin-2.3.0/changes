@@ -1,0 +1,163 @@
+Jasmin Revision History                                 Sable Research Group
+
+May 28, 2004                [Chris Pickett]
+    added .no_super directive (for compiling java.lang.Object)
+
+Sept 5, 2003                [Feng Qian]
+    fixed various compile shell scripts for SunOS
+
+May 4, 2002 - Release sable-1.1.4 [Feng Qian]
+    - fixed jasmin.Scanner to allow an attribute string longer than 65536.  
+
+May 3, 2001 - Release sable-1.1 [Patrick Lam, Feng Qian]
+    - No changes except for highjacking the versioning scheme.
+
+Apr 17, 2001 - Release 1.06-s11 [Patrick Lam, Feng Qian]
+    - upgraded java_cup from 0.9d to 0.10j (plam); jasmin now
+          compiles properly under recent JDKs.
+    - adjust code attribute table format, add a table size before 
+	  attribute table. Code_attribute will have same head format as
+	  LineNumberTable attribute.
+    - Correctness patch for emitting constant numbers due to 
+          Brian Demsky (bdemsky@mit.edu).
+
+Apr 2, 2001 - Release 1.06-s10  [Feng Qian (fqian@sable.mcgill.ca)]
+    - fix-up the grammar bug dealing with class, method, and field attributes,
+      reported by jmunsin@abo.fi
+
+Jan 25, 2001 - Release 1.06-s9 [Patrick Lam (plam@sable.mcgill.ca)]
+    - Realized that compilation would be a lot simpler if 
+        soot.tagkit.Base64 was included in our jasmin distribution;
+        copied the file (to the jas library) and added warnings.
+    - Minor change to lib/src/scm/driver.java to make it compile with 1.3.0.
+
+May 2, 2000 - Release 1.06-s8 [Patrick Lam (plam@sable.mcgill.ca)]
+
+Changes:
+    - Not sure what versions 1.06-s6, -s7 modified.
+    - Added support for quoted literal names to fix issues with
+            variables named, for instance, "int".
+    - Patrice Pominville (patrice@sable.mcgill.ca) added support 
+            for incorporation of attributes into bytecode.
+
+March 29, 1999 - Release 1.06-s5  [Raja Vallee-Rai (rvalleerai@sable.mcgill.ca)]
+
+Changes:
+    - Silenced jasmin.  (no more generation messages)
+
+March 15, 1999 - Release 1.06-s4  [Raja Vallee-Rai (rvalleerai@sable.mcgill.ca)]
+
+Changes:
+    - Added \\ to the list of possible escape characters for Strings.
+  	- Disabled $ as a macro substitution tool.
+	- Added +-DoubleInfinity and +-FloatInfinity
+
+2 Nov 98 - Release 1.06-s3
+
+  Changed the grammar some more to fix some constant ambiguities (1.0F vs 1.0)
+	- Raja Vallee-Rai (kor@sable.mcgill.ca)
+
+2 Nov 98 - Release 1.06-s2
+
+  Changed the grammar to fix some ambiguities
+	- Raja Vallee-Rai (kor@sable.mcgill.ca)
+
+Jasmin Revision History                                     Jonathan Meyer
+
+11 Apr 97 - Release 1.06.
+
+11 Apr 97
+
+   * Fixed bug which prevented the source name from being written out
+     in the class file
+
+   * Improved README file
+
+2 Mar 97 - Release 1.05.
+
+1 Mar 97
+
+   * Moved scripts into a bin directory. 
+
+   * Added support for Visual J++.
+
+     Added vjasmin.bat, for running Jasmin using Visual J++.
+
+     Converted JAS/Jasmin to use its own internal RuntimeConstants, so that
+     there is no longer any dependency on Sun's version (needed by J++).
+
+   * Tidied API:
+
+     Renamed "Jasmin" class "ClassFile" (sorry to those of you using the API
+     from 1.04). The ClassFile class is documented in the doc/api directory.
+
+   * Mods for Java 1.1:
+
+     Classes now set the ACC_SUPER bit in their access flags.
+     i2b/i2s/i2c are now synonyms for int2byte, int2short, int2char.
+     invokespecial is now a synonym for invokenonvirtual.
+
+   * Mods to pick up documentation in book:
+    
+     "wide" is now a recognized instruction in Jasmin files - although the assembler
+     just ignores it!
+ 
+     Added the optional <high> parameter to tableswitch. 
+
+   * Fixed bug in .catch all
+    
+10 Feb 96 - Release 1.04.
+
+8 Feb 97
+   * Updated to use latest version of JAS. This fixes some bugs in the
+     earlier release (including handling of _w instructions)
+
+   * Split several of the internal classes into smaller pieces.
+
+   * Restructured internal sources so that Jasmin, Scanner and parser
+     no longer rely on static data structures. Now there is a public API
+     to Jasmin, for people that want to assemble classes using their own
+     data input/output streams.
+
+30 Oct 96
+
+   * Added support for more \ escapes in quoted strings. In
+     particular, you can now use \nnn to specify a character using
+     octal.
+
+2 Oct 96 - Release 1.03.
+
+1 Oct 96
+
+   * Added better support for interfaces: added the .interface
+     directive (an alternative to the .class directive), and also a
+     .implements directive. Updates guide.html to mention these new
+     features.
+
+24 Sept 96
+
+   * Fixed several problems with guide.html - thanks to feedback from
+     Shawn Silverman (umsilve1@cc.umanitoba.ca).
+
+23 Aug 96
+
+   * Tidied up documentation and implementation for wide instructions.
+
+     Now ldc and ldc_w are used for single-word items, whereas
+     ldc2_w is used for two word items (previously, I had ldc_w as
+     a synonym for ldc2_w - oops).
+
+25 July 96
+
+   * Added documentation for .var directive.
+
+   * Fixed line numbering produced by -g flag (I hope).
+
+   * Improved error reporting slightly.
+
+24 July 96
+
+   * Added fix to scanner to handle Ctrl-M characters,
+     for DOS/NT Systems. (Thanks sbk!)
+
+18 July 96 - Release 1.0.

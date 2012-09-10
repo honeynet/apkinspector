@@ -1,0 +1,9 @@
+
+1 March 1997, Jon Meyer
+
+* Modified JAS to use self-contained RuntimeConstants interface.
+
+* Moved JAS classes into the Jasmin classes directory.
+
+* Fixed bug in CatchEntry.
+           

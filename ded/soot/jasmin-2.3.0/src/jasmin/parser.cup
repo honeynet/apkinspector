@@ -1,0 +1,940 @@
+/** 
+    Modifications Copyright (C) 1997, 1998 Raja Vallee-Rai (kor@sable.mcgill.ca)
+    All rights reserved.                                              
+   
+    Changes:
+        - Changed the grammar of the parser to fix some ambiguities
+          which occur when a field is named "method" and vice versa.                                                                  
+*/
+
+/* --- Copyright Jonathan Meyer 1996. All rights reserved. -----------------
+ > File:        jasmin/src/jasmin/parser.cup
+ > Purpose:     Parser for Jasmin
+ > Author:      Jonathan Meyer, 10 July 1996
+ */
+
+/*
+ * parser.cup - Java CUP file containing LALR(1) grammar for Jasmin,
+ * along with calls to ClassFile methods to output bytecode.
+ */
+
+/* CHANGES
+ * soot.tagkits.Base64 is changed to Base64 from jas package. 
+ *
+ * Feng Qian, Jan 25, 2001
+ */
+
+package jasmin;
+
+import java_cup.runtime.*;
+import java_cup.*;
+import jas.*;
+import java.io.*;
+import java.util.Hashtable;
+
+/* Preliminaries to set up and use the scanner.  */
+
+action code {:
+    short access_val;
+    public Scanner scanner;
+    public ClassFile classFile;
+:};
+
+parser code {:
+
+	// parser code
+
+	public Scanner scanner;
+	public ClassFile classFile;
+	
+	public void report_error(String message, Object info)  {
+    	classFile.report_error("Warning - " + message);
+	}
+
+	public void report_fatal_error(String message, Object info)  {
+    	classFile.report_error("Error - " + message);
+    	// System.exit(-1);
+	}
+
+	parser(ClassFile classFile, Scanner scanner) {
+	    super();
+
+	    this.scanner = scanner;
+	    this.classFile = classFile;
+	}
+:};
+
+init with {:
+	action_obj.scanner = scanner;
+	action_obj.classFile = classFile;
+:};
+
+scan with {:
+    return scanner.next_token();
+:};
+
+
+
+/* Terminals (tokens returned by the scanner). */
+terminal token
+    // Directives (words beginning with a '.')
+    DCATCH, DCLASS, DEND, DFIELD, DLIMIT, DLINE, DMETHOD, DSET, DSUPER,
+    DNOSUPER, DSOURCE, DTHROWS, DVAR, DIMPLEMENTS, DINTERFACE,
+
+    // Attributes
+	DCODE_ATTR, DCLASS_ATTR, DFIELD_ATTR, DMETHOD_ATTR, DINNER_CLASS_ATTR, DINNER_CLASS_SPEC_ATTR, DSYNTHETIC, DENCLOSING_METH, DDEPRECATED, DSIG_ATTR, DRUNTIME_VISIBLE, DRUNTIME_INVISIBLE, DRUNTIME_PARAM_VISIBLE, DRUNTIME_PARAM_INVISIBLE, DANNOTATION_ATTR, DANNOTATION, INT_KIND, BYTE_KIND, CHAR_KIND, SHORT_KIND, BOOL_KIND, LONG_KIND, DOUB_KIND, FLOAT_KIND, ARR_KIND, ANN_KIND, ENUM_KIND, CLS_KIND, STR_KIND, DARR_ELEM, DANNOT_ELEM, DELEM, DANNOT_DEFAULT, DPARAM_ANNOT_ATTR, 
+
+
+    // keywords for directives
+    TO, USING, IS, FROM, METHOD,
+
+    // access types
+    ABSTRACT, FINAL, INTERFACE, NATIVE, PRIVATE, PROTECTED, PUBLIC, STATIC,
+    SYNCHRONIZED, TRANSIENT, VOLATILE, STRICTFP, ANNOTATION, ENUM, 
+
+    // complex instructions
+    LOOKUPSWITCH, TABLESWITCH, DEFAULT,
+
+    // special symbols
+    EQ, SEP, COLON
+    
+ ;
+
+terminal String Str, Word, Insn;
+terminal Integer Int;
+terminal Number Num;
+
+nonterminal String classname;
+nonterminal Object optional_default, item;
+nonterminal Object deprecated_attr, signature_attr;
+
+/* Non terminals */
+nonterminal 
+       access_item, access_items, access_list, catch_expr, class_spec,
+       complex_instruction, defmethod, directive, endmethod, field_list,
+       field_spec, fields, instruction, impls, implements_list, 
+       implements_spec,
+       jas_file, label, limit_expr, lookup,
+       lookup_args, lookup_default, lookup_entry, lookup_list_t, lookup_list, 
+       method_list,
+       method_spec, methods, set_expr, simple_instruction, source_spec,
+       statement, statements, stmnt, super_spec, table, table_args, line_expr,
+       table_default, table_entry, table_list_t, table_list, throws_expr, 
+       var_expr, 
+	   code_attr_expr, 
+	   class_attrs, class_attr_list,  class_attr_spec,
+	   method_item, method_attrs, method_attr_list,  method_attr_spec,
+	   field_item, field_attrs, field_attr_list,  field_attr_spec,
+       inner_class_attr, inner_class_attr_list, inner_class_attr_spec,
+       end_inner_class_attr, synth_attr, encl_meth_attr,
+       meth_synth_attr, meth_depr_attr, meth_sig_attr, class_depr_attr,
+       class_sig_attr, visibility_type, annotation_attr, annotation_list,
+       annotation, elem_val_pair_list, meth_annotation_attr, 
+       class_annotation_attr, elem_val_pair, meth_annotation_default_attr,
+       meth_param_annotation_attr, annotation_attr_list,
+       param_visibility_type, annotation_attr_opt, annotation_list_opt,
+       elem_val_pair_list_opt
+    ;
+
+nonterminal Short access;
+
+/* The grammar */
+
+jas_file ::=
+        source_spec        
+        class_spec
+        super_spec
+	    impls
+	    class_attrs
+        synth_attr
+        inner_class_attr
+        encl_meth_attr
+        class_depr_attr
+        class_sig_attr
+        class_annotation_attr
+        fields
+        methods
+    ;
+
+// ---- Source specification
+
+source_spec ::=
+    DSOURCE Word:w SEP
+        {: classFile.setSource(w); :}
+    |
+    /* nothing */
+;
+
+// ---- Class specification
+
+class_spec ::=
+    DCLASS access:a classname:name SEP
+        {:
+            classFile.setClass(name,
+                (short)(a.intValue() | RuntimeConstants.ACC_SUPER));
+        :}
+    |
+    DINTERFACE access:a classname:name SEP
+        {:
+            classFile.setClass(name,
+                (short)(a.intValue() |
+                        RuntimeConstants.ACC_SUPER |
+                        RuntimeConstants.ACC_INTERFACE));
+        :}
+  ;
+
+classname ::=
+    Word:w
+        {: RESULT = ScannerUtils.convertDots(w); :}
+
+  ;
+
+access ::=
+    {: access_val = 0; :}
+        access_list
+    {: RESULT = new Short(access_val); :}
+ ;
+
+
+access_list ::= access_items | ;
+access_items ::= access_items access_item | access_item ;
+
+access_item ::=
+    PUBLIC       {: access_val |= RuntimeConstants.ACC_PUBLIC; :}
+    |
+    PRIVATE      {: access_val |= RuntimeConstants.ACC_PRIVATE; :}
+    |
+    PROTECTED    {: access_val |= RuntimeConstants.ACC_PROTECTED; :}
+    |
+    STATIC       {: access_val |= RuntimeConstants.ACC_STATIC; :}
+    |
+    FINAL        {: access_val |= RuntimeConstants.ACC_FINAL; :}
+    |
+    SYNCHRONIZED {: access_val |= RuntimeConstants.ACC_SYNCHRONIZED; :}
+    |
+    VOLATILE     {: access_val |= RuntimeConstants.ACC_VOLATILE; :}
+    |
+    TRANSIENT    {: access_val |= RuntimeConstants.ACC_TRANSIENT; :}
+    |
+    NATIVE       {: access_val |= RuntimeConstants.ACC_NATIVE; :}
+    |
+    INTERFACE    {: access_val |= RuntimeConstants.ACC_INTERFACE; :}
+    |
+    ABSTRACT     {: access_val |= RuntimeConstants.ACC_ABSTRACT; :}
+    |
+    STRICTFP     {: access_val |= RuntimeConstants.ACC_STRICTFP; :}
+    |
+    ANNOTATION     {: access_val |= RuntimeConstants.ACC_ANNOTATION; :}
+    |
+    ENUM     {: access_val |= RuntimeConstants.ACC_ENUM; :}
+  ;
+
+// ---- Superclass specification
+
+super_spec ::=
+    DSUPER classname:name SEP
+        {:
+            classFile.setSuperClass(name);
+        :}
+    |
+    DNOSUPER SEP
+        {:
+            classFile.setNoSuperClass();
+        :}
+  ;
+
+// ---- Implements specification
+
+impls ::= implements_list | /* empty */ ;
+
+implements_list ::= implements_list implements_spec | implements_spec ;
+
+implements_spec ::= DIMPLEMENTS classname:name SEP
+	{: classFile.addInterface(name); :}
+    ;
+
+class_depr_attr ::= deprecated_attr:dep_attr
+    {:
+        classFile.addClassDeprAttr(dep_attr);
+    :}
+;    
+
+class_sig_attr ::= signature_attr:sig_attr
+    {:
+        classFile.addClassSigAttr(sig_attr);
+    :}
+;    
+
+class_annotation_attr ::=
+    annotation_attr_opt:annot_attr 
+    {:
+    	if(annot_attr!=null) {
+	        if(((VisibilityAnnotationAttr)annot_attr).getKind().equals("RuntimeVisible"))
+	        	classFile.addClassAnnotAttrVisible(annot_attr);
+	        else
+	            classFile.addClassAnnotAttrInvisible(annot_attr);
+	    }
+    :}
+    |
+    annotation_attr:annot_attr annotation_attr:annot_attr2
+    {:
+        if(((VisibilityAnnotationAttr)annot_attr).getKind().equals("RuntimeVisible"))
+        	classFile.addClassAnnotAttrVisible(annot_attr);
+        else
+            classFile.addClassAnnotAttrInvisible(annot_attr);
+        if(((VisibilityAnnotationAttr)annot_attr2).getKind().equals("RuntimeVisible"))
+        	classFile.addClassAnnotAttrVisible(annot_attr2);
+        else
+            classFile.addClassAnnotAttrInvisible(annot_attr2);        
+    :}
+;    
+    
+// ---- Fields
+
+fields ::= field_list | /* empty */ ;
+
+field_list ::= field_list field_item | field_item;
+
+field_item ::= field_spec field_attrs | field_spec;
+
+field_spec ::=
+    DFIELD access:a Str:name Word:sig optional_default:v SEP deprecated_attr:dep_attr signature_attr:sig_attr annotation_attr_opt:vis_annot_attr
+        {:
+            classFile.addField((short)a.intValue(), name, sig, v, dep_attr, sig_attr, vis_annot_attr, null);
+        :}
+   |
+   DFIELD access:a Str:name Word:sig optional_default:v DSYNTHETIC SEP deprecated_attr:dep_attr signature_attr:sig_attr annotation_attr_opt:vis_annot_attr
+        {:
+            classFile.addField((short)a.intValue(), name, sig, v, "synth", dep_attr, sig_attr, vis_annot_attr, null);
+        :}
+   |
+    DFIELD access:a Str:name Word:sig optional_default:v SEP deprecated_attr:dep_attr signature_attr:sig_attr annotation_attr:vis_annot_attr1 annotation_attr:vis_annot_attr2
+        {:
+            classFile.addField((short)a.intValue(), name, sig, v, dep_attr, sig_attr, vis_annot_attr1, vis_annot_attr2);
+        :}
+   |
+   DFIELD access:a Str:name Word:sig optional_default:v DSYNTHETIC SEP deprecated_attr:dep_attr signature_attr:sig_attr annotation_attr:vis_annot_attr1 annotation_attr:vis_annot_attr2
+        {:
+            classFile.addField((short)a.intValue(), name, sig, v, "synth", dep_attr, sig_attr, vis_annot_attr1, vis_annot_attr2);
+        :}
+   ;
+
+// default value for a field
+optional_default ::=
+     EQ item:v   {: RESULT = v; :}
+     |
+     /* empty */ {: RESULT = null; :}
+  ;
+
+// an item is an integer, a float/double/long, or a quoted string
+item ::=
+    Int:i {: RESULT = i; :}
+    |
+    Num:n {: RESULT = n; :}
+    |
+    Str:s {: RESULT = s; :}
+  ;
+
+// ---- Methods
+
+methods ::= method_list | /* empty */;
+
+method_list ::= method_list method_item | method_item;
+
+method_item ::= method_spec method_attrs | method_spec;
+
+method_spec ::=
+    defmethod
+    statements
+    endmethod
+    |
+    defmethod endmethod
+ ;
+
+defmethod ::=
+    DMETHOD access:i Word:name SEP
+        {:
+            String split[] = ScannerUtils.splitMethodSignature(name);
+            classFile.newMethod(split[0], split[1], i.intValue());
+        :}
+  ;
+
+endmethod ::=
+    DEND METHOD SEP
+        {:
+            classFile.endMethod();
+        :}
+  ;
+
+
+// ---- Statements in a method
+
+statements ::= statements statement | statement ;
+
+statement ::=
+     {: classFile.setLine(scanner.token_line_num); :}
+     stmnt SEP
+  ;
+
+stmnt ::=
+    instruction
+    |
+    directive
+    |
+    error
+    |
+    label
+    |
+    /* empty */
+  ;
+
+// label:
+label ::=
+    Word:label COLON
+        {:
+            classFile.plantLabel(label);
+        :}
+  ;
+
+// Directives (.catch, .set, .limit, etc.)
+
+directive ::=
+    DVAR var_expr
+    |
+    DLIMIT limit_expr
+    |
+    DLINE line_expr
+    |
+    DTHROWS throws_expr
+    |
+    DCATCH catch_expr
+    |
+    DSET set_expr
+    |
+    DCODE_ATTR code_attr_expr   
+    |
+    meth_synth_attr
+    | 
+    meth_depr_attr
+    |
+    meth_sig_attr
+    |
+    meth_annotation_attr
+    |
+    meth_annotation_default_attr
+    |
+    meth_param_annotation_attr
+  ;
+
+meth_synth_attr ::= DSYNTHETIC
+    {:
+        classFile.addMethSynthAttr();
+    :}
+;
+
+meth_depr_attr ::= DDEPRECATED
+    {:
+        classFile.addMethDeprAttr();
+    :}
+;    
+
+meth_sig_attr ::= DSIG_ATTR Str:s
+    {:
+        classFile.addMethSigAttr(s);
+    :}
+;    
+
+meth_annotation_attr ::= visibility_type:tval SEP annotation_list:list DEND DANNOTATION_ATTR 
+    {:
+        RESULT = classFile.makeVisibilityAnnotation(tval, list);
+        if(tval.equals("RuntimeVisible"))
+        	classFile.addMethAnnotAttrVisible(RESULT);
+        else
+            classFile.addMethAnnotAttrInvisible(RESULT);        
+    :}
+;
+
+meth_param_annotation_attr ::= DPARAM_ANNOT_ATTR visibility_type:kind SEP annotation_attr_list:list DEND DPARAM_ANNOT_ATTR
+    {:
+        RESULT = classFile.makeParameterVisibilityAnnotation(kind, list);
+        if(kind.equals("RuntimeVisible"))
+        	classFile.addMethParamAnnotAttrVisible(RESULT);
+        else
+            classFile.addMethParamAnnotAttrInvisible(RESULT);        
+    :}
+;
+
+annotation_attr_list ::= 
+    annotation_attr_list:list annotation_attr:elem 
+    {:
+        RESULT = classFile.mergeNewAnnotAttr(list, elem);
+    :}
+    |
+    annotation_attr:elem
+    {:
+        RESULT = classFile.makeNewAnnotAttrList(elem);
+    :}
+;    
+
+meth_annotation_default_attr ::= DANNOT_DEFAULT elem_val_pair:def DEND DANNOT_DEFAULT 
+    {:
+        classFile.addMethAnnotDefault(def);
+    :}
+;    
+
+code_attr_expr ::=
+ Word:w Str:v
+          {:
+               classFile.addSootCodeAttr(w, v);    
+          :}
+;
+
+//
+// .var <num> is <name> <sig> from StartLab to EndLab
+//
+var_expr ::=
+    Int:reg IS Word:name Word:sig FROM Word:slab TO Word:elab
+        {:
+             classFile.addVar(slab, elab, name,
+                            sig, reg.intValue());
+        :}
+    |
+    Int:reg IS Word:name Word:sig
+        {:
+             classFile.addVar(null, null, name, sig, reg.intValue());
+        :}
+;
+
+
+// .limit stack <val>
+// .limit locals <val>
+
+limit_expr ::=
+    Word:w Int:v
+      {:
+        // .limit locals
+        if (w.equals("locals")
+                 || w.equals("vars")) // "vars" for historic reasons
+            classFile.setVarSize((short)v.intValue());
+        // .limit stack
+        else if (w.equals("stack"))
+            classFile.setStackSize((short)v.intValue());
+        else
+            classFile.report_error(".limit expected \"stack\" or \"locals\", but got "
+                          + w);
+      :}
+;
+
+// .line <num>
+line_expr ::=
+    Int:v
+       {: classFile.addLine(v.intValue()); :}
+;
+
+// .throws <class>
+throws_expr ::=
+    classname:s
+        {:
+            classFile.addThrow(s);
+        :}
+  ;
+
+// .catch <class> from <label1> to <label2> using <branchlab>
+catch_expr ::=
+    classname:aclass FROM Word:fromlab TO Word:tolab USING Word:branchlab
+        {:
+            classFile.addCatch(aclass,
+                            fromlab, tolab,
+                            branchlab);
+        :}
+  ;
+
+// .set <var> = <val>
+set_expr ::=
+    Word:name Int:v     {: scanner.dict.put(name, v); :}
+    |
+    Word:name Word:v    {: scanner.dict.put(name, v); :}
+    |
+    Word:name Num:v  {: scanner.dict.put(name, v); :}
+    |
+    Word:name Str:v  {: scanner.dict.put(name, v); :}
+;
+
+instruction ::=
+    simple_instruction
+    |
+    complex_instruction
+ ;
+
+// Various patterns of instruction:
+//      instruction [<pattern>]
+simple_instruction ::=
+    Insn:i
+        {:
+            classFile.plant(i);
+        :}
+    |
+    Insn:i Int:n1 Int:n2
+        {:
+            classFile.plant(i, n1.intValue(), n2.intValue());
+        :}
+    |
+    Insn:i Int:n
+        {:
+            classFile.plant(i, n.intValue());
+        :}
+    |
+    Insn:i Num:n
+        {:
+            classFile.plant(i, n);
+        :}
+    |
+    Insn:i Word:n
+        {:
+            classFile.plant(i, n);
+        :}
+    |
+    Insn:i Word:n Int:n2
+        {:
+            classFile.plant(i, n, n2.intValue());
+        :}
+    |
+    Insn:i Word:n1 Word:n2
+        {:
+            classFile.plant(i, n1, n2);
+        :}
+    |
+    Insn:i Str:n
+        {:
+            classFile.plantString(i, n);
+        :}
+  ;
+
+// complex (i.e. multiline) instructions
+//      lookupswitch <lookup>
+//      tableswitch  <table>
+
+complex_instruction ::=
+    LOOKUPSWITCH lookup
+    |
+    TABLESWITCH table
+ ;
+
+// lookupswitch
+//     <value> : <label>
+//     <value> : <label>
+//     ...
+//     default : <label>
+
+lookup ::=
+    lookup_args
+    lookup_list_t
+    lookup_default
+  ;
+
+lookup_args ::=
+    SEP         /* no arguments to lookupswitch */
+        {: classFile.newLookupswitch(); :}
+  ;
+
+lookup_list_t ::=
+     | lookup_list
+  ;
+
+lookup_list ::=
+    lookup_list lookup_entry | lookup_entry 
+ ;
+
+lookup_entry ::=
+    Int:i COLON Word:w SEP
+        {:
+            classFile.addLookupswitch(i.intValue(), w);
+        :}
+  ;
+
+lookup_default ::=
+    DEFAULT COLON Word:w
+        {: classFile.endLookupswitch(w); :}
+  ;
+
+
+// tableswitch <low> [<high>]
+//     <label>
+//     <label>
+//     ...
+//     default : <label>
+
+table ::=
+    table_args
+    table_list_t
+    table_default
+  ;
+
+table_args ::=
+    Int:low SEP     /* one argument : the <low> parameter */
+        {:
+            classFile.newTableswitch(low.intValue());
+        :}
+    |
+    Int:low Int:high SEP     /* two arguments : <low> and <high> parameters */
+        {:
+            classFile.newTableswitch(low.intValue(), high.intValue());
+        :}
+  ;
+
+table_list_t ::=
+     | table_list
+	;
+
+table_list ::=
+    table_list table_entry | table_entry 
+  ;
+
+table_entry ::=
+    Word:w SEP
+        {:
+            classFile.addTableswitch(w);
+        :}
+  ;
+
+table_default ::=
+    DEFAULT COLON Word:w
+        {:
+            classFile.endTableswitch(w);
+        :}
+  ;
+
+
+
+
+class_attrs ::= class_attr_list | /* */;
+class_attr_list ::= class_attr_list class_attr_spec | class_attr_spec;
+class_attr_spec ::= DCLASS_ATTR  Word:w Str:v SEP 
+          {:
+		byte[] data = Base64.decode(v.toCharArray());
+                classFile.addGenericAttrToClass(new GenericAttr(w, data));             
+          :}
+;
+	
+method_attrs ::= method_attr_list; 
+method_attr_list ::= method_attr_list method_attr_spec | method_attr_spec;
+method_attr_spec ::= DMETHOD_ATTR  Word:w Str:v SEP
+          {:
+		 byte[] data = Base64.decode(v.toCharArray());
+                classFile.addGenericAttrToMethod(w, data);	
+          :}
+;
+
+	
+field_attrs ::= field_attr_list; 
+field_attr_list ::= field_attr_list field_attr_spec | field_attr_spec;
+field_attr_spec ::= DFIELD_ATTR  Word:w Str:v SEP
+          {:
+		 byte[] data = Base64.decode(v.toCharArray());
+                classFile.addGenericAttrToField(w, data);
+          :}
+;
+
+inner_class_attr ::= DINNER_CLASS_ATTR SEP inner_class_attr_list end_inner_class_attr
+    {:
+        classFile.addInnerClassAttr();
+    :}
+    |
+    /* empty*/
+;
+inner_class_attr_list ::= inner_class_attr_list inner_class_attr_spec | inner_class_attr_spec;
+inner_class_attr_spec ::= DINNER_CLASS_SPEC_ATTR Str:a Str:b Str:c access:d DEND DINNER_CLASS_SPEC_ATTR SEP
+    {:
+        classFile.addInnerClassSpec(a, b, c, (short)d.intValue());
+    :}
+;
+end_inner_class_attr ::= DEND DINNER_CLASS_ATTR SEP
+    {:
+        classFile.endInnerClassAttr();
+    :}
+;
+
+synth_attr ::= DSYNTHETIC SEP
+    {:
+        classFile.addClassSynthAttr();
+    :}
+    |
+    /* empty */
+;
+
+encl_meth_attr ::= DENCLOSING_METH Str:c Str:m Str:s SEP
+    {:
+        classFile.addEnclMethAttr(c, m, s);
+    :}
+    |
+    /* empty */
+;
+
+deprecated_attr ::= DDEPRECATED SEP
+    {:
+        RESULT = "deprecated";
+    :}
+    |
+    {:
+        /* empty */ RESULT = null;
+    :}    
+;
+
+signature_attr ::= DSIG_ATTR Str:sig SEP 
+    {:
+        RESULT = sig;
+    :}
+    | 
+    {:
+        /* empty */ RESULT = null;
+    :}    
+;
+
+visibility_type ::= 
+    DRUNTIME_VISIBLE 
+    {: RESULT = "RuntimeVisible"; :}
+    | 
+    DRUNTIME_INVISIBLE 
+    {: RESULT = "RuntimeInvisible"; :}
+;
+
+param_visibility_type ::=
+    DRUNTIME_PARAM_VISIBLE 
+    {: RESULT = "RuntimeVisibleParameter"; :}
+    | 
+    DRUNTIME_PARAM_INVISIBLE
+    {: RESULT = "RuntimeInvisibleParameter"; :}
+;    
+
+annotation_attr_opt ::= annotation_attr:attr
+    {:  
+        RESULT = attr;
+    :}
+    |
+    {:
+        RESULT = null; /* empty */
+    :}
+;
+
+annotation_attr ::= visibility_type:tval SEP annotation_list_opt:list DEND DANNOTATION_ATTR SEP 
+    {:
+        RESULT = classFile.makeVisibilityAnnotation(tval, list);
+    :}
+;    
+
+annotation_list_opt ::= annotation_list:list
+    {:
+        RESULT = list;
+    :}
+    |
+    /* empty */
+    {:
+        RESULT = null;
+    :}
+;    
+
+annotation_list ::= annotation_list:list annotation:elem {:
+        RESULT = classFile.mergeNewAnnotation(list, elem);
+    :}
+    | 
+    annotation:elem{:
+        RESULT = classFile.makeNewAnnotationList(elem);
+    :}
+;
+
+annotation ::= DANNOTATION Str:annotation_type SEP elem_val_pair_list_opt:elems DEND DANNOTATION SEP
+    {:
+        RESULT = classFile.makeAnnotation(annotation_type, elems);
+    :}
+;
+
+elem_val_pair_list_opt ::=
+    elem_val_pair_list:list
+    {:
+        RESULT = list;
+    :}
+    |
+    /* empty */
+    {:
+        RESULT = null;
+    :}
+;    
+    
+elem_val_pair_list ::= elem_val_pair_list:list elem_val_pair:elem {:
+        RESULT = classFile.mergeNewElemValPair(list, elem);
+    :}
+    | elem_val_pair:elem {:
+        RESULT = classFile.makeNewElemValPairList(elem);
+    :}
+;
+
+elem_val_pair ::= 
+    DELEM INT_KIND Str:name Int:val SEP{:
+        RESULT = classFile.makeConstantElem(name, 'I', val);
+    :}
+    |
+    DELEM SHORT_KIND Str:name Int:val SEP{:
+        RESULT = classFile.makeConstantElem(name, 'S', val);
+    :}
+    |
+    DELEM BYTE_KIND Str:name Int:val SEP{:
+        RESULT = classFile.makeConstantElem(name, 'B', val);
+    :}
+    |
+    DELEM CHAR_KIND Str:name Int:val SEP{:
+        RESULT = classFile.makeConstantElem(name, 'C', val);
+    :}
+    |
+    DELEM BOOL_KIND Str:name Int:val SEP{:
+        RESULT = classFile.makeConstantElem(name, 'Z', val);
+    :}
+    |
+    DELEM LONG_KIND Str:name item:val SEP{:
+        RESULT = classFile.makeConstantElem(name, 'J', val);
+    :}
+    |
+    DELEM FLOAT_KIND Str:name item:val SEP{:
+        RESULT = classFile.makeConstantElem(name, 'F', val);
+    :}
+    |
+    DELEM DOUB_KIND Str:name item:val SEP{:
+        RESULT = classFile.makeConstantElem(name, 'D', val);
+    :}
+    |
+    DELEM STR_KIND Str:name Str:val SEP{:
+        RESULT = classFile.makeConstantElem(name, 's', val);
+    :}
+    |
+    DELEM ENUM_KIND Str:name Str:tname Str:cname SEP{:
+        RESULT = classFile.makeEnumElem(name, 'e', tname, cname);
+    :}
+    |
+    DELEM CLS_KIND Str:name Str:desc SEP{:
+        RESULT = classFile.makeClassElem(name, 'c', desc);
+    :}
+    |
+    DELEM ARR_KIND Str:name SEP elem_val_pair_list_opt:list DEND DARR_ELEM SEP{:
+        RESULT = classFile.makeArrayElem(name, '[', list);
+    :}
+    |
+    DELEM ANN_KIND Str:name SEP annotation:attr DEND DANNOT_ELEM SEP{:
+        RESULT = classFile.makeAnnotElem(name, '@', attr);
+    :}
+;        
+        
+
+/* --- Revision History ---------------------------------------------------
+--- Jonathan Meyer, Mar 1 1997
+    Added ACC_SUPER flag - needed by 1.1.
+
+--- Jonathan Meyer, Oct 1 1996
+    Added support for .interface and .implements.
+
+--- Jonathan Meyer, July 25 1996
+    Slightly modified syntax of .var directive.
+
+    Added call to setLine to fix problem with line numbering.
+
+    Added definitions for report_error and report_fatal_error, and
+    also added 'error' token to statements list.
+*/

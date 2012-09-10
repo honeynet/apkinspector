@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+
+<project default="compile">
+    <property file="ant.settings"/>
+    <target name="settings">
+        <fail
+            message="Please copy ant.settings.template to ant.settings, and set the variables in it."
+            unless="java_cup.jar"
+        />
+    </target>
+
+    <target name="compile" depends="settings,scm">
+        <javac
+            destdir="classes"
+            classpath="classes:${java_cup.jar}"
+	    source="1.4"
+            target="1.4"
+            debug="true"
+        >
+            <src path="src"/>
+            <src path="generated/"/>
+        </javac>
+    </target>
+
+    <target name="build_parser">
+        <java
+            classname="java_cup.Main"
+            dir="src/jasmin"
+            classpath="${java_cup.jar}"
+            >
+        <arg line="src/jasmin/parser.cup"/>
+        </java>
+        <move file="parser.java" tofile="src/jasmin/parser.java"/> 
+        <move file="sym.java" tofile="src/jasmin/sym.java"/> 
+    </target>
+
+    <target name="scm" depends="autogen_run">
+        <javac
+            destdir="classes"
+            classpath="classes"
+            debug="true"
+            deprecation="true"
+	    source="1.4"
+            target="1.4"
+        >
+            <src path="lib/jas/src/scm"/>
+            <src path="generated/scm"/>
+        </javac>
+    </target>
+
+    <target name="autogen_compile" depends="jas">
+        <javac
+            destdir="classes"
+            classpath="classes"
+            debug="true"
+	    source="1.4"
+            target="1.4"
+        >
+            <src path="lib/jas/src/scm/autogen/"/>
+        </javac>
+    </target>
+    
+    <target name="autogen_run" depends="autogen_compile, determine-autogen-uptodate" unless="autogen-uptodate">
+        <java
+            classname="autogen"
+            dir="generated/scm"
+            classpath="classes"
+            fork="true"
+        >
+        </java>
+    </target>
+    
+    <target name="determine-autogen-uptodate">
+        <uptodate property="autogen-uptodate" srcfile="lib/jas/src/scm/autogen/autogen.java" targetfile="generated/scm/AutoInit.java"/>
+    </target>
+   
+    <target name="jas">
+        <javac
+            destdir="classes"
+            optimize="true"
+            debug="true"
+	    source="1.4"
+            target="1.4"
+        >
+            <src path="lib/jas/src/jas"/>
+        </javac>
+    </target>
+   
+    <target name="clean">
+        <delete quiet="true">
+            <fileset dir="classes" includes="**/*.class"/>
+        </delete>
+    </target>
+
+    <target name="veryclean" depends="clean">
+        <delete quiet="true">
+            <fileset dir="generated/scm" includes="**/*"/>
+        </delete>
+    </target>
+
+    <target name="jasmin-jar" depends="compile">
+        <jar destfile="${release.loc}/jasminclasses-${jasmin.version}.jar">
+            <fileset dir="classes"/>
+        </jar>
+    </target>
+
+    <target name="barebones" depends="clean,settings">
+        <jar destfile="${release.loc}/jasminsrc-${jasmin.version}.jar">
+            <fileset dir="."/>
+        </jar>
+        <tar destfile="${release.loc}/jasminsrc-${jasmin.version}.tar.gz" compression="gzip" longfile="gnu">
+            <tarfileset dir="."/>
+        </tar>
+    </target>
+</project>

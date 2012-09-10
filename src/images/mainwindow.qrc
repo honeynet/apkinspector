@@ -1,8 +1,14 @@
 <RCC>
   <qresource prefix="/src/images/">
+    <file>back.png</file>
+    <file>forward.png</file>
+    <file>build.png</file>
     <file>logo2.png</file>
     <file>new.png</file>
     <file>open.png</file>
     <file>save.png</file>
+    <file>back.png</file>
+    <file>forward.png</file>
+    <file>build.png</file>
   </qresource>
 </RCC>
