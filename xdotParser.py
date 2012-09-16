@@ -81,12 +81,21 @@ class XDot:
         self.buff += "splines=ortho"
         i = 0
         j = 100
+        label2name = {}
+        """
         for I in allmethod:
             i += 1
             Im = I.get_class_name() + " " + I.get_descriptor() +"," + I.get_name()
+
+            node_name = "%s" % i
             label = Im
+
+            label2name[label] = node_name
  
-            self.buff += "\"%s\" [color=\"lightgray\", label=\"%s\"]\n" % (i, label)
+            self.buff += "\"%s\" [color=\"lightgray\", label=\"%s\"]\n" % (node_name, label)
+        print "total method count = %s" % i
+        """
+        
         for I in allmethod:
               Im = I.get_class_name() + " " + I.get_descriptor() +"," + I.get_name()
               if Im not in Dir.keys():
@@ -95,9 +104,26 @@ class XDot:
               lenth = len(callList)
               for l in range (0, lenth ):
                    col = "blue"
-                   self.buff += "\"%s\" -> \"%s\" [color=\"%s\"];\n " % (Im, callList[l],col ) 
 
-             
+                   if not label2name.has_key(Im):
+                     node_from = "node%s" % i
+                     label2name[Im] = node_from
+                     i += 1
+                   else:
+                     node_from = label2name[Im]
+
+                   if not label2name.has_key(callList[l]):
+                     node_to = "node%s" % i
+                     label2name[callList[l]] = node_to
+                     i += 1
+                   else:
+                     node_to = label2name[callList[l]]
+
+                   try:
+#                     self.buff += "\"%s\" -> \"%s\" [color=\"%s\"];\n " % (Im, callList[l],col ) 
+                      self.buff += "\"%s\" -> \"%s\" [color=\"%s\"];\n " % (node_from, node_to,col ) 
+                   except:
+                     print "error"
         """
         for I in callInList:
             i += 1
@@ -170,6 +196,7 @@ class XDot:
         file.close()
         for i in parselist:
             if i.find("->") == -1 and i != '':
+
                 start = i.index("label=") + 7
                 end = i[start:].index("\"") + start
                 # label is the content of the node
@@ -258,30 +285,42 @@ class XDot:
         file.close()
         for i in parselist:
             if i.find("->") == -1 and i != '':
-                start = i.find("label=") + 7
-                end = i[start:].index("\"") + start
+                try:
+                  start = i.index("label=") + 7
+ #               start = i.find("label=") + 7
+                  end = i[start:].index("\"") + start
                 # label is the content of the node
-                label = i[start : end]
-                label = label.replace("\\", "")
+                  label = i[start : end]
+                  label = label.replace("\\", "")
+                except:
+                   label = "123"
+                   end = 0
                 
-                start = i[end:].index("P 4 ") + end + 4
-                end = i[start:].index("\"") + start
+                try:
+
+                  start = i[end:].index("P 4 ") + end + 4
+                  end = i[start:].index("\"") + start
                 
-                points = i[start:end]
-                points.strip()
-                points = points.split(" ")
-                width = string.atof(points[0]) - string.atof(points[2])
-                height = string.atof(points[3]) - string.atof(points[5])
-                point_x = string.atof(points[2])
-                point_y = self.transform(string.atof(points[3]), pagesize[1])
+                
+                  points = i[start:end]
+                  points.strip()
+                  points = points.split(" ")
+                  width = string.atof(points[0]) - string.atof(points[2])
+                  height = string.atof(points[3]) - string.atof(points[5])
+                  point_x = string.atof(points[2])
+                  point_y = self.transform(string.atof(points[3]), pagesize[1])
                 # this point is the left-top point
-                point = [point_x, point_y]
+                  point = [point_x, point_y]
+                except:
+                  print "Error = %s" % i
+                  point = [0.0, 0.0]
+                  width = 50.0
+                  height = 40.0
                 
                 node = Node(point[0], point[1], width, height)
                 node.setText_call(label)
                 node.setHint(label)
                 nodeList.append(node)
-
             elif i != '':
                 i = i.replace("\\", "")
                 
@@ -300,16 +339,18 @@ class XDot:
                         path[j] = self.transform(string.atof(path[j]), pagesize[1])
                     else:
                         path[j] = string.atof(path[j])
-                    
-                arrow = i[i.rindex("P 3 ")+4: i.rindex(" \"")]
-                arrow = arrow.split(" ")
-                
+                try :               
+                    arrow = i[i.rindex("P 3 ")+4: i.rindex(" \"")]
+                    arrow = arrow.split(" ")
+                except:
+                    print 123
+
                 for j in range(0, len(arrow)):
                     if j % 2 ==1:
                         arrow[j] = self.transform(string.atof(arrow[j]), pagesize[1])
                     else:
                         arrow[j] = string.atof(arrow[j])
-                
+            
 
                 link = Link()
                 link.setColor(color)

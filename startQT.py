@@ -944,7 +944,7 @@ class startQT(QMainWindow, Ui_mainWindow):
         #time.sleep(10)
         #print "sleep the callin"
         self.Graph_call.setPageSize(pagesize)
-        self.Graph_call.showcall(nodeList, linkList)
+        self.Graph_call.show(nodeList, linkList)
       
 
         callInContent = "************************Call In*************************\n"

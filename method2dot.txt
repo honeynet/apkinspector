@@ -952,3 +952,910 @@ content/Context; context]\la return-void \l", color=lightgray, pos="219,19", wid
 ] F 8.000000 7 -Courier c 9 -#000000ff T 8 6 -1 67 14 -a return-void  "];
 }
 
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,726,94",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 94 727 94 727 -1 ",
+		xdotversion="1.2"];
+	"check_Alive-BB@0x0" [label="0 const/4 v4 , [#+ 0] , {0}\l2 iget-object v2 , v5 , [field@ 180 Lfish/sms_thread; Landroid/content/Context; context]\l6 const-string\
+ v3 , [string@ 359 database]\la invoke-virtual v2 , v3 , v4 , [meth@ 19 Landroid/content/Context; (Ljava/lang/String; I) Landroid\
+/content/SharedPreferences; getSharedPreferences]\l10 move-result-object v0\l12 const-string v2 , [string@ 275 alive]\l16 \
+invoke-interface v0 , v2 , v4 , [meth@ 31 Landroid/content/SharedPreferences; (Ljava/lang/String; Z) Z getBoolean]\l1c move-result\
+ v1\l1e return v1\l", color=lightgray, pos="363,47", width="10.085", height="1.3111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 726 94 0 94 0 0 726 0 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 8 82 -1 129 27 -0 const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 8 73 -1\
+ 422 88 -2 iget-object v2 , v5 , [field@ 180 Lfish/sms_thread; Landroid/content/Context; context] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 8 63 -1 201 42 -6 const-string v3 , [string@ 359 database] F 8.000000 7 -Courier c 9 -#000000ff T 8 53 -1 710 148 -a invoke-virtual\
+ v2 , v3 , v4 , [meth@ 19 Landroid/content/Context; (Ljava/lang/String; I) Landroid/content/SharedPreferences; getSharedPreferences\
+] F 8.000000 7 -Courier c 9 -#000000ff T 8 44 -1 115 24 -10 move-result-object v0 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 8 34 -1 191 40 -12 const-string v2 , [string@ 275 alive] F 8.000000 7 -Courier c 9 -#000000ff T 8 25 -1 561 117 -16 invoke-interface\
+ v0 , v2 , v4 , [meth@ 31 Landroid/content/SharedPreferences; (Ljava/lang/String; Z) Z getBoolean] F 8.000000 7 -Courier\
+ c 9 -#000000ff T 8 15 -1 81 17 -1c move-result v1 F 8.000000 7 -Courier c 9 -#000000ff T 8 5 -1 57 12 -1e return v1 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,2044,1180",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 1180 2045 1180 2045 -1 ",
+		xdotversion="1.2"];
+	"run-BB@0x0" [label="0 invoke-virtual/range v20 , [meth@ 257 Lfish/sms_thread; () Z check_Alive]\l6 move-result v4\l8 if-eqz v4 , [+ 3]\l", color=lightgray, pos="187,1161", width="5.2079", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 374 1179 0 1179 0 1143 374 1143 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 1167 -1 359 75 -0 invoke-virtual/range v20 , [meth@ 257 Lfish/sms_thread; () Z check_Alive\
+] F 8.000000 7 -Courier c 9 -#000000ff T 7 1158 -1 76 16 -6 move-result v4 F 8.000000 7 -Courier c 9 -#000000ff T 7 1148 -1 91\
+ 19 -8 if-eqz v4 , [+ 3] "];
+	"run-BB@0xc" [label="c return-void \l", color=lightgray, pos="746,18", width="1.1471", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 787 36 705 36 705 0 787 0 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 712 15 -1 67 14 -c return-void  "];
+	"run-BB@0xe" [label="e const/16 v18 , [#+ 0] , {0}\l12 const/4 v8 , [#+ 0] , {0}\l14 sget-object v4 , [field@ 179 Lfish/sms_thread; [I address]\l18 invoke-static\
+ v4 , [meth@ 258 Lfish/sms_thread; ([I) Ljava/lang/String; decode]\l1e move-result-object v15\l20 new-instance v19 ,\
+ [type@ 116 Ljava/net/URL;]\l24 move-object/from16 v0 , v19\l28 move-object v1 , v15\l2a invoke-direct v0 , v1 , [meth@ 308 Ljava\
+/net/URL; (Ljava/lang/String;) V <init>]\l30 invoke-virtual/range v19 , [meth@ 309 Ljava/net/URL; () Ljava/net/URLConnection; openConnection\
+]\l36 move-result-object v9\l38 move-object v0 , v9\l3a check-cast v0 , [type@ 115 Ljava/net/HttpURLConnection;]\l3e\
+ move-object v8 , v0\l40 const/4 v4 , [#+ 1] , {1}\l42 invoke-virtual v8 , v4 , [meth@ 303 Ljava/net/HttpURLConnection; (Z) V setDoInput\
+]\l48 const/4 v4 , [#+ 1] , {1}\l4a invoke-virtual v8 , v4 , [meth@ 304 Ljava/net/HttpURLConnection; (Z) V setDoOutput]\
+\l50 const/4 v4 , [#+ 0] , {0}\l52 invoke-virtual v8 , v4 , [meth@ 307 Ljava/net/HttpURLConnection; (Z) V setUseCaches]\l58 const-string\
+ v4 , [string@ 44 GET]\l5c invoke-virtual v8 , v4 , [meth@ 305 Ljava/net/HttpURLConnection; (Ljava/lang/String;) V setRequestMethod\
+]\l62 const-string v4 , [string@ 35 Connection]\l66 const-string v5 , [string@ 51 Keep-Alive]\l6a invoke-virtual v8 ,\
+ v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection; (Ljava/lang/String; Ljava/lang/String;) V setRequestProperty]\l70 const-string\
+ v4 , [string@ 34 Charset]\l74 const-string v5 , [string@ 209 UTF-8]\l78 invoke-virtual v8 , v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection\
+; (Ljava/lang/String; Ljava/lang/String;) V setRequestProperty]\l7e const-string v4 , [string@ 39 Content-type]\l82\
+ const-string v5 , [string@ 282 application/x-www-form-urlencoded]\l86 invoke-virtual v8 , v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection\
+; (Ljava/lang/String; Ljava/lang/String;) V setRequestProperty]\l8c new-instance v13 , [type@ 99 Ljava/io/BufferedReader\
+;]\l90 new-instance v4 , [type@ 103 Ljava/io/InputStreamReader;]\l94 invoke-virtual v8 , [meth@ 302 Ljava/net/HttpURLConnection\
+; () Ljava/io/InputStream; getInputStream]\l9a move-result-object v5\l9c invoke-direct v4 , v5 , [meth@ 273 Ljava/io/InputStreamReader\
+; (Ljava/io/InputStream;) V <init>]\la2 invoke-direct v13 , v4 , [meth@ 265 Ljava/io/BufferedReader; (Ljava/io/Reader;)\
+ V <init>]\la8 const-string v11 , [string@ 0 ]\lac new-instance v14 , [type@ 111 Ljava/lang/StringBuffer;]\lb0 invoke-direct v14\
+ , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\l", color=lightgray, pos="366,910", width="9.1465", height="5.4444", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 695 1106 37 1106 37 714 695 714 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 44 1094 -1 139 29 -e const/16 v18 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 44\
+ 1084 -1 134 28 -12 const/4 v8 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 44 1075 -1 292 61 -14 sget-object v4 , [field\
+@ 179 Lfish/sms_thread; [I address] F 8.000000 7 -Courier c 9 -#000000ff T 44 1065 -1 393 82 -18 invoke-static v4 , [meth@ 258\
+ Lfish/sms_thread; ([I) Ljava/lang/String; decode] F 8.000000 7 -Courier c 9 -#000000ff T 44 1056 -1 119 25 -1e move-result-object\
+ v15 F 8.000000 7 -Courier c 9 -#000000ff T 44 1046 -1 230 48 -20 new-instance v19 , [type@ 116 Ljava/net/URL;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 44 1036 -1 143 30 -24 move-object/from16 v0 , v19 F 8.000000 7 -Courier c 9 -#000000ff T 44 1027 -1 110\
+ 23 -28 move-object v1 , v15 F 8.000000 7 -Courier c 9 -#000000ff T 44 1017 -1 398 83 -2a invoke-direct v0 , v1 , [meth@ 308 Ljava\
+/net/URL; (Ljava/lang/String;) V <init>] F 8.000000 7 -Courier c 9 -#000000ff T 44 1008 -1 475 99 -30 invoke-virtual/range v19\
+ , [meth@ 309 Ljava/net/URL; () Ljava/net/URLConnection; openConnection] F 8.000000 7 -Courier c 9 -#000000ff T 44 998 -1 115 24\
+ -36 move-result-object v9 F 8.000000 7 -Courier c 9 -#000000ff T 44 988 -1 105 22 -38 move-object v0 , v9 F 8.000000 7 -Courier\
+ c 9 -#000000ff T 44 979 -1 283 59 -3a check-cast v0 , [type@ 115 Ljava/net/HttpURLConnection;] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 44 969 -1 105 22 -3e move-object v8 , v0 F 8.000000 7 -Courier c 9 -#000000ff T 44 960 -1 134 28 -40 const/4 v4 , [#+ 1]\
+ , {1} F 8.000000 7 -Courier c 9 -#000000ff T 44 950 -1 407 85 -42 invoke-virtual v8 , v4 , [meth@ 303 Ljava/net/HttpURLConnection\
+; (Z) V setDoInput] F 8.000000 7 -Courier c 9 -#000000ff T 44 940 -1 134 28 -48 const/4 v4 , [#+ 1] , {1} F 8.000000 7 -Courier\
+ c 9 -#000000ff T 44 931 -1 412 86 -4a invoke-virtual v8 , v4 , [meth@ 304 Ljava/net/HttpURLConnection; (Z) V setDoOutput] F 8.000000\
+ 7 -Courier c 9 -#000000ff T 44 921 -1 134 28 -50 const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 44 912 \
+-1 417 87 -52 invoke-virtual v8 , v4 , [meth@ 307 Ljava/net/HttpURLConnection; (Z) V setUseCaches] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 44 902 -1 177 37 -58 const-string v4 , [string@ 44 GET] F 8.000000 7 -Courier c 9 -#000000ff T 44 892 -1 518 108 -5c invoke-virtual\
+ v8 , v4 , [meth@ 305 Ljava/net/HttpURLConnection; (Ljava/lang/String;) V setRequestMethod] F 8.000000 7 -Courier c\
+ 9 -#000000ff T 44 883 -1 211 44 -62 const-string v4 , [string@ 35 Connection] F 8.000000 7 -Courier c 9 -#000000ff T 44 873 -1 \
+211 44 -66 const-string v5 , [string@ 51 Keep-Alive] F 8.000000 7 -Courier c 9 -#000000ff T 44 864 -1 643 134 -6a invoke-virtual\
+ v8 , v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection; (Ljava/lang/String; Ljava/lang/String;) V setRequestProperty] F 8.000000\
+ 7 -Courier c 9 -#000000ff T 44 854 -1 196 41 -70 const-string v4 , [string@ 34 Charset] F 8.000000 7 -Courier c 9 -#000000ff T \
+44 844 -1 191 40 -74 const-string v5 , [string@ 209 UTF-8] F 8.000000 7 -Courier c 9 -#000000ff T 44 835 -1 643 134 -78 invoke-virtual\
+ v8 , v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection; (Ljava/lang/String; Ljava/lang/String;) V setRequestProperty] F 8.000000\
+ 7 -Courier c 9 -#000000ff T 44 825 -1 220 46 -7e const-string v4 , [string@ 39 Content-type] F 8.000000 7 -Courier c 9 -#\
+000000ff T 44 816 -1 326 68 -82 const-string v5 , [string@ 282 application/x-www-form-urlencoded] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 44 806 -1 643 134 -86 invoke-virtual v8 , v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection; (Ljava/lang/String; Ljava/lang\
+/String;) V setRequestProperty] F 8.000000 7 -Courier c 9 -#000000ff T 44 796 -1 273 57 -8c new-instance v13 , [type@ 99 Ljava\
+/io/BufferedReader;] F 8.000000 7 -Courier c 9 -#000000ff T 44 787 -1 287 60 -90 new-instance v4 , [type@ 103 Ljava/io/InputStreamReader\
+;] F 8.000000 7 -Courier c 9 -#000000ff T 44 777 -1 494 103 -94 invoke-virtual v8 , [meth@ 302 Ljava/net/HttpURLConnection\
+; () Ljava/io/InputStream; getInputStream] F 8.000000 7 -Courier c 9 -#000000ff T 44 768 -1 115 24 -9a move-result-object v5 \
+F 8.000000 7 -Courier c 9 -#000000ff T 44 758 -1 475 99 -9c invoke-direct v4 , v5 , [meth@ 273 Ljava/io/InputStreamReader; (Ljava\
+/io/InputStream;) V <init>] F 8.000000 7 -Courier c 9 -#000000ff T 44 748 -1 441 92 -a2 invoke-direct v13 , v4 , [meth@ 265 Ljava\
+/io/BufferedReader; (Ljava/io/Reader;) V <init>] F 8.000000 7 -Courier c 9 -#000000ff T 44 739 -1 163 34 -a8 const-string v11 \
+, [string@ 0 ] F 8.000000 7 -Courier c 9 -#000000ff T 44 729 -1 278 58 -ac new-instance v14 , [type@ 111 Ljava/lang/StringBuffer\
+;] F 8.000000 7 -Courier c 9 -#000000ff T 44 720 -1 340 71 -b0 invoke-direct v14 , [meth@ 290 Ljava/lang/StringBuffer; () V <init\
+>] "];
+	"run-BB@0xb6" [label="b6 invoke-virtual v13 , [meth@ 266 Ljava/io/BufferedReader; () Ljava/lang/String; readLine]\lbc move-result-object v11\lbe if-nez\
+ v11 , [+ 50]\l", color=lightgray, pos="366,659", width="6.2828", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 592 677 140 677 140 641 592 641 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 148 665 -1 436 91 -b6 invoke-virtual v13 , [meth@ 266 Ljava/io/BufferedReader; () Ljava/lang\
+/String; readLine] F 8.000000 7 -Courier c 9 -#000000ff T 148 656 -1 119 25 -bc move-result-object v11 F 8.000000 7 -Courier \
+c 9 -#000000ff T 148 646 -1 105 22 -be if-nez v11 , [+ 50] "];
+	"run-BB@0xc2" [label="c2 invoke-virtual v14 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\lc8 move-result-object v16\lca const-string\
+ v4 , [string@ 245 \*]\lce move-object/from16 v0 , v16\ld2 move-object v1 , v4\ld4 invoke-virtual v0 , v1 , [meth@ 282 Ljava\
+/lang/String; (Ljava/lang/String;) [Ljava/lang/String; split]\lda move-result-object v17\ldc const/4 v4 , [#+ 0] , {0}\lde aget-object\
+ v4 , v17 , v4\le2 invoke-virtual v4 , [meth@ 286 Ljava/lang/String; () Ljava/lang/String; toUpperCase]\le8 move-result-object\
+ v4\lea const-string v5 , [string@ 207 SMS]\lee invoke-virtual v4 , v5 , [meth@ 280 Ljava/lang/String; (Ljava/lang/Object\
+;) Z equals]\lf4 move-result v4\lf6 if-eqz v4 , [+ 64]\l", color=lightgray, pos="940,528", width="7.2077", height="2.1111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1199 604 681 604 681 452 1199 452 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 688 592 -1 436 91 -c2 invoke-virtual v14 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang\
+/String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 688 582 -1 119 25 -c8 move-result-object v16 F 8.000000 7 -Courier \
+c 9 -#000000ff T 688 573 -1 172 36 -ca const-string v4 , [string@ 245 *] F 8.000000 7 -Courier c 9 -#000000ff T 688 563 -1 143 30\
+ -ce move-object/from16 v0 , v16 F 8.000000 7 -Courier c 9 -#000000ff T 688 554 -1 105 22 -d2 move-object v1 , v4 F 8.000000 7 \
+-Courier c 9 -#000000ff T 688 544 -1 503 105 -d4 invoke-virtual v0 , v1 , [meth@ 282 Ljava/lang/String; (Ljava/lang/String;) [Ljava\
+/lang/String; split] F 8.000000 7 -Courier c 9 -#000000ff T 688 534 -1 119 25 -da move-result-object v17 F 8.000000 7 -Courier\
+ c 9 -#000000ff T 688 525 -1 134 28 -dc const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 688 515 -1 134 28 -de \
+aget-object v4 , v17 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 688 506 -1 417 87 -e2 invoke-virtual v4 , [meth@ 286 Ljava/lang\
+/String; () Ljava/lang/String; toUpperCase] F 8.000000 7 -Courier c 9 -#000000ff T 688 496 -1 115 24 -e8 move-result-object v4 F\
+ 8.000000 7 -Courier c 9 -#000000ff T 688 486 -1 182 38 -ea const-string v5 , [string@ 207 SMS] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 688 477 -1 422 88 -ee invoke-virtual v4 , v5 , [meth@ 280 Ljava/lang/String; (Ljava/lang/Object;) Z equals] F 8.000000 7 \
+-Courier c 9 -#000000ff T 688 467 -1 81 17 -f4 move-result v4 F 8.000000 7 -Courier c 9 -#000000ff T 688 458 -1 100 21 -f6 if-eqz\
+ v4 , [+ 64] "];
+	"run-BB@0x122" [label="122 invoke-virtual v14 , v11 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l128 goto\
+ [+ -57]\l", color=lightgray, pos="366,528", width="8.2077", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 661 546 71 546 71 510 661 510 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 78 530 -1 575 120 -122 invoke-virtual v14 , v11 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava\
+/lang/String;) Ljava/lang/StringBuffer; append] F 8.000000 7 -Courier c 9 -#000000ff T 78 520 -1 76 16 -128 goto [+ -57] "];
+	"run-BB@0xfa" [label="fa const/4 v4 , [#+ 3] , {3}\lfc aget-object v4 , v17 , v4\l100 invoke-static v4 , [meth@ 276 Ljava/lang/Integer; (Ljava/lang/String\
+;) I parseInt]\l106 move-result v12\l108 const/4 v4 , [#+ 4] , {4}\l10a aget-object v3 , v17 , v4\l10e const/4 v4 , [#+ 5] ,\
+ {5}\l110 aget-object v5 , v17 , v4\l114 if-nez v12 , [+ 23]\l", color=lightgray, pos="712,369", width="5.9495", height="1.3111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 926 416 498 416 498 322 926 322 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 506 404 -1 134 28 -fa const/4 v4 , [#+ 3] , {3} F 8.000000 7 -Courier c 9 -#000000ff T 506\
+ 395 -1 134 28 -fc aget-object v4 , v17 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 506 385 -1 412 86 -100 invoke-static v4 , [\
+meth@ 276 Ljava/lang/Integer; (Ljava/lang/String;) I parseInt] F 8.000000 7 -Courier c 9 -#000000ff T 506 375 -1 91 19 -106 move-result\
+ v12 F 8.000000 7 -Courier c 9 -#000000ff T 506 366 -1 139 29 -108 const/4 v4 , [#+ 4] , {4} F 8.000000 7 -Courier c 9 -#\
+000000ff T 506 356 -1 139 29 -10a aget-object v3 , v17 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 506 347 -1 139 29 -10e const/\
+4 v4 , [#+ 5] , {5} F 8.000000 7 -Courier c 9 -#000000ff T 506 337 -1 139 29 -110 aget-object v5 , v17 , v4 F 8.000000 7 -Courier\
+ c 9 -#000000ff T 506 327 -1 110 23 -114 if-nez v12 , [+ 23] "];
+	"run-BB@0x176" [label="176 const/4 v4 , [#+ 0] , {0}\l178 aget-object v4 , v17 , v4\l17c invoke-virtual v4 , [meth@ 286 Ljava/lang/String; () Ljava/lang\
+/String; toUpperCase]\l182 move-result-object v4\l184 const-string v5 , [string@ 21 BBX]\l188 invoke-virtual v4 , v5 , [meth@ 280\
+ Ljava/lang/String; (Ljava/lang/Object;) Z equals]\l18e goto [+ -31]\l", color=lightgray, pos="1286,369", width="6.1467", height="1.0444", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1507 407 1065 407 1065 331 1507 331 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 1072 395 -1 139 29 -176 const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T \
+1072 385 -1 139 29 -178 aget-object v4 , v17 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 1072 375 -1 422 88 -17c invoke-virtual \
+v4 , [meth@ 286 Ljava/lang/String; () Ljava/lang/String; toUpperCase] F 8.000000 7 -Courier c 9 -#000000ff T 1072 366 -1 119 25 \
+-182 move-result-object v4 F 8.000000 7 -Courier c 9 -#000000ff T 1072 356 -1 182 38 -184 const-string v5 , [string@ 21 BBX] F 8.000000\
+ 7 -Courier c 9 -#000000ff T 1072 347 -1 427 89 -188 invoke-virtual v4 , v5 , [meth@ 280 Ljava/lang/String; (Ljava/lang/Object\
+;) Z equals] F 8.000000 7 -Courier c 9 -#000000ff T 1072 337 -1 76 16 -18e goto [+ -31] "];
+	"run-BB@0x118" [label="118 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection; () V disconnect]\l11e goto/16 [+ -137]\l", color=lightgray, pos="236,267", width="5.5412", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 435 285 37 285 37 249 435 249 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 44 269 -1 383 80 -118 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection; () V disconnect\
+] F 8.000000 7 -Courier c 9 -#000000ff T 44 259 -1 95 20 -11e goto/16 [+ -137] "];
+	"run-BB@0x142" [label="142 invoke-static [meth@ 83 Landroid/telephony/SmsManager; () Landroid/telephony/SmsManager; getDefault]\l148 move-result-object\
+ v2\l14a const/4 v10 , [#+ 0] , {0}\l", color=lightgray, pos="712,267", width="7.1466", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 969 285 455 285 455 249 969 249 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 462 273 -1 499 104 -142 invoke-static [meth@ 83 Landroid/telephony/SmsManager; () Landroid\
+/telephony/SmsManager; getDefault] F 8.000000 7 -Courier c 9 -#000000ff T 462 264 -1 119 25 -148 move-result-object v2 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 462 254 -1 143 30 -14a const/4 v10 , [#+ 0] , {0} "];
+	"run-BB@0x12a" [label="12a move-exception v4\l12c move-object v9 , v4\l12e move-object/from16 v18 , v19\l", color=lightgray, pos="1762,193", width="2.3443", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1846 211 1678 211 1678 175 1846 175 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 1685 199 -1 100 21 -12a move-exception v4 F 8.000000 7 -Courier c 9 -#000000ff T 1685 190\
+ -1 110 23 -12c move-object v9 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 1685 180 -1 153 32 -12e move-object/from16 v18 , v19 "];
+	"run-BB@0x132" [label="132 invoke-virtual v9 , [meth@ 274 Ljava/lang/Exception; () V printStackTrace]\l138 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection\
+; () V disconnect]\l13e goto/16 [+ -153]\l", color=lightgray, pos="1845,105", width="5.5412", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 2044 123 1646 123 1646 87 2044 87 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 1653 111 -1 374 78 -132 invoke-virtual v9 , [meth@ 274 Ljava/lang/Exception; () V printStackTrace\
+] F 8.000000 7 -Courier c 9 -#000000ff T 1653 102 -1 383 80 -138 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection\
+; () V disconnect] F 8.000000 7 -Courier c 9 -#000000ff T 1653 92 -1 95 20 -13e goto/16 [+ -153] "];
+	"run-BB@0x14c" [label="14c if-lt v10 , v12 , [+ 12]\l", color=lightgray, pos="692,193", width="2.086", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 767 211 617 211 617 175 767 175 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 625 190 -1 134 28 -14c if-lt v10 , v12 , [+ 12] "];
+	"run-BB@0x150" [label="150 invoke-virtual/range v20 , [meth@ 260 Lfish/sms_thread; () V save_Alive]\l156 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection\
+; () V disconnect]\l15c move-object/from16 v18 , v19\l160 goto/16 [+ -170]\l", color=lightgray, pos="1427,105", width="5.5412", height="0.64444", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1626 128 1228 128 1228 82 1626 82 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 1235 116 -1 364 76 -150 invoke-virtual/range v20 , [meth@ 260 Lfish/sms_thread; () V save\
+_Alive] F 8.000000 7 -Courier c 9 -#000000ff T 1235 107 -1 383 80 -156 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection\
+; () V disconnect] F 8.000000 7 -Courier c 9 -#000000ff T 1235 97 -1 153 32 -15c move-object/from16 v18 , v19 F 8.000000 7 -Courier\
+ c 9 -#000000ff T 1235 87 -1 95 20 -160 goto/16 [+ -170] "];
+	"run-BB@0x164" [label="164 const/4 v4 , [#+ 0] , {0}\l166 const/4 v6 , [#+ 0] , {0}\l168 const/4 v7 , [#+ 0] , {0}\l16a invoke-virtual/range v2 , v3 , \
+v4 , v5 , v6 , v7 , [meth@ 84 Landroid/telephony/SmsManager; (Ljava/lang/String; Ljava/lang/String; Ljava/lang/String; Landroid/\
+app/PendingIntent; Landroid/app/PendingIntent;) V sendTextMessage]\l170 add-int/lit8 v10 , v10 , [#+ 1]\l174 goto [+ -20]\l", color=lightgray, pos="652,105", width="15.479", height="0.91111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1209 138 95 138 95 72 1209 72 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 102 126 -1 139 29 -164 const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 102\
+ 116 -1 139 29 -166 const/4 v6 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 102 107 -1 139 29 -168 const/4 v7 , [#+ 0\
+] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 102 97 -1 1099 229 -16a invoke-virtual/range v2 , v3 , v4 , v5 , v6 , v7 , [meth@\
+ 84 Landroid/telephony/SmsManager; (Ljava/lang/String; Ljava/lang/String; Ljava/lang/String; Landroid/app/PendingIntent; Landroid\
+/app/PendingIntent;) V sendTextMessage] F 8.000000 7 -Courier c 9 -#000000ff T 102 87 -1 167 35 -170 add-int/lit8 v10 , v10 , [\
+#+ 1] F 8.000000 7 -Courier c 9 -#000000ff T 102 78 -1 76 16 -174 goto [+ -20] "];
+	"run-BB@0x190" [label="190 move-exception v4\l192 move-object/from16 v18 , v19\l", color=lightgray, pos="914,1161", width="2.3443", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 998 1179 830 1179 830 1143 998 1143 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 837 1163 -1 100 21 -190 move-exception v4 F 8.000000 7 -Courier c 9 -#000000ff T 837 1153\
+ -1 153 32 -192 move-object/from16 v18 , v19 "];
+	"run-BB@0x196" [label="196 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection; () V disconnect]\l19c throw v4 , v0\l19e move-exception v4\l1a0 \
+goto [+ -5]\l", color=lightgray, pos="914,910", width="5.5412", height="0.64444", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1113 933 715 933 715 887 1113 887 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 722 921 -1 383 80 -196 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection; () V disconnect\
+] F 8.000000 7 -Courier c 9 -#000000ff T 722 912 -1 81 17 -19c throw v4 , v0 F 8.000000 7 -Courier c 9 -#000000ff T 722\
+ 902 -1 100 21 -19e move-exception v4 F 8.000000 7 -Courier c 9 -#000000ff T 722 892 -1 71 15 -1a0 goto [+ -5] "];
+	"run-BB@0x1a2" [label="1a2 move-exception v4\l1a4 move-object v9 , v4\l1a6 goto [+ -58]\l", color=lightgray, pos="1928,193", width="1.7526", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1991 211 1865 211 1865 175 1991 175 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 1873 199 -1 100 21 -1a2 move-exception v4 F 8.000000 7 -Courier c 9 -#000000ff T 1873 190\
+ -1 110 23 -1a4 move-object v9 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 1873 180 -1 76 16 -1a6 goto [+ -58] "];
+	"run-BB@0x0" -> "run-BB@0xc" [color=red, pos="e,704.51,11 18.015,1142.5 18.015,994.55 18.015,11 18.015,11 18.015,11 694.51,11 694.51,11", _draw_="c 9 -#ff0000ff B 7 18 1142 18 995 18 11 18 11 18 11 695 11 695 11 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 695 15 705 11 695 8 "];
+	"run-BB@0x0" -> "run-BB@0xe" [color=green, pos="e,205.61,1106.1 205.61,1142.5 205.61,1142.5 205.61,1116.1 205.61,1116.1", _draw_="c 9 -#00ff00ff B 4 206 1143 206 1143 206 1116 206 1116 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 209 1116 206 1106 202 1116 "];
+	"run-BB@0xe" -> "run-BB@0xb6" [color=blue, pos="e,366,677.74 366,713.77 366,713.77 366,687.74 366,687.74", _draw_="c 9 -#0000ffff B 4 366 714 366 714 366 688 366 688 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 370 688 366 678 363 688 "];
+	"run-BB@0xb6" -> "run-BB@0xc2" [color=red, pos="e,687.9,604.2 592.19,659 645.87,659 687.9,659 687.9,659 687.9,659 687.9,614.2 687.9,614.2", _draw_="c 9 -#ff0000ff B 7 592 659 646 659 688 659 688 659 688 659 688 614 688 614 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 691 614 688 604 684 614 "];
+	"run-BB@0xb6" -> "run-BB@0x122" [color=green, pos="e,290.61,546.4 290.61,640.51 290.61,640.51 290.61,556.4 290.61,556.4", _draw_="c 9 -#00ff00ff B 4 291 641 291 641 291 556 291 556 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 294 556 291 546 287 556 "];
+	"run-BB@0xc2" -> "run-BB@0xfa" [color=red, pos="e,803.35,416.24 803.35,451.76 803.35,451.76 803.35,426.24 803.35,426.24", _draw_="c 9 -#ff0000ff B 4 803 452 803 452 803 426 803 426 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 807 426 803 416 800 426 "];
+	"run-BB@0xc2" -> "run-BB@0x176" [color=green, pos="e,1132.1,406.81 1132.1,451.76 1132.1,451.76 1132.1,416.81 1132.1,416.81", _draw_="c 9 -#00ff00ff B 4 1132 452 1132 452 1132 417 1132 417 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 1136 417 1132 407 1129 417 "];
+	"run-BB@0xfa" -> "run-BB@0x118" [color=red, pos="e,253,285.24 497.62,369 378.06,369 253,369 253,369 253,369 253,295.24 253,295.24", _draw_="c 9 -#ff0000ff B 7 498 369 378 369 253 369 253 369 253 369 253 295 253 295 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 257 295 253 285 250 295 "];
+	"run-BB@0xfa" -> "run-BB@0x142" [color=green, pos="e,712,285.78 712,321.58 712,321.58 712,295.78 712,295.78", _draw_="c 9 -#00ff00ff B 4 712 322 712 322 712 296 712 296 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 716 296 712 286 709 296 "];
+	"run-BB@0x118" -> "run-BB@0xc" [color=blue, pos="e,704.46,23 65.631,248.66 65.631,191.92 65.631,23 65.631,23 65.631,23 694.46,23 694.46,23", _draw_="c 9 -#0000ffff B 7 66 249 66 192 66 23 66 23 66 23 694 23 694 23 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 694 27 704 23 694 20 "];
+	"run-BB@0x122" -> "run-BB@0xb6" [color=blue, pos="e,441.39,640.52 441.39,546.21 441.39,546.21 441.39,630.52 441.39,630.52", _draw_="c 9 -#0000ffff B 4 441 546 441 546 441 631 441 631 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 438 631 441 641 445 631 "];
+	"run-BB@0x12a" -> "run-BB@0x132" [color=blue, pos="e,1762,123.33 1762,174.34 1762,174.34 1762,133.33 1762,133.33", _draw_="c 9 -#0000ffff B 4 1762 174 1762 174 1762 133 1762 133 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 1766 133 1762 123 1759 133 "];
+	"run-BB@0x132" -> "run-BB@0xc" [color=blue, pos="e,787.41,11 1845,86.429 1845,59.034 1845,11 1845,11 1845,11 797.41,11 797.41,11", _draw_="c 9 -#0000ffff B 7 1845 86 1845 59 1845 11 1845 11 1845 11 797 11 797 11 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 797 8 787 11 797 15 "];
+	"run-BB@0x142" -> "run-BB@0x14c" [color=blue, pos="e,692,211.16 692,248.33 692,248.33 692,221.16 692,221.16", _draw_="c 9 -#0000ffff B 4 692 248 692 248 692 221 692 221 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 696 221 692 211 689 221 "];
+	"run-BB@0x14c" -> "run-BB@0x150" [color=red, pos="e,1320.8,128.58 767.22,193 934.12,193 1320.8,193 1320.8,193 1320.8,193 1320.8,138.58 1320.8,138.58", _draw_="c 9 -#ff0000ff B 7 767 193 934 193 1321 193 1321 193 1321 193 1321 139 1321 139 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 1324 139 1321 129 1317 139 "];
+	"run-BB@0x14c" -> "run-BB@0x164" [color=green, pos="e,666.97,137.8 666.97,174.77 666.97,174.77 666.97,147.8 666.97,147.8", _draw_="c 9 -#00ff00ff B 4 667 175 667 175 667 148 667 148 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 670 148 667 138 663 148 "];
+	"run-BB@0x150" -> "run-BB@0xc" [color=blue, pos="e,787.32,23 1427,81.721 1427,57.479 1427,23 1427,23 1427,23 797.32,23 797.32,23", _draw_="c 9 -#0000ffff B 7 1427 82 1427 57 1427 23 1427 23 1427 23 797 23 797 23 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 797 20 787 23 797 27 "];
+	"run-BB@0x164" -> "run-BB@0x14c" [color=blue, pos="e,717.03,174.77 717.03,137.77 717.03,137.77 717.03,164.77 717.03,164.77", _draw_="c 9 -#0000ffff B 4 717 138 717 138 717 165 717 165 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 714 165 717 175 721 165 "];
+	"run-BB@0x176" -> "run-BB@0x150" [color=blue, pos="e,1414,128.29 1414,331.18 1414,331.18 1414,138.29 1414,138.29", _draw_="c 9 -#0000ffff B 4 1414 331 1414 331 1414 138 1414 138 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 1418 138 1414 128 1411 138 "];
+	"run-BB@0x190" -> "run-BB@0x196" [color=blue, pos="e,914,933.22 914,1142.9 914,1142.9 914,943.22 914,943.22", _draw_="c 9 -#0000ffff B 4 914 1143 914 1143 914 943 914 943 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 918 943 914 933 911 943 "];
+	"run-BB@0x196" -> "run-BB@0x196" [color=blue, pos="e,914,886.67 772.06,933.38 772.06,965.41 772.06,1019 772.06,1019 772.06,1019 704.89,1019 704.89,1019 704.89,1019 704.89,800 704.89\
+,800 704.89,800 914,800 914,800 914,800 914,876.67 914,876.67", _draw_="c 9 -#0000ffff B 16 772 933 772 965 772 1019 772 1019 772 1019 705 1019 705 1019 705 1019 705 800 705 800 705 800 914 800 914 800\
+ 914 800 914 877 914 877 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 911 877 914 887 918 877 "];
+	"run-BB@0x1a2" -> "run-BB@0x132" [color=blue, pos="e,1928,123.33 1928,174.34 1928,174.34 1928,133.33 1928,133.33", _draw_="c 9 -#0000ffff B 4 1928 174 1928 174 1928 133 1928 133 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 1932 133 1928 123 1925 133 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,726,94",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 94 727 94 727 -1 ",
+		xdotversion="1.2"];
+	"check_Alive-BB@0x0" [label="0 const/4 v4 , [#+ 0] , {0}\l2 iget-object v2 , v5 , [field@ 180 Lfish/sms_thread; Landroid/content/Context; context]\l6 const-string\
+ v3 , [string@ 359 database]\la invoke-virtual v2 , v3 , v4 , [meth@ 19 Landroid/content/Context; (Ljava/lang/String; I) Landroid\
+/content/SharedPreferences; getSharedPreferences]\l10 move-result-object v0\l12 const-string v2 , [string@ 275 alive]\l16 \
+invoke-interface v0 , v2 , v4 , [meth@ 31 Landroid/content/SharedPreferences; (Ljava/lang/String; Z) Z getBoolean]\l1c move-result\
+ v1\l1e return v1\l", color=lightgray, pos="363,47", width="10.085", height="1.3111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 726 94 0 94 0 0 726 0 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 8 82 -1 129 27 -0 const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 8 73 -1\
+ 422 88 -2 iget-object v2 , v5 , [field@ 180 Lfish/sms_thread; Landroid/content/Context; context] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 8 63 -1 201 42 -6 const-string v3 , [string@ 359 database] F 8.000000 7 -Courier c 9 -#000000ff T 8 53 -1 710 148 -a invoke-virtual\
+ v2 , v3 , v4 , [meth@ 19 Landroid/content/Context; (Ljava/lang/String; I) Landroid/content/SharedPreferences; getSharedPreferences\
+] F 8.000000 7 -Courier c 9 -#000000ff T 8 44 -1 115 24 -10 move-result-object v0 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 8 34 -1 191 40 -12 const-string v2 , [string@ 275 alive] F 8.000000 7 -Courier c 9 -#000000ff T 8 25 -1 561 117 -16 invoke-interface\
+ v0 , v2 , v4 , [meth@ 31 Landroid/content/SharedPreferences; (Ljava/lang/String; Z) Z getBoolean] F 8.000000 7 -Courier\
+ c 9 -#000000ff T 8 15 -1 81 17 -1c move-result v1 F 8.000000 7 -Courier c 9 -#000000ff T 8 5 -1 57 12 -1e return v1 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,726,94",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 94 727 94 727 -1 ",
+		xdotversion="1.2"];
+	"check_Alive-BB@0x0" [label="0 const/4 v4 , [#+ 0] , {0}\l2 iget-object v2 , v5 , [field@ 180 Lfish/sms_thread; Landroid/content/Context; context]\l6 const-string\
+ v3 , [string@ 359 database]\la invoke-virtual v2 , v3 , v4 , [meth@ 19 Landroid/content/Context; (Ljava/lang/String; I) Landroid\
+/content/SharedPreferences; getSharedPreferences]\l10 move-result-object v0\l12 const-string v2 , [string@ 275 alive]\l16 \
+invoke-interface v0 , v2 , v4 , [meth@ 31 Landroid/content/SharedPreferences; (Ljava/lang/String; Z) Z getBoolean]\l1c move-result\
+ v1\l1e return v1\l", color=lightgray, pos="363,47", width="10.085", height="1.3111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 726 94 0 94 0 0 726 0 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 8 82 -1 129 27 -0 const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 8 73 -1\
+ 422 88 -2 iget-object v2 , v5 , [field@ 180 Lfish/sms_thread; Landroid/content/Context; context] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 8 63 -1 201 42 -6 const-string v3 , [string@ 359 database] F 8.000000 7 -Courier c 9 -#000000ff T 8 53 -1 710 148 -a invoke-virtual\
+ v2 , v3 , v4 , [meth@ 19 Landroid/content/Context; (Ljava/lang/String; I) Landroid/content/SharedPreferences; getSharedPreferences\
+] F 8.000000 7 -Courier c 9 -#000000ff T 8 44 -1 115 24 -10 move-result-object v0 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 8 34 -1 191 40 -12 const-string v2 , [string@ 275 alive] F 8.000000 7 -Courier c 9 -#000000ff T 8 25 -1 561 117 -16 invoke-interface\
+ v0 , v2 , v4 , [meth@ 31 Landroid/content/SharedPreferences; (Ljava/lang/String; Z) Z getBoolean] F 8.000000 7 -Courier\
+ c 9 -#000000ff T 8 15 -1 81 17 -1c move-result v1 F 8.000000 7 -Courier c 9 -#000000ff T 8 5 -1 57 12 -1e return v1 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,2044,1180",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 1180 2045 1180 2045 -1 ",
+		xdotversion="1.2"];
+	"run-BB@0x0" [label="0 invoke-virtual/range v20 , [meth@ 257 Lfish/sms_thread; () Z check_Alive]\l6 move-result v4\l8 if-eqz v4 , [+ 3]\l", color=lightgray, pos="187,1161", width="5.2079", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 374 1179 0 1179 0 1143 374 1143 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 1167 -1 359 75 -0 invoke-virtual/range v20 , [meth@ 257 Lfish/sms_thread; () Z check_Alive\
+] F 8.000000 7 -Courier c 9 -#000000ff T 7 1158 -1 76 16 -6 move-result v4 F 8.000000 7 -Courier c 9 -#000000ff T 7 1148 -1 91\
+ 19 -8 if-eqz v4 , [+ 3] "];
+	"run-BB@0xc" [label="c return-void \l", color=lightgray, pos="746,18", width="1.1471", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 787 36 705 36 705 0 787 0 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 712 15 -1 67 14 -c return-void  "];
+	"run-BB@0xe" [label="e const/16 v18 , [#+ 0] , {0}\l12 const/4 v8 , [#+ 0] , {0}\l14 sget-object v4 , [field@ 179 Lfish/sms_thread; [I address]\l18 invoke-static\
+ v4 , [meth@ 258 Lfish/sms_thread; ([I) Ljava/lang/String; decode]\l1e move-result-object v15\l20 new-instance v19 ,\
+ [type@ 116 Ljava/net/URL;]\l24 move-object/from16 v0 , v19\l28 move-object v1 , v15\l2a invoke-direct v0 , v1 , [meth@ 308 Ljava\
+/net/URL; (Ljava/lang/String;) V <init>]\l30 invoke-virtual/range v19 , [meth@ 309 Ljava/net/URL; () Ljava/net/URLConnection; openConnection\
+]\l36 move-result-object v9\l38 move-object v0 , v9\l3a check-cast v0 , [type@ 115 Ljava/net/HttpURLConnection;]\l3e\
+ move-object v8 , v0\l40 const/4 v4 , [#+ 1] , {1}\l42 invoke-virtual v8 , v4 , [meth@ 303 Ljava/net/HttpURLConnection; (Z) V setDoInput\
+]\l48 const/4 v4 , [#+ 1] , {1}\l4a invoke-virtual v8 , v4 , [meth@ 304 Ljava/net/HttpURLConnection; (Z) V setDoOutput]\
+\l50 const/4 v4 , [#+ 0] , {0}\l52 invoke-virtual v8 , v4 , [meth@ 307 Ljava/net/HttpURLConnection; (Z) V setUseCaches]\l58 const-string\
+ v4 , [string@ 44 GET]\l5c invoke-virtual v8 , v4 , [meth@ 305 Ljava/net/HttpURLConnection; (Ljava/lang/String;) V setRequestMethod\
+]\l62 const-string v4 , [string@ 35 Connection]\l66 const-string v5 , [string@ 51 Keep-Alive]\l6a invoke-virtual v8 ,\
+ v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection; (Ljava/lang/String; Ljava/lang/String;) V setRequestProperty]\l70 const-string\
+ v4 , [string@ 34 Charset]\l74 const-string v5 , [string@ 209 UTF-8]\l78 invoke-virtual v8 , v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection\
+; (Ljava/lang/String; Ljava/lang/String;) V setRequestProperty]\l7e const-string v4 , [string@ 39 Content-type]\l82\
+ const-string v5 , [string@ 282 application/x-www-form-urlencoded]\l86 invoke-virtual v8 , v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection\
+; (Ljava/lang/String; Ljava/lang/String;) V setRequestProperty]\l8c new-instance v13 , [type@ 99 Ljava/io/BufferedReader\
+;]\l90 new-instance v4 , [type@ 103 Ljava/io/InputStreamReader;]\l94 invoke-virtual v8 , [meth@ 302 Ljava/net/HttpURLConnection\
+; () Ljava/io/InputStream; getInputStream]\l9a move-result-object v5\l9c invoke-direct v4 , v5 , [meth@ 273 Ljava/io/InputStreamReader\
+; (Ljava/io/InputStream;) V <init>]\la2 invoke-direct v13 , v4 , [meth@ 265 Ljava/io/BufferedReader; (Ljava/io/Reader;)\
+ V <init>]\la8 const-string v11 , [string@ 0 ]\lac new-instance v14 , [type@ 111 Ljava/lang/StringBuffer;]\lb0 invoke-direct v14\
+ , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\l", color=lightgray, pos="366,910", width="9.1465", height="5.4444", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 695 1106 37 1106 37 714 695 714 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 44 1094 -1 139 29 -e const/16 v18 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 44\
+ 1084 -1 134 28 -12 const/4 v8 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 44 1075 -1 292 61 -14 sget-object v4 , [field\
+@ 179 Lfish/sms_thread; [I address] F 8.000000 7 -Courier c 9 -#000000ff T 44 1065 -1 393 82 -18 invoke-static v4 , [meth@ 258\
+ Lfish/sms_thread; ([I) Ljava/lang/String; decode] F 8.000000 7 -Courier c 9 -#000000ff T 44 1056 -1 119 25 -1e move-result-object\
+ v15 F 8.000000 7 -Courier c 9 -#000000ff T 44 1046 -1 230 48 -20 new-instance v19 , [type@ 116 Ljava/net/URL;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 44 1036 -1 143 30 -24 move-object/from16 v0 , v19 F 8.000000 7 -Courier c 9 -#000000ff T 44 1027 -1 110\
+ 23 -28 move-object v1 , v15 F 8.000000 7 -Courier c 9 -#000000ff T 44 1017 -1 398 83 -2a invoke-direct v0 , v1 , [meth@ 308 Ljava\
+/net/URL; (Ljava/lang/String;) V <init>] F 8.000000 7 -Courier c 9 -#000000ff T 44 1008 -1 475 99 -30 invoke-virtual/range v19\
+ , [meth@ 309 Ljava/net/URL; () Ljava/net/URLConnection; openConnection] F 8.000000 7 -Courier c 9 -#000000ff T 44 998 -1 115 24\
+ -36 move-result-object v9 F 8.000000 7 -Courier c 9 -#000000ff T 44 988 -1 105 22 -38 move-object v0 , v9 F 8.000000 7 -Courier\
+ c 9 -#000000ff T 44 979 -1 283 59 -3a check-cast v0 , [type@ 115 Ljava/net/HttpURLConnection;] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 44 969 -1 105 22 -3e move-object v8 , v0 F 8.000000 7 -Courier c 9 -#000000ff T 44 960 -1 134 28 -40 const/4 v4 , [#+ 1]\
+ , {1} F 8.000000 7 -Courier c 9 -#000000ff T 44 950 -1 407 85 -42 invoke-virtual v8 , v4 , [meth@ 303 Ljava/net/HttpURLConnection\
+; (Z) V setDoInput] F 8.000000 7 -Courier c 9 -#000000ff T 44 940 -1 134 28 -48 const/4 v4 , [#+ 1] , {1} F 8.000000 7 -Courier\
+ c 9 -#000000ff T 44 931 -1 412 86 -4a invoke-virtual v8 , v4 , [meth@ 304 Ljava/net/HttpURLConnection; (Z) V setDoOutput] F 8.000000\
+ 7 -Courier c 9 -#000000ff T 44 921 -1 134 28 -50 const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 44 912 \
+-1 417 87 -52 invoke-virtual v8 , v4 , [meth@ 307 Ljava/net/HttpURLConnection; (Z) V setUseCaches] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 44 902 -1 177 37 -58 const-string v4 , [string@ 44 GET] F 8.000000 7 -Courier c 9 -#000000ff T 44 892 -1 518 108 -5c invoke-virtual\
+ v8 , v4 , [meth@ 305 Ljava/net/HttpURLConnection; (Ljava/lang/String;) V setRequestMethod] F 8.000000 7 -Courier c\
+ 9 -#000000ff T 44 883 -1 211 44 -62 const-string v4 , [string@ 35 Connection] F 8.000000 7 -Courier c 9 -#000000ff T 44 873 -1 \
+211 44 -66 const-string v5 , [string@ 51 Keep-Alive] F 8.000000 7 -Courier c 9 -#000000ff T 44 864 -1 643 134 -6a invoke-virtual\
+ v8 , v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection; (Ljava/lang/String; Ljava/lang/String;) V setRequestProperty] F 8.000000\
+ 7 -Courier c 9 -#000000ff T 44 854 -1 196 41 -70 const-string v4 , [string@ 34 Charset] F 8.000000 7 -Courier c 9 -#000000ff T \
+44 844 -1 191 40 -74 const-string v5 , [string@ 209 UTF-8] F 8.000000 7 -Courier c 9 -#000000ff T 44 835 -1 643 134 -78 invoke-virtual\
+ v8 , v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection; (Ljava/lang/String; Ljava/lang/String;) V setRequestProperty] F 8.000000\
+ 7 -Courier c 9 -#000000ff T 44 825 -1 220 46 -7e const-string v4 , [string@ 39 Content-type] F 8.000000 7 -Courier c 9 -#\
+000000ff T 44 816 -1 326 68 -82 const-string v5 , [string@ 282 application/x-www-form-urlencoded] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 44 806 -1 643 134 -86 invoke-virtual v8 , v4 , v5 , [meth@ 306 Ljava/net/HttpURLConnection; (Ljava/lang/String; Ljava/lang\
+/String;) V setRequestProperty] F 8.000000 7 -Courier c 9 -#000000ff T 44 796 -1 273 57 -8c new-instance v13 , [type@ 99 Ljava\
+/io/BufferedReader;] F 8.000000 7 -Courier c 9 -#000000ff T 44 787 -1 287 60 -90 new-instance v4 , [type@ 103 Ljava/io/InputStreamReader\
+;] F 8.000000 7 -Courier c 9 -#000000ff T 44 777 -1 494 103 -94 invoke-virtual v8 , [meth@ 302 Ljava/net/HttpURLConnection\
+; () Ljava/io/InputStream; getInputStream] F 8.000000 7 -Courier c 9 -#000000ff T 44 768 -1 115 24 -9a move-result-object v5 \
+F 8.000000 7 -Courier c 9 -#000000ff T 44 758 -1 475 99 -9c invoke-direct v4 , v5 , [meth@ 273 Ljava/io/InputStreamReader; (Ljava\
+/io/InputStream;) V <init>] F 8.000000 7 -Courier c 9 -#000000ff T 44 748 -1 441 92 -a2 invoke-direct v13 , v4 , [meth@ 265 Ljava\
+/io/BufferedReader; (Ljava/io/Reader;) V <init>] F 8.000000 7 -Courier c 9 -#000000ff T 44 739 -1 163 34 -a8 const-string v11 \
+, [string@ 0 ] F 8.000000 7 -Courier c 9 -#000000ff T 44 729 -1 278 58 -ac new-instance v14 , [type@ 111 Ljava/lang/StringBuffer\
+;] F 8.000000 7 -Courier c 9 -#000000ff T 44 720 -1 340 71 -b0 invoke-direct v14 , [meth@ 290 Ljava/lang/StringBuffer; () V <init\
+>] "];
+	"run-BB@0xb6" [label="b6 invoke-virtual v13 , [meth@ 266 Ljava/io/BufferedReader; () Ljava/lang/String; readLine]\lbc move-result-object v11\lbe if-nez\
+ v11 , [+ 50]\l", color=lightgray, pos="366,659", width="6.2828", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 592 677 140 677 140 641 592 641 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 148 665 -1 436 91 -b6 invoke-virtual v13 , [meth@ 266 Ljava/io/BufferedReader; () Ljava/lang\
+/String; readLine] F 8.000000 7 -Courier c 9 -#000000ff T 148 656 -1 119 25 -bc move-result-object v11 F 8.000000 7 -Courier \
+c 9 -#000000ff T 148 646 -1 105 22 -be if-nez v11 , [+ 50] "];
+	"run-BB@0xc2" [label="c2 invoke-virtual v14 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\lc8 move-result-object v16\lca const-string\
+ v4 , [string@ 245 \*]\lce move-object/from16 v0 , v16\ld2 move-object v1 , v4\ld4 invoke-virtual v0 , v1 , [meth@ 282 Ljava\
+/lang/String; (Ljava/lang/String;) [Ljava/lang/String; split]\lda move-result-object v17\ldc const/4 v4 , [#+ 0] , {0}\lde aget-object\
+ v4 , v17 , v4\le2 invoke-virtual v4 , [meth@ 286 Ljava/lang/String; () Ljava/lang/String; toUpperCase]\le8 move-result-object\
+ v4\lea const-string v5 , [string@ 207 SMS]\lee invoke-virtual v4 , v5 , [meth@ 280 Ljava/lang/String; (Ljava/lang/Object\
+;) Z equals]\lf4 move-result v4\lf6 if-eqz v4 , [+ 64]\l", color=lightgray, pos="940,528", width="7.2077", height="2.1111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1199 604 681 604 681 452 1199 452 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 688 592 -1 436 91 -c2 invoke-virtual v14 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang\
+/String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 688 582 -1 119 25 -c8 move-result-object v16 F 8.000000 7 -Courier \
+c 9 -#000000ff T 688 573 -1 172 36 -ca const-string v4 , [string@ 245 *] F 8.000000 7 -Courier c 9 -#000000ff T 688 563 -1 143 30\
+ -ce move-object/from16 v0 , v16 F 8.000000 7 -Courier c 9 -#000000ff T 688 554 -1 105 22 -d2 move-object v1 , v4 F 8.000000 7 \
+-Courier c 9 -#000000ff T 688 544 -1 503 105 -d4 invoke-virtual v0 , v1 , [meth@ 282 Ljava/lang/String; (Ljava/lang/String;) [Ljava\
+/lang/String; split] F 8.000000 7 -Courier c 9 -#000000ff T 688 534 -1 119 25 -da move-result-object v17 F 8.000000 7 -Courier\
+ c 9 -#000000ff T 688 525 -1 134 28 -dc const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 688 515 -1 134 28 -de \
+aget-object v4 , v17 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 688 506 -1 417 87 -e2 invoke-virtual v4 , [meth@ 286 Ljava/lang\
+/String; () Ljava/lang/String; toUpperCase] F 8.000000 7 -Courier c 9 -#000000ff T 688 496 -1 115 24 -e8 move-result-object v4 F\
+ 8.000000 7 -Courier c 9 -#000000ff T 688 486 -1 182 38 -ea const-string v5 , [string@ 207 SMS] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 688 477 -1 422 88 -ee invoke-virtual v4 , v5 , [meth@ 280 Ljava/lang/String; (Ljava/lang/Object;) Z equals] F 8.000000 7 \
+-Courier c 9 -#000000ff T 688 467 -1 81 17 -f4 move-result v4 F 8.000000 7 -Courier c 9 -#000000ff T 688 458 -1 100 21 -f6 if-eqz\
+ v4 , [+ 64] "];
+	"run-BB@0x122" [label="122 invoke-virtual v14 , v11 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l128 goto\
+ [+ -57]\l", color=lightgray, pos="366,528", width="8.2077", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 661 546 71 546 71 510 661 510 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 78 530 -1 575 120 -122 invoke-virtual v14 , v11 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava\
+/lang/String;) Ljava/lang/StringBuffer; append] F 8.000000 7 -Courier c 9 -#000000ff T 78 520 -1 76 16 -128 goto [+ -57] "];
+	"run-BB@0xfa" [label="fa const/4 v4 , [#+ 3] , {3}\lfc aget-object v4 , v17 , v4\l100 invoke-static v4 , [meth@ 276 Ljava/lang/Integer; (Ljava/lang/String\
+;) I parseInt]\l106 move-result v12\l108 const/4 v4 , [#+ 4] , {4}\l10a aget-object v3 , v17 , v4\l10e const/4 v4 , [#+ 5] ,\
+ {5}\l110 aget-object v5 , v17 , v4\l114 if-nez v12 , [+ 23]\l", color=lightgray, pos="712,369", width="5.9495", height="1.3111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 926 416 498 416 498 322 926 322 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 506 404 -1 134 28 -fa const/4 v4 , [#+ 3] , {3} F 8.000000 7 -Courier c 9 -#000000ff T 506\
+ 395 -1 134 28 -fc aget-object v4 , v17 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 506 385 -1 412 86 -100 invoke-static v4 , [\
+meth@ 276 Ljava/lang/Integer; (Ljava/lang/String;) I parseInt] F 8.000000 7 -Courier c 9 -#000000ff T 506 375 -1 91 19 -106 move-result\
+ v12 F 8.000000 7 -Courier c 9 -#000000ff T 506 366 -1 139 29 -108 const/4 v4 , [#+ 4] , {4} F 8.000000 7 -Courier c 9 -#\
+000000ff T 506 356 -1 139 29 -10a aget-object v3 , v17 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 506 347 -1 139 29 -10e const/\
+4 v4 , [#+ 5] , {5} F 8.000000 7 -Courier c 9 -#000000ff T 506 337 -1 139 29 -110 aget-object v5 , v17 , v4 F 8.000000 7 -Courier\
+ c 9 -#000000ff T 506 327 -1 110 23 -114 if-nez v12 , [+ 23] "];
+	"run-BB@0x176" [label="176 const/4 v4 , [#+ 0] , {0}\l178 aget-object v4 , v17 , v4\l17c invoke-virtual v4 , [meth@ 286 Ljava/lang/String; () Ljava/lang\
+/String; toUpperCase]\l182 move-result-object v4\l184 const-string v5 , [string@ 21 BBX]\l188 invoke-virtual v4 , v5 , [meth@ 280\
+ Ljava/lang/String; (Ljava/lang/Object;) Z equals]\l18e goto [+ -31]\l", color=lightgray, pos="1286,369", width="6.1467", height="1.0444", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1507 407 1065 407 1065 331 1507 331 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 1072 395 -1 139 29 -176 const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T \
+1072 385 -1 139 29 -178 aget-object v4 , v17 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 1072 375 -1 422 88 -17c invoke-virtual \
+v4 , [meth@ 286 Ljava/lang/String; () Ljava/lang/String; toUpperCase] F 8.000000 7 -Courier c 9 -#000000ff T 1072 366 -1 119 25 \
+-182 move-result-object v4 F 8.000000 7 -Courier c 9 -#000000ff T 1072 356 -1 182 38 -184 const-string v5 , [string@ 21 BBX] F 8.000000\
+ 7 -Courier c 9 -#000000ff T 1072 347 -1 427 89 -188 invoke-virtual v4 , v5 , [meth@ 280 Ljava/lang/String; (Ljava/lang/Object\
+;) Z equals] F 8.000000 7 -Courier c 9 -#000000ff T 1072 337 -1 76 16 -18e goto [+ -31] "];
+	"run-BB@0x118" [label="118 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection; () V disconnect]\l11e goto/16 [+ -137]\l", color=lightgray, pos="236,267", width="5.5412", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 435 285 37 285 37 249 435 249 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 44 269 -1 383 80 -118 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection; () V disconnect\
+] F 8.000000 7 -Courier c 9 -#000000ff T 44 259 -1 95 20 -11e goto/16 [+ -137] "];
+	"run-BB@0x142" [label="142 invoke-static [meth@ 83 Landroid/telephony/SmsManager; () Landroid/telephony/SmsManager; getDefault]\l148 move-result-object\
+ v2\l14a const/4 v10 , [#+ 0] , {0}\l", color=lightgray, pos="712,267", width="7.1466", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 969 285 455 285 455 249 969 249 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 462 273 -1 499 104 -142 invoke-static [meth@ 83 Landroid/telephony/SmsManager; () Landroid\
+/telephony/SmsManager; getDefault] F 8.000000 7 -Courier c 9 -#000000ff T 462 264 -1 119 25 -148 move-result-object v2 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 462 254 -1 143 30 -14a const/4 v10 , [#+ 0] , {0} "];
+	"run-BB@0x12a" [label="12a move-exception v4\l12c move-object v9 , v4\l12e move-object/from16 v18 , v19\l", color=lightgray, pos="1762,193", width="2.3443", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1846 211 1678 211 1678 175 1846 175 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 1685 199 -1 100 21 -12a move-exception v4 F 8.000000 7 -Courier c 9 -#000000ff T 1685 190\
+ -1 110 23 -12c move-object v9 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 1685 180 -1 153 32 -12e move-object/from16 v18 , v19 "];
+	"run-BB@0x132" [label="132 invoke-virtual v9 , [meth@ 274 Ljava/lang/Exception; () V printStackTrace]\l138 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection\
+; () V disconnect]\l13e goto/16 [+ -153]\l", color=lightgray, pos="1845,105", width="5.5412", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 2044 123 1646 123 1646 87 2044 87 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 1653 111 -1 374 78 -132 invoke-virtual v9 , [meth@ 274 Ljava/lang/Exception; () V printStackTrace\
+] F 8.000000 7 -Courier c 9 -#000000ff T 1653 102 -1 383 80 -138 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection\
+; () V disconnect] F 8.000000 7 -Courier c 9 -#000000ff T 1653 92 -1 95 20 -13e goto/16 [+ -153] "];
+	"run-BB@0x14c" [label="14c if-lt v10 , v12 , [+ 12]\l", color=lightgray, pos="692,193", width="2.086", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 767 211 617 211 617 175 767 175 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 625 190 -1 134 28 -14c if-lt v10 , v12 , [+ 12] "];
+	"run-BB@0x150" [label="150 invoke-virtual/range v20 , [meth@ 260 Lfish/sms_thread; () V save_Alive]\l156 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection\
+; () V disconnect]\l15c move-object/from16 v18 , v19\l160 goto/16 [+ -170]\l", color=lightgray, pos="1427,105", width="5.5412", height="0.64444", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1626 128 1228 128 1228 82 1626 82 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 1235 116 -1 364 76 -150 invoke-virtual/range v20 , [meth@ 260 Lfish/sms_thread; () V save\
+_Alive] F 8.000000 7 -Courier c 9 -#000000ff T 1235 107 -1 383 80 -156 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection\
+; () V disconnect] F 8.000000 7 -Courier c 9 -#000000ff T 1235 97 -1 153 32 -15c move-object/from16 v18 , v19 F 8.000000 7 -Courier\
+ c 9 -#000000ff T 1235 87 -1 95 20 -160 goto/16 [+ -170] "];
+	"run-BB@0x164" [label="164 const/4 v4 , [#+ 0] , {0}\l166 const/4 v6 , [#+ 0] , {0}\l168 const/4 v7 , [#+ 0] , {0}\l16a invoke-virtual/range v2 , v3 , \
+v4 , v5 , v6 , v7 , [meth@ 84 Landroid/telephony/SmsManager; (Ljava/lang/String; Ljava/lang/String; Ljava/lang/String; Landroid/\
+app/PendingIntent; Landroid/app/PendingIntent;) V sendTextMessage]\l170 add-int/lit8 v10 , v10 , [#+ 1]\l174 goto [+ -20]\l", color=lightgray, pos="652,105", width="15.479", height="0.91111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1209 138 95 138 95 72 1209 72 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 102 126 -1 139 29 -164 const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 102\
+ 116 -1 139 29 -166 const/4 v6 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 102 107 -1 139 29 -168 const/4 v7 , [#+ 0\
+] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 102 97 -1 1099 229 -16a invoke-virtual/range v2 , v3 , v4 , v5 , v6 , v7 , [meth@\
+ 84 Landroid/telephony/SmsManager; (Ljava/lang/String; Ljava/lang/String; Ljava/lang/String; Landroid/app/PendingIntent; Landroid\
+/app/PendingIntent;) V sendTextMessage] F 8.000000 7 -Courier c 9 -#000000ff T 102 87 -1 167 35 -170 add-int/lit8 v10 , v10 , [\
+#+ 1] F 8.000000 7 -Courier c 9 -#000000ff T 102 78 -1 76 16 -174 goto [+ -20] "];
+	"run-BB@0x190" [label="190 move-exception v4\l192 move-object/from16 v18 , v19\l", color=lightgray, pos="914,1161", width="2.3443", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 998 1179 830 1179 830 1143 998 1143 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 837 1163 -1 100 21 -190 move-exception v4 F 8.000000 7 -Courier c 9 -#000000ff T 837 1153\
+ -1 153 32 -192 move-object/from16 v18 , v19 "];
+	"run-BB@0x196" [label="196 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection; () V disconnect]\l19c throw v4 , v0\l19e move-exception v4\l1a0 \
+goto [+ -5]\l", color=lightgray, pos="914,910", width="5.5412", height="0.64444", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1113 933 715 933 715 887 1113 887 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 722 921 -1 383 80 -196 invoke-virtual v8 , [meth@ 301 Ljava/net/HttpURLConnection; () V disconnect\
+] F 8.000000 7 -Courier c 9 -#000000ff T 722 912 -1 81 17 -19c throw v4 , v0 F 8.000000 7 -Courier c 9 -#000000ff T 722\
+ 902 -1 100 21 -19e move-exception v4 F 8.000000 7 -Courier c 9 -#000000ff T 722 892 -1 71 15 -1a0 goto [+ -5] "];
+	"run-BB@0x1a2" [label="1a2 move-exception v4\l1a4 move-object v9 , v4\l1a6 goto [+ -58]\l", color=lightgray, pos="1928,193", width="1.7526", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1991 211 1865 211 1865 175 1991 175 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 1873 199 -1 100 21 -1a2 move-exception v4 F 8.000000 7 -Courier c 9 -#000000ff T 1873 190\
+ -1 110 23 -1a4 move-object v9 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 1873 180 -1 76 16 -1a6 goto [+ -58] "];
+	"run-BB@0x0" -> "run-BB@0xc" [color=red, pos="e,704.51,11 18.015,1142.5 18.015,994.55 18.015,11 18.015,11 18.015,11 694.51,11 694.51,11", _draw_="c 9 -#ff0000ff B 7 18 1142 18 995 18 11 18 11 18 11 695 11 695 11 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 695 15 705 11 695 8 "];
+	"run-BB@0x0" -> "run-BB@0xe" [color=green, pos="e,205.61,1106.1 205.61,1142.5 205.61,1142.5 205.61,1116.1 205.61,1116.1", _draw_="c 9 -#00ff00ff B 4 206 1143 206 1143 206 1116 206 1116 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 209 1116 206 1106 202 1116 "];
+	"run-BB@0xe" -> "run-BB@0xb6" [color=blue, pos="e,366,677.74 366,713.77 366,713.77 366,687.74 366,687.74", _draw_="c 9 -#0000ffff B 4 366 714 366 714 366 688 366 688 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 370 688 366 678 363 688 "];
+	"run-BB@0xb6" -> "run-BB@0xc2" [color=red, pos="e,687.9,604.2 592.19,659 645.87,659 687.9,659 687.9,659 687.9,659 687.9,614.2 687.9,614.2", _draw_="c 9 -#ff0000ff B 7 592 659 646 659 688 659 688 659 688 659 688 614 688 614 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 691 614 688 604 684 614 "];
+	"run-BB@0xb6" -> "run-BB@0x122" [color=green, pos="e,290.61,546.4 290.61,640.51 290.61,640.51 290.61,556.4 290.61,556.4", _draw_="c 9 -#00ff00ff B 4 291 641 291 641 291 556 291 556 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 294 556 291 546 287 556 "];
+	"run-BB@0xc2" -> "run-BB@0xfa" [color=red, pos="e,803.35,416.24 803.35,451.76 803.35,451.76 803.35,426.24 803.35,426.24", _draw_="c 9 -#ff0000ff B 4 803 452 803 452 803 426 803 426 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 807 426 803 416 800 426 "];
+	"run-BB@0xc2" -> "run-BB@0x176" [color=green, pos="e,1132.1,406.81 1132.1,451.76 1132.1,451.76 1132.1,416.81 1132.1,416.81", _draw_="c 9 -#00ff00ff B 4 1132 452 1132 452 1132 417 1132 417 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 1136 417 1132 407 1129 417 "];
+	"run-BB@0xfa" -> "run-BB@0x118" [color=red, pos="e,253,285.24 497.62,369 378.06,369 253,369 253,369 253,369 253,295.24 253,295.24", _draw_="c 9 -#ff0000ff B 7 498 369 378 369 253 369 253 369 253 369 253 295 253 295 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 257 295 253 285 250 295 "];
+	"run-BB@0xfa" -> "run-BB@0x142" [color=green, pos="e,712,285.78 712,321.58 712,321.58 712,295.78 712,295.78", _draw_="c 9 -#00ff00ff B 4 712 322 712 322 712 296 712 296 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 716 296 712 286 709 296 "];
+	"run-BB@0x118" -> "run-BB@0xc" [color=blue, pos="e,704.46,23 65.631,248.66 65.631,191.92 65.631,23 65.631,23 65.631,23 694.46,23 694.46,23", _draw_="c 9 -#0000ffff B 7 66 249 66 192 66 23 66 23 66 23 694 23 694 23 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 694 27 704 23 694 20 "];
+	"run-BB@0x122" -> "run-BB@0xb6" [color=blue, pos="e,441.39,640.52 441.39,546.21 441.39,546.21 441.39,630.52 441.39,630.52", _draw_="c 9 -#0000ffff B 4 441 546 441 546 441 631 441 631 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 438 631 441 641 445 631 "];
+	"run-BB@0x12a" -> "run-BB@0x132" [color=blue, pos="e,1762,123.33 1762,174.34 1762,174.34 1762,133.33 1762,133.33", _draw_="c 9 -#0000ffff B 4 1762 174 1762 174 1762 133 1762 133 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 1766 133 1762 123 1759 133 "];
+	"run-BB@0x132" -> "run-BB@0xc" [color=blue, pos="e,787.41,11 1845,86.429 1845,59.034 1845,11 1845,11 1845,11 797.41,11 797.41,11", _draw_="c 9 -#0000ffff B 7 1845 86 1845 59 1845 11 1845 11 1845 11 797 11 797 11 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 797 8 787 11 797 15 "];
+	"run-BB@0x142" -> "run-BB@0x14c" [color=blue, pos="e,692,211.16 692,248.33 692,248.33 692,221.16 692,221.16", _draw_="c 9 -#0000ffff B 4 692 248 692 248 692 221 692 221 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 696 221 692 211 689 221 "];
+	"run-BB@0x14c" -> "run-BB@0x150" [color=red, pos="e,1320.8,128.58 767.22,193 934.12,193 1320.8,193 1320.8,193 1320.8,193 1320.8,138.58 1320.8,138.58", _draw_="c 9 -#ff0000ff B 7 767 193 934 193 1321 193 1321 193 1321 193 1321 139 1321 139 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 1324 139 1321 129 1317 139 "];
+	"run-BB@0x14c" -> "run-BB@0x164" [color=green, pos="e,666.97,137.8 666.97,174.77 666.97,174.77 666.97,147.8 666.97,147.8", _draw_="c 9 -#00ff00ff B 4 667 175 667 175 667 148 667 148 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 670 148 667 138 663 148 "];
+	"run-BB@0x150" -> "run-BB@0xc" [color=blue, pos="e,787.32,23 1427,81.721 1427,57.479 1427,23 1427,23 1427,23 797.32,23 797.32,23", _draw_="c 9 -#0000ffff B 7 1427 82 1427 57 1427 23 1427 23 1427 23 797 23 797 23 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 797 20 787 23 797 27 "];
+	"run-BB@0x164" -> "run-BB@0x14c" [color=blue, pos="e,717.03,174.77 717.03,137.77 717.03,137.77 717.03,164.77 717.03,164.77", _draw_="c 9 -#0000ffff B 4 717 138 717 138 717 165 717 165 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 714 165 717 175 721 165 "];
+	"run-BB@0x176" -> "run-BB@0x150" [color=blue, pos="e,1414,128.29 1414,331.18 1414,331.18 1414,138.29 1414,138.29", _draw_="c 9 -#0000ffff B 4 1414 331 1414 331 1414 138 1414 138 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 1418 138 1414 128 1411 138 "];
+	"run-BB@0x190" -> "run-BB@0x196" [color=blue, pos="e,914,933.22 914,1142.9 914,1142.9 914,943.22 914,943.22", _draw_="c 9 -#0000ffff B 4 914 1143 914 1143 914 943 914 943 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 918 943 914 933 911 943 "];
+	"run-BB@0x196" -> "run-BB@0x196" [color=blue, pos="e,914,886.67 772.06,933.38 772.06,965.41 772.06,1019 772.06,1019 772.06,1019 704.89,1019 704.89,1019 704.89,1019 704.89,800 704.89\
+,800 704.89,800 914,800 914,800 914,800 914,876.67 914,876.67", _draw_="c 9 -#0000ffff B 16 772 933 772 965 772 1019 772 1019 772 1019 705 1019 705 1019 705 1019 705 800 705 800 705 800 914 800 914 800\
+ 914 800 914 877 914 877 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 911 877 914 887 918 877 "];
+	"run-BB@0x1a2" -> "run-BB@0x132" [color=blue, pos="e,1928,123.33 1928,174.34 1928,174.34 1928,133.33 1928,133.33", _draw_="c 9 -#0000ffff B 4 1928 174 1928 174 1928 133 1928 133 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 1932 133 1928 123 1925 133 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,726,94",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 94 727 94 727 -1 ",
+		xdotversion="1.2"];
+	"check_Alive-BB@0x0" [label="0 const/4 v4 , [#+ 0] , {0}\l2 iget-object v2 , v5 , [field@ 180 Lfish/sms_thread; Landroid/content/Context; context]\l6 const-string\
+ v3 , [string@ 359 database]\la invoke-virtual v2 , v3 , v4 , [meth@ 19 Landroid/content/Context; (Ljava/lang/String; I) Landroid\
+/content/SharedPreferences; getSharedPreferences]\l10 move-result-object v0\l12 const-string v2 , [string@ 275 alive]\l16 \
+invoke-interface v0 , v2 , v4 , [meth@ 31 Landroid/content/SharedPreferences; (Ljava/lang/String; Z) Z getBoolean]\l1c move-result\
+ v1\l1e return v1\l", color=lightgray, pos="363,47", width="10.085", height="1.3111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 726 94 0 94 0 0 726 0 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 8 82 -1 129 27 -0 const/4 v4 , [#+ 0] , {0} F 8.000000 7 -Courier c 9 -#000000ff T 8 73 -1\
+ 422 88 -2 iget-object v2 , v5 , [field@ 180 Lfish/sms_thread; Landroid/content/Context; context] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 8 63 -1 201 42 -6 const-string v3 , [string@ 359 database] F 8.000000 7 -Courier c 9 -#000000ff T 8 53 -1 710 148 -a invoke-virtual\
+ v2 , v3 , v4 , [meth@ 19 Landroid/content/Context; (Ljava/lang/String; I) Landroid/content/SharedPreferences; getSharedPreferences\
+] F 8.000000 7 -Courier c 9 -#000000ff T 8 44 -1 115 24 -10 move-result-object v0 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 8 34 -1 191 40 -12 const-string v2 , [string@ 275 alive] F 8.000000 7 -Courier c 9 -#000000ff T 8 25 -1 561 117 -16 invoke-interface\
+ v0 , v2 , v4 , [meth@ 31 Landroid/content/SharedPreferences; (Ljava/lang/String; Z) Z getBoolean] F 8.000000 7 -Courier\
+ c 9 -#000000ff T 8 15 -1 81 17 -1c move-result v1 F 8.000000 7 -Courier c 9 -#000000ff T 8 5 -1 57 12 -1e return v1 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,438,38",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 38 439 38 439 -1 ",
+		xdotversion="1.2"];
+	"<init>-BB@0x0" [label="0 invoke-direct v0 , [meth@ 300 Ljava/lang/Thread; () V <init>]\l6 iput-object v1 , v0 , [field@ 180 Lfish/sms_thread; Landroid/\
+content/Context; context]\la return-void \l", color=lightgray, pos="219,19", width="6.0856", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 438 37 0 37 0 1 438 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 8 25 -1 302 63 -0 invoke-direct v0 , [meth@ 300 Ljava/lang/Thread; () V <init>] F 8.000000\
+ 7 -Courier c 9 -#000000ff T 8 16 -1 422 88 -6 iput-object v1 , v0 , [field@ 180 Lfish/sms_thread; Landroid/content/Context; context\
+] F 8.000000 7 -Courier c 9 -#000000ff T 8 6 -1 67 14 -a return-void  "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,1042,232",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 232 1043 232 1043 -1 ",
+		xdotversion="1.2"];
+	"decode-BB@0x0" [label="0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;]\l4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>]\la\
+ const/4 v1 , [#+ 0] , {0}\l", color=lightgray, pos="754,213", width="4.8135", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 927 231 581 231 581 195 927 195 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 588 219 -1 268 56 -0 new-instance v2 , [type@ 111 Ljava/lang/StringBuffer;] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 210 -1 331 69 -4 invoke-direct v2 , [meth@ 290 Ljava/lang/StringBuffer; () V <init>] F 8.000000 7 \
+-Courier c 9 -#000000ff T 588 200 -1 129 27 -a const/4 v1 , [#+ 0] , {0} "];
+	"decode-BB@0xc" [label="c array-length v3 , v4\le if-lt v1 , v3 , [+ 7]\l", color=lightgray, pos="754,140", width="1.7526", height="0.5", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 817 158 691 158 691 122 817 122 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 699 142 -1 105 22 -c array-length v3 , v4 F 8.000000 7 -Courier c 9 -#000000ff T 699 132 \
+-1 110 23 -e if-lt v1 , v3 , [+ 7] "];
+	"decode-BB@0x12" [label="12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/String; toString]\l18 move-result-object v3\l1a return-object\
+ v3\l", color=lightgray, pos="223,43", width="6.2078", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 446 61 0 61 0 25 446 25 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 7 49 -1 431 90 -12 invoke-virtual v2 , [meth@ 292 Ljava/lang/StringBuffer; () Ljava/lang/\
+String; toString] F 8.000000 7 -Courier c 9 -#000000ff T 7 40 -1 115 24 -18 move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff\
+ T 7 30 -1 91 19 -1a return-object v3 "];
+	"decode-BB@0x1c" [label="1c aget v3 , v4 , v1\l20 xor-int/lit8 v0 , v3 , [#+ -1]\l24 int-to-char v3 , v0\l26 invoke-static v3 , [meth@ 288 Ljava/lang/String\
+; (C) Ljava/lang/String; valueOf]\l2c move-result-object v3\l2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; \
+(Ljava/lang/String;) Ljava/lang/StringBuffer; append]\l34 add-int/lit8 v1 , v1 , [#+ 1]\l38 goto [+ -22]\l", color=lightgray, pos="754,43", width="8.0105", height="1.1778", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 1042 85 466 85 466 1 1042 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 473 73 -1 95 20 -1c aget v3 , v4 , v1 F 8.000000 7 -Courier c 9 -#000000ff T 473 64 -1 158\
+ 33 -20 xor-int/lit8 v0 , v3 , [#+ -1] F 8.000000 7 -Courier c 9 -#000000ff T 473 54 -1 105 22 -24 int-to-char v3 , v0 F 8.000000\
+ 7 -Courier c 9 -#000000ff T 473 45 -1 398 83 -26 invoke-static v3 , [meth@ 288 Ljava/lang/String; (C) Ljava/lang/String; valueOf\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 35 -1 115 24 -2c move-result-object v3 F 8.000000 7 -Courier c 9 -#000000ff T 473\
+ 25 -1 561 117 -2e invoke-virtual v2 , v3 , [meth@ 291 Ljava/lang/StringBuffer; (Ljava/lang/String;) Ljava/lang/StringBuffer; append\
+] F 8.000000 7 -Courier c 9 -#000000ff T 473 16 -1 153 32 -34 add-int/lit8 v1 , v1 , [#+ 1] F 8.000000 7 -Courier c 9 -#000000ff\
+ T 473 6 -1 71 15 -38 goto [+ -22] "];
+	"decode-BB@0x0" -> "decode-BB@0xc" [color=blue, pos="e,754,158.16 754,194.58 754,194.58 754,168.16 754,168.16", _draw_="c 9 -#0000ffff B 4 754 195 754 195 754 168 754 168 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 758 168 754 158 751 168 "];
+	"decode-BB@0xc" -> "decode-BB@0x12" [color=red, pos="e,223,61.703 690.74,140 549.94,140 223,140 223,140 223,140 223,71.703 223,71.703", _draw_="c 9 -#ff0000ff B 7 691 140 550 140 223 140 223 140 223 140 223 72 223 72 ", _hdraw_="S 5 -solid c 9 -#ff0000ff C 9 -#ff0000ff P 3 227 72 223 62 220 72 "];
+	"decode-BB@0xc" -> "decode-BB@0x1c" [color=green, pos="e,732.97,85.303 732.97,121.76 732.97,121.76 732.97,95.303 732.97,95.303", _draw_="c 9 -#00ff00ff B 4 733 122 733 122 733 95 733 95 ", _hdraw_="S 5 -solid c 9 -#00ff00ff C 9 -#00ff00ff P 3 736 95 733 85 729 95 "];
+	"decode-BB@0x1c" -> "decode-BB@0xc" [color=blue, pos="e,775.03,121.57 775.03,85.546 775.03,85.546 775.03,111.57 775.03,111.57", _draw_="c 9 -#0000ffff B 4 775 86 775 86 775 112 775 112 ", _hdraw_="S 5 -solid c 9 -#0000ffff C 9 -#0000ffff P 3 772 112 775 122 779 112 "];
+}
+
+digraph code {
+	graph [splines=ortho, bgcolor=white];
+	node [label="\N", color=red, style=filled, fontname=Courier, fontsize=8, shape=box];
+	graph [bb="0,0,438,38",
+		_draw_="c 9 -#ffffffff C 9 -#ffffffff P 4 0 -1 0 38 439 38 439 -1 ",
+		xdotversion="1.2"];
+	"<init>-BB@0x0" [label="0 invoke-direct v0 , [meth@ 300 Ljava/lang/Thread; () V <init>]\l6 iput-object v1 , v0 , [field@ 180 Lfish/sms_thread; Landroid/\
+content/Context; context]\la return-void \l", color=lightgray, pos="219,19", width="6.0856", height="0.51111", _draw_="c 9 -#d3d3d3ff C 9 -#d3d3d3ff P 4 438 37 0 37 0 1 438 1 ", _ldraw_="F 8.000000 7 -Courier c 9 -#000000ff T 8 25 -1 302 63 -0 invoke-direct v0 , [meth@ 300 Ljava/lang/Thread; () V <init>] F 8.000000\
+ 7 -Courier c 9 -#000000ff T 8 16 -1 422 88 -6 iput-object v1 , v0 , [field@ 180 Lfish/sms_thread; Landroid/content/Context; context\
+] F 8.000000 7 -Courier c 9 -#000000ff T 8 6 -1 67 14 -a return-void  "];
+}
+
