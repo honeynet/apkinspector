@@ -108,6 +108,7 @@ class XDot:
                    if not label2name.has_key(Im):
                      node_from = "node%s" % i
                      label2name[Im] = node_from
+                     self.buff += "\"%s\" [color=\"lightgray\", label=\"%s\"]\n" % (node_from, Im)
                      i += 1
                    else:
                      node_from = label2name[Im]
@@ -115,6 +116,7 @@ class XDot:
                    if not label2name.has_key(callList[l]):
                      node_to = "node%s" % i
                      label2name[callList[l]] = node_to
+                     self.buff += "\"%s\" [color=\"lightgray\", label=\"%s\"]\n" % (node_to, callList[l])
                      i += 1
                    else:
                      node_to = label2name[callList[l]]

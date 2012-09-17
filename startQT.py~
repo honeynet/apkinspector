@@ -932,7 +932,7 @@ class startQT(QMainWindow, Ui_mainWindow):
 #        xdotc.method2xdot()
 
         xdotc.call2xdot(methodInvokeList, allmethod)
-        [pagesize, nodeList, linkList] = xdotc.parse()
+        [pagesize, nodeList, linkList] = xdotc.parsecall()
 
 #        wnd = QtSvg.QSvgRenderer(self)
 #        wnd.load("3.svg")
@@ -944,7 +944,7 @@ class startQT(QMainWindow, Ui_mainWindow):
         #time.sleep(10)
         #print "sleep the callin"
         self.Graph_call.setPageSize(pagesize)
-        self.Graph_call.show(nodeList, linkList)
+        self.Graph_call.showcall(nodeList, linkList)
       
 
         callInContent = "************************Call In*************************\n"

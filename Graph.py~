@@ -101,20 +101,17 @@ class GraphicsView(QGraphicsView):
         self.rootcall = Link()
             
         for node in nodeList:
-            text = []
-            myText = node.myText
-            text = node.myText.split("\n")
-            lineNumber = len(node.myText.split("\n")) - 1
 
-            for i in range (1, lineNumber+1):
-                nodeNew = Node (0,0,0,0)
-                nodeNew.left = node.left
-                nodeNew.top = node.top + ((node.height)/lineNumber)*(i-1)  
-                nodeNew.width = node.width
-                nodeNew.height = (node.height)/lineNumber
-                nodeNew.myText = text[i-1]
+            nodeNew = Node (0,0,0,0)
+            nodeNew.left = node.left
+            nodeNew.top = node.top
+            nodeNew.width = node.width
+            nodeNew.height = node.height
+            nodeNew.myText = node.label
 
-                nodeNew.setParentItem(self.rootcall)
+            print "Node created with (%s %s %s %s)" % (nodeNew.left, nodeNew.top, nodeNew.width, nodeNew.height)
+
+            nodeNew.setParentItem(self.rootcall)
 
 
  #       for node in nodeList:
